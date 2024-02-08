@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+	@font-face {
+		font-family: 'Norwester';
+		src:
+			local('Norwester'),
+			url('/norwester.woff') format('woff'),
+			url('/norwester.woff2') format('woff');
+	}
+}
