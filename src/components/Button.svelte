@@ -6,10 +6,13 @@
 	export let onClick: () => void = () => {};
 
 	const buttonBase =
-		'py-2 px-3 font-semibold shadow-sm text-sm rounded-lg hover:scale-[97.5%] transition-all';
+		'flex gap-2 items-center py-2 px-3 font-semibold shadow-sm text-sm rounded-lg hover:scale-[97.5%] transition-all';
 
 	const variantStyles = {
-		primary: twMerge(buttonBase, 'bg-emerald-300 text-emerald-950 hover:bg-emerald-400 border-emerald-300 border'),
+		primary: twMerge(
+			buttonBase,
+			'bg-emerald-300 text-emerald-950 hover:bg-emerald-400 border-emerald-300 border'
+		),
 		outline: twMerge(buttonBase, 'hover:bg-neutral-100 border')
 	};
 </script>
