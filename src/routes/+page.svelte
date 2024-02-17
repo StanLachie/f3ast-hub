@@ -1,2 +1,11 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script>
+	import Hero from '../components/blocks/Hero.svelte';
+	import LandingHeader from '../components/blocks/LandingHeader.svelte';
+	import LearnMore from '../components/blocks/LearnMore.svelte';
+</script>
+
+<LandingHeader />
+<Hero />
+<img src="/waveUp.svg" alt="wave" class="w-full" />
+<LearnMore />
+<img src="/waveDown.svg" alt="wave" class="w-full" />
