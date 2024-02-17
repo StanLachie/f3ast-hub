@@ -11,9 +11,9 @@
 	const variantStyles = {
 		primary: twMerge(
 			buttonBase,
-			'bg-emerald-300 text-emerald-950 hover:bg-emerald-400 border-emerald-300 border'
+			'bg-emerald-300 text-emerald-950 hover:bg-emerald-400 border-emerald-950 border'
 		),
-		outline: twMerge(buttonBase, 'hover:bg-neutral-100 border')
+		outline: twMerge(buttonBase, 'hover:bg-neutral-100 border border-neutral-400 text-neutral-900')
 	};
 </script>
 
