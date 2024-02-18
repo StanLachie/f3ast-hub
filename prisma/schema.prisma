@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+// Define the client account model
+model ClientAccount {
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
+  stripeId     String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  // Define the relationship with Subscription
+  subscriptions Subscription[]
+  
+  // Define the relationship with Restaurant
+  restaurant   Restaurant?   @relation(fields: [restaurantId], references: [id])
+  restaurantId Int?
+}
+
+// Define the subscription model
+model Subscription {
+  id            Int           @id @default(autoincrement())
+  stripePlanId  String
+  status        String
+  // Define the relationship with ClientAccount
+  clientAccount ClientAccount @relation(fields: [clientId], references: [id])
+  clientId      Int
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+// Define the restaurant model
+model Restaurant {
+  id             Int           @id @default(autoincrement())
+  active         Boolean       @default(false)
+  name           String
+  address        String
+  bio            String?
+  banner         String?
+  profilePhoto   String?
+  instagram      String?
+  facebook       String?
+  twitter        String?
+  phone          String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  // Define the relationship with ClientAccount
+  clients        ClientAccount[]
+  // Define the relationship with MenuCategory
+  menuCategories MenuCategory[]
+}
+
+// Define the menu category model
+model MenuCategory {
+  id        Int      @id @default(autoincrement())
+  name      String
+  active    Boolean  @default(true)
+  sortingIndex Int
+  // Define the relationship with Restaurant
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId Int
+  // Define the relationship with MenuItem
+  menuItems MenuItem[]
+}
+
+// Define the menu item model
+model MenuItem {
+  id           Int      @id @default(autoincrement())
+  name         String
+  active       Boolean  @default(true)
+  description  String?
+  price        Float
+  // Define the relationship with MenuCategory
+  menuCategory MenuCategory @relation(fields: [categoryId], references: [id])
+  categoryId   Int
+}
