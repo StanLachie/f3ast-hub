@@ -32,11 +32,11 @@
 			Starting from just <span class="text-emerald-400">$19.99</span> a month.
 		</h2>
 		<div class="my-8 flex gap-4">
-			<Button variant="primary" class="px-6"
-				>View Pricing <Icon icon="mingcute:arrow-right-circle-fill" class="text-xl" /></Button
+			<a class="btn-primary" href="/pricing"
+				>View Pricing <Icon icon="mingcute:arrow-right-circle-fill" class="text-xl" /></a
 			>
-			<Button variant="outline" class="px-6"
-				>Learn More <Icon icon="mingcute:information-fill" class="text-xl" /></Button
+			<a class="btn-outline" href="/learn-more"
+				>Learn More <Icon icon="mingcute:information-fill" class="text-xl" /></a
 			>
 		</div>
 	</div>

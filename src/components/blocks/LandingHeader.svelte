@@ -8,7 +8,5 @@
 	<div class="flex gap-4">
 		<a class="btn-outline" href="/dashboard">Dashboard</a>
 		<a class="btn-primary" href="/">Contact Us</a>
-		<a class="btn-simple" href="/">Sign In</a>
-		<a class="btn-dark" href="/">Sign Up</a>
 	</div>
 </div>
