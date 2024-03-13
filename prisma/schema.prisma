@@ -44,6 +44,7 @@ model Restaurant {
   id             Int           @id @default(autoincrement())
   active         Boolean       @default(false)
   name           String
+  slug           String        @unique
   address        String
   bio            String?
   banner         String?

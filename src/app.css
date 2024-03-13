@@ -11,3 +11,18 @@
 			url('/norwester.woff2') format('woff');
 	}
 }
+
+@layer components {
+	.btn-primary {
+		@apply flex items-center gap-2 rounded-lg border border-emerald-950 bg-emerald-300 px-3 py-2 text-sm font-semibold text-emerald-950 shadow-sm transition-all hover:scale-[97.5%] hover:bg-emerald-400;
+	}
+	.btn-outline {
+		@apply flex items-center gap-2 rounded-lg border border-neutral-400 px-3 py-2 text-sm font-semibold text-neutral-900 shadow-sm transition-all hover:scale-[97.5%] hover:bg-neutral-100;
+	}
+	.btn-simple {
+		@apply flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-neutral-900 shadow-sm hover:scale-[97.5%] bg-white hover:bg-neutral-100 border border-neutral-300 
+	}
+	.btn-dark {
+		@apply flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold 
+	}
+}
