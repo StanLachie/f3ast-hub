@@ -5,12 +5,12 @@
 </script>
 
 <div
-	class="grid w-full grid-cols-2 gap-8 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10"
+	class="grid w-full grid-cols-2 gap-8 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-8"
 >
-	<div class="col-span-2 rounded-lg border border-neutral-400 p-6 text-center shadow-sm">
-		<h1 class="mb-1 text-2xl font-semibold">Welcome to F3AST!</h1>
-		<span class="text-sm text-neutral-600"
-			>enjoy exploring my voluminous body and seeing what secrets it hold :o
-		</span>
+	<div class="col-span-2 rounded-lg border border-neutral-400 bg-white p-6 text-center shadow-sm">
+		<h1 class="mb-1 text-2xl font-semibold">
+			Hello, <span class="text-emerald-400">{data.client?.first_name}</span>.
+		</h1>
+		<span class="text-neutral-600"> Welcome to the F3AST Dashboard. </span>
 	</div>
 </div>

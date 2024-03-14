@@ -28,8 +28,10 @@
 	$: currentRoute = $page.url.pathname;
 </script>
 
-<div class="flex min-h-screen w-screen divide-x divide-neutral-400">
-	<div class="flex h-screen min-w-16 flex-col justify-between bg-white">
+<div class=" flex min-h-screen w-screen">
+	<div
+		class="fixed flex h-screen min-w-16 flex-col justify-between border-r border-neutral-400 bg-white"
+	>
 		<div class="group flex flex-col divide-y divide-neutral-400 border-b border-neutral-400">
 			{#each sidebarItems as item}
 				<a
@@ -57,7 +59,7 @@
 			{/each}
 		</div>
 	</div>
-	<div class="flex-grow p-8 md:p-16">
+	<div class="ml-16 flex-grow overflow-y-auto bg-neutral-100 p-2 sm:p-8 md:p-16">
 		<slot />
 	</div>
 </div>
