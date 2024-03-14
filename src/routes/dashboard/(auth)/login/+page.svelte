@@ -9,4 +9,9 @@
 	<input type="text" name="username" placeholder="Username" />
 	<input type="password" name="password" placeholder="Password" />
 	<button class="btn-primary w-full"> Login </button>
+	<span class="">
+		Need an account?
+		<a class=" underline" href="/dashboard/register"> register </a>
+	</span>
+	<!-- Add a styling tag to the a element add an underline, text emerald 300. finally add a styling tag to the span: text-neutral-500 -->
 </form>
