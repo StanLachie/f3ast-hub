@@ -13,4 +13,8 @@
 	<input type="password" name="Password" placeholder="Password" />
 	<input type="password" name="Confirm Password" placeholder="Confirm Passoword" />
 	<button class="btn-primary w-full"> Register </button>
+	<span class=" text-neutral-600">
+		Already have an account?
+		<a class=" underline text-emerald-500" href="/dashboard/login"> login </a>
+	</span>
 </form>
