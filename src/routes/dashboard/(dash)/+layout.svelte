@@ -34,9 +34,12 @@
 			{#each sidebarItems as item}
 				<a
 					href={item.link}
-					class="flex h-16 items-center justify-center text-2xl hover:bg-neutral-100"
+					class="group flex h-16 items-center justify-center text-2xl hover:bg-neutral-100"
 				>
-					<Icon icon={item.icon} class={currentRoute === item.link ? 'text-emerald-300' : ''} />
+					<Icon
+						icon={item.icon}
+						class={`${currentRoute === item.link ? 'text-emerald-300' : ''} transition-all group-hover:scale-[125%]`}
+					/>
 				</a>
 			{/each}
 		</div>
@@ -44,9 +47,12 @@
 			{#each accountItems as item}
 				<a
 					href={item.link}
-					class="flex h-16 items-center justify-center text-2xl hover:bg-neutral-100"
+					class="group flex h-16 items-center justify-center text-2xl hover:bg-neutral-100"
 				>
-					<Icon icon={item.icon} class={currentRoute === item.link ? 'text-emerald-300' : ''} />
+					<Icon
+						icon={item.icon}
+						class={`${currentRoute === item.link ? 'text-emerald-300' : ''} transition-all group-hover:scale-[125%]`}
+					/>
 				</a>
 			{/each}
 		</div>
