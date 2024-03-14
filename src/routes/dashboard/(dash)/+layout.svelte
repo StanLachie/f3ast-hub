@@ -57,7 +57,7 @@
 			{/each}
 		</div>
 	</div>
-	<div>
+	<div class="flex-grow p-8 md:p-16">
 		<slot />
 	</div>
 </div>
