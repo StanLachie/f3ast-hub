@@ -11,7 +11,7 @@
 	<input type="email" name="Email" placeholder="Email" />
 	<input type="text" name="Username" placeholder="Username" />
 	<input type="password" name="Password" placeholder="Password" />
-	<input type="password" name="Confirm Password" placeholder="Confirm Passoword" />
+	<input type="password" name="Confirm Password" placeholder="Confirm Password" />
 	<button class="btn-primary w-full"> Register </button>
 	<span class=" text-neutral-600">
 		Already have an account?
