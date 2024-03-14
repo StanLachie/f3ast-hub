@@ -1,3 +1,3 @@
-<div class="m-4 min-h-screen flex justify-center items-center">
+<div class="m-4 flex min-h-screen items-center justify-center bg-neutral-100">
 	<slot />
 </div>
