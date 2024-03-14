@@ -29,7 +29,7 @@
 </script>
 
 <div class="flex min-h-screen w-screen divide-x divide-neutral-400">
-	<div class="flex h-screen w-16 flex-col justify-between bg-white">
+	<div class="flex h-screen min-w-16 flex-col justify-between bg-white">
 		<div class="group flex flex-col divide-y divide-neutral-400 border-b border-neutral-400">
 			{#each sidebarItems as item}
 				<a
