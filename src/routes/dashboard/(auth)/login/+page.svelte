@@ -6,7 +6,7 @@
 
 <form method="POST">
 	<h1 class="text-2xl font-semibold">Login</h1>
-	<input type="text" name="username" placeholder="Username" />
+	<input type="text" name="Email" placeholder="Email" />
 	<input type="password" name="password" placeholder="Password" />
 	<button class="btn-primary w-full"> Login </button>
 	<span class=" text-neutral-600">
