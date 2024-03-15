@@ -30,7 +30,7 @@
 
 <div class=" flex min-h-screen w-screen">
 	<div
-		class="fixed flex h-screen min-w-16 flex-col justify-between border-r border-neutral-400 bg-white"
+		class="fixed flex h-dvh min-w-16 flex-col justify-between border-r border-neutral-400 bg-white"
 	>
 		<div class="flex flex-col divide-y divide-neutral-400 border-b border-neutral-400">
 			<div class="flex h-16 cursor-default items-center justify-center font-norwester text-xl">
