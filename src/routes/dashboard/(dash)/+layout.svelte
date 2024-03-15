@@ -32,7 +32,10 @@
 	<div
 		class="fixed flex h-screen min-w-16 flex-col justify-between border-r border-neutral-400 bg-white"
 	>
-		<div class="group flex flex-col divide-y divide-neutral-400 border-b border-neutral-400">
+		<div class="flex flex-col divide-y divide-neutral-400 border-b border-neutral-400">
+			<div class="flex h-16 cursor-default items-center justify-center font-norwester text-xl">
+				F3AST
+			</div>
 			{#each sidebarItems as item}
 				<a
 					href={item.link}
@@ -40,7 +43,7 @@
 				>
 					<Icon
 						icon={item.icon}
-						class={`${currentRoute === item.link ? 'text-emerald-300' : ''} transition-all group-hover:scale-[125%]`}
+						class={`${currentRoute === item.link ? 'scale-[120%] text-emerald-300' : ''} transition-all group-hover:scale-[125%]`}
 					/>
 				</a>
 			{/each}
@@ -53,7 +56,7 @@
 				>
 					<Icon
 						icon={item.icon}
-						class={`${currentRoute === item.link ? 'text-emerald-300' : ''} transition-all group-hover:scale-[125%]`}
+						class={`${currentRoute === item.link ? 'scale-[120%] text-emerald-300' : ''} transition-all group-hover:scale-[125%]`}
 					/>
 				</a>
 			{/each}
