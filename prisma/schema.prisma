@@ -283,17 +283,18 @@ model users {
 }
 
 model ClientAccount {
-  id           Int            @id @default(autoincrement())
-  first_name   String?
-  last_name    String?
-  email        String         @unique
-  password     String
-  stripeId     String?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime
-  restaurantId Int?
-  Restaurant   Restaurant?    @relation(fields: [restaurantId], references: [id])
-  Subscription Subscription[]
+  id                 Int            @id @default(autoincrement())
+  email              String         @unique
+  password           String
+  stripeId           String?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime
+  restaurantId       Int?
+  first_name         String?
+  last_name          String?
+  promotional_emails Boolean        @default(false)
+  Restaurant         Restaurant?    @relation(fields: [restaurantId], references: [id])
+  Subscription       Subscription[]
 
   @@schema("public")
 }

@@ -5,8 +5,8 @@ export const actions = {
 	default: async ({ request, locals }) => {
 		const data = await request.formData();
 
-		const email = data.get('email');
-		const password = data.get('password');
+		const email = data.get('email') as string;
+		const password = data.get('password') as string;
 
 		const { data: signInData, error } = await locals.supabase.auth.signInWithPassword({
 			email: email,
