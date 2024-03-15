@@ -1,9 +1,11 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import { fade } from 'svelte/transition';
+	import Icon from '@iconify/svelte';
 
 	export let data: PageData;
 
-	let showBtn = false;
+	let first_name = data.client?.first_name;
 </script>
 
 <div class="mx-auto flex w-full max-w-4xl flex-col gap-8">
@@ -19,12 +21,19 @@
 					<h2 class="text-lg font-semibold">First Name</h2>
 					<p class="text-neutral-600">Your legal first name.</p>
 				</div>
-				<input
-					value={data.client?.first_name}
-					type="text"
-					placeholder="John"
-					class="input flex-1"
-				/>
+				<div class="relative flex-1">
+					<input bind:value={first_name} type="text" placeholder="John" class="input h-full p-4" />
+					{#if first_name !== data.client?.first_name}
+						<button
+							transition:fade={{
+								duration: 100
+							}}
+							class="btn-primary absolute bottom-[10px] right-[10px] !p-1"
+						>
+							<Icon icon="material-symbols-light:save-outline" class="h-6 w-6" />
+						</button>
+					{/if}
+				</div>
 			</div>
 			<div
 				class="flex w-full flex-col gap-2 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm md:flex-row"
