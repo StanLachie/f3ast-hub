@@ -1,8 +1,8 @@
 <script>
-	import Hero from '../components/blocks/Hero.svelte';
-	import LandingHeader from '../components/blocks/LandingHeader.svelte';
-	import LearnMore from '../components/blocks/LearnMore.svelte';
-	import Showcase from '../components/blocks/Showcase.svelte';
+	import Hero from '$lib/components/blocks/Hero.svelte';
+	import LandingHeader from '$lib/components/blocks/LandingHeader.svelte';
+	import LearnMore from '$lib/components/blocks/LearnMore.svelte';
+	import Showcase from '$lib/components/blocks/Showcase.svelte';
 </script>
 
 <LandingHeader />
