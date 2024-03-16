@@ -40,7 +40,7 @@ export const actions = {
 			billing_address_collection: 'auto',
 			line_items: [
 				{
-					price: 'price_1OYiywJkLTgCVE9z34dDdKwq',
+					price: 'price_1OunUpJkLTgCVE9zM6oII4pX',
 					quantity: 1
 				}
 			],
