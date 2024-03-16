@@ -12,6 +12,11 @@ export const load = (async ({ params }) => {
 	if (!restaurant) {
 		return error(404, 'Restaurant not found');
 	}
+
+	if (!restaurant.active) {
+		return error(404, 'Restaurant not active');
+	}
+
 	return {
 		restaurant
 	};

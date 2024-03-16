@@ -283,18 +283,17 @@ model users {
 }
 
 model ClientAccount {
-  id                 Int            @id @default(autoincrement())
-  email              String         @unique
+  id                 Int         @id @default(autoincrement())
+  email              String      @unique
   password           String
   stripeId           String?
-  createdAt          DateTime       @default(now())
+  createdAt          DateTime    @default(now())
   updatedAt          DateTime
   restaurantId       Int?
   first_name         String?
   last_name          String?
-  promotional_emails Boolean        @default(false)
-  Restaurant         Restaurant?    @relation(fields: [restaurantId], references: [id])
-  Subscription       Subscription[]
+  promotional_emails Boolean     @default(false)
+  Restaurant         Restaurant? @relation(fields: [restaurantId], references: [id])
 
   @@schema("public")
 }
@@ -340,18 +339,27 @@ model Restaurant {
   slug          String          @unique
   ClientAccount ClientAccount[]
   MenuCategory  MenuCategory[]
+  Subscription  Subscription?
 
   @@schema("public")
 }
 
 model Subscription {
-  id            Int           @id @default(autoincrement())
-  stripePlanId  String
-  status        String
-  clientId      Int
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime
-  ClientAccount ClientAccount @relation(fields: [clientId], references: [id])
+  id                   Int        @id @default(autoincrement())
+  stripeSubscriptionId String     @unique
+  status               String
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @updatedAt
+  restaurantId         Int        @unique
+  stripeCustomerId     String
+  Restaurant           Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "public_Subscription_restaurantId_fkey")
+
+  @@schema("public")
+}
+
+enum subscription_status {
+  active
+  inactivce
 
   @@schema("public")
 }

@@ -4,6 +4,10 @@
 	export let data: PageData;
 </script>
 
+<meta:head>
+	<title>Dashboard | Welcome</title>
+</meta:head>
+
 <div
 	class="grid w-full grid-cols-2 gap-8 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-8"
 >

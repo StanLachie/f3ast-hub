@@ -6,7 +6,7 @@
 	<h1 class="text-6xl font-bold text-emerald-300">
 		{$page.status}
 	</h1>
-	<span class="text font-semibold">
+	<span class="text-lg font-semibold text-neutral-600">
 		{$page.error?.message}
 	</span>
 </div>

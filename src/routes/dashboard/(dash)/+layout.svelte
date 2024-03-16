@@ -9,6 +9,16 @@
 			name: 'Dashboard',
 			icon: 'mingcute:home-2-fill',
 			link: '/dashboard/welcome'
+		},
+		{
+			name: 'Restaurant',
+			icon: 'mingcute:shop-fill',
+			link: '/dashboard/restaurant'
+		},
+		{
+			name: 'Billing',
+			icon: 'mingcute:bank-card-fill',
+			link: '/dashboard/billing'
 		}
 	];
 
@@ -39,6 +49,7 @@
 			{#each sidebarItems as item}
 				<a
 					href={item.link}
+					title={item.name}
 					class="group flex h-16 items-center justify-center text-2xl hover:bg-neutral-100"
 				>
 					<Icon
@@ -52,6 +63,7 @@
 			{#each accountItems as item}
 				<a
 					href={item.link}
+					title={item.name}
 					class="group flex h-16 items-center justify-center text-2xl hover:bg-neutral-100"
 				>
 					<Icon

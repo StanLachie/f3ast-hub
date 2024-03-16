@@ -23,6 +23,10 @@
 	});
 </script>
 
+<meta:head>
+	<title>Dashboard | Profile</title>
+</meta:head>
+
 <div class="mx-auto flex w-full max-w-4xl flex-col gap-8">
 	<div>
 		<h1 class="my-2 text-3xl font-semibold">Personal Info</h1>
