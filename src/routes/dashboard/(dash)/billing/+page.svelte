@@ -10,7 +10,7 @@
 
 <div class="mx-auto flex w-full max-w-4xl flex-col gap-8">
 	<div>
-		<h1 class="my-2 text-3xl font-semibold">{data.restaurant.name} Billing</h1>
+		<h1 class="my-2 text-3xl font-semibold">Restaurant Billing</h1>
 		<p class="text-neutral-600">Update your billing details here.</p>
 		<div class="my-6 flex flex-col gap-4">
 			<div

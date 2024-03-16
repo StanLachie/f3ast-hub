@@ -325,6 +325,7 @@ model MenuItem {
 model Restaurant {
   id            Int             @id @default(autoincrement())
   active        Boolean         @default(false)
+  published     Boolean         @default(false)
   name          String
   address       String
   bio           String?

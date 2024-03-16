@@ -13,7 +13,7 @@ export const load = (async ({ params }) => {
 		return error(404, 'Restaurant not found');
 	}
 
-	if (!restaurant.active) {
+	if (!restaurant.active || !restaurant.published) {
 		return error(404, 'Restaurant not active');
 	}
 
