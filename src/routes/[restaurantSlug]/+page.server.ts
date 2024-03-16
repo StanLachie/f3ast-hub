@@ -17,7 +17,17 @@ export const load = (async ({ params }) => {
 		return error(404, 'Restaurant not active');
 	}
 
+	const menuCategories = await prisma.menuCategory.findMany({
+		where: {
+			restaurantId: restaurant.id
+		},
+		include: {
+			MenuItems: true
+		}
+	});
+
 	return {
-		restaurant
+		restaurant,
+		categories: menuCategories
 	};
 }) satisfies PageServerLoad;

@@ -44,3 +44,18 @@
 		{data.restaurant.bio}
 	</div>
 </div>
+<div class="mt-8 flex flex-col gap-4">
+	{#each data.categories as category}
+		<div class="flex flex-col gap-2">
+			<h1 class="text-2xl font-semibold">{category.name}</h1>
+			{#each category.MenuItems as item}
+				<div class="flex items-center justify-between">
+					<div class="flex flex-col">
+						<h2 class="text-lg font-semibold">{item.name}</h2>
+						<p class="text-neutral-500">${item.price.toFixed(2)}</p>
+					</div>
+				</div>
+			{/each}
+		</div>
+	{/each}
+</div>

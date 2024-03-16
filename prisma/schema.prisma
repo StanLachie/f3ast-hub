@@ -305,7 +305,7 @@ model MenuCategory {
   restaurantId Int
   active       Boolean    @default(true)
   Restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
-  MenuItem     MenuItem[]
+  MenuItems    MenuItem[]
 
   @@schema("public")
 }
