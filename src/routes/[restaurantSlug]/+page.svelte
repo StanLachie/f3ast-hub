@@ -63,7 +63,7 @@
 	</div>
 </div>
 <div class="mt-6 space-y-6">
-	{#each data.categories as category}
+	{#each data.categories.sort((a, b) => a.sortingIndex - b.sortingIndex) as category}
 		<div class="space-y-3">
 			<div class="flex items-center justify-between">
 				<h1 class="text-2xl font-semibold">{category.name}</h1>

@@ -19,7 +19,7 @@
 </meta:head>
 
 {#if data.subscription?.status === 'active'}
-	<div class="mx-auto flex w-full max-w-4xl flex-col gap-8">
+	<div class="mx-auto flex w-full max-w-3xl flex-col gap-8">
 		<div>
 			<h1 class="my-2 text-3xl font-semibold">Restaurant Info</h1>
 			<p class="text-neutral-600">Update your restaurant's details here.</p>
@@ -107,7 +107,6 @@
 							<option value="amber">Amber</option>
 							<option value="bubblegum">Bubblegum</option>
 							<option value="f3ast">F3AST</option>
-							
 						</select>
 						{#if restaurantInfo.theme !== data.restaurant?.theme}
 							<button

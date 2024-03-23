@@ -8,7 +8,7 @@
 	<title>Dashboard | Billing</title>
 </meta:head>
 
-<div class="mx-auto flex w-full max-w-4xl flex-col gap-8">
+<div class="mx-auto flex w-full max-w-3xl flex-col gap-8">
 	<div>
 		<h1 class="my-2 text-3xl font-semibold">Restaurant Billing</h1>
 		<p class="text-neutral-600">Update your billing details here.</p>

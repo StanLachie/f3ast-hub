@@ -27,7 +27,7 @@
 	<title>Dashboard | Profile</title>
 </meta:head>
 
-<div class="mx-auto flex w-full max-w-4xl flex-col gap-8">
+<div class="mx-auto flex w-full max-w-3xl flex-col gap-8">
 	<div>
 		<h1 class="my-2 text-3xl font-semibold">Personal Info</h1>
 		<p class="text-neutral-600">Update your personal details here.</p>
