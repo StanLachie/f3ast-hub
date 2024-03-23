@@ -106,6 +106,7 @@
 							<option value="lavender">Lavender</option>
 							<option value="amber">Amber</option>
 							<option value="f3ast">F3ast</option>
+							<option value="pine">Pine</option>
 						</select>
 						{#if restaurantInfo.theme !== data.restaurant?.theme}
 							<button

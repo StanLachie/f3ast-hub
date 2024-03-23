@@ -86,6 +86,17 @@ const themes = {
 			socialButton: `bg-emerald-300 text-neutral-950 p-1.5 rounded-lg shadow-md hover:bg-emerald-400 border border-emerald-950`,
 			scrollButton: `bg-emerald-300 text-neutral-950 p-1.5 rounded-lg shadow-md hover:bg-emerald-400 border border-emerald-950`
 		}
+	},
+	pine: {
+		colors: {
+			background: 'bg-[#e1d3bc]',
+			primaryText: 'text-[#456140]',
+			secondaryText: 'text-neutral-700'
+		},
+		components: {
+			socialButton: `bg-[#456140] text-[#e1d3bc] p-1.5 rounded-full shadow-md hover:bg-[#354a31]`,
+			scrollButton: `bg-[#456140] text-[#e1d3bc] p-1.5 rounded-full shadow-md hover:bg-[#354a31]`
+		}
 	}
 };
 
