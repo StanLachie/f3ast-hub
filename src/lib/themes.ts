@@ -107,7 +107,18 @@ const themes = {
 		},
 		components: {
 			socialButton: `bg-[#00aeef] text-neutral-800 p-1.5 rounded-lg shadow-md hover:bg-[#0494c9]`,
-			scrollButton: `bg-[#00aeef] text-neutral-800 p-1.5 rounded-lg shadow-md hover:bg-[#0494c9]`
+			scrollButton: `bg-[#00aeef] text-neutral-800 p-1.5 rounded-full shadow-md hover:bg-[#0494c9]`
+		}
+	},
+	ocean: {
+		colors: {
+			background: 'bg-blue-50',
+			primaryText: 'text-sky-500',
+			secondaryText: 'text-[#58c9f9]'
+		},
+		components: {
+			socialButton: `bg-sky-500 text-blue-50 p-1.5 rounded-full shadow-md hover:bg-sky-600`,
+			scrollButton: `bg-sky-500 text-blue-50 p-1.5 rounded-full shadow-md hover:bg-sky-600`
 		}
 	}
 };

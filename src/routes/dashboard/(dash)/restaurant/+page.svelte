@@ -103,6 +103,7 @@
 							<option value="cream">Cream</option>
 							<option value="pine">Pine</option>
 							<option value="chocolate">Chocolate</option>
+							<option value="ocean">Ocean</option>
 							<option value="lavender">Lavender</option>
 							<option value="amber">Amber</option>
 							<option value="pluto">Pluto</option>
