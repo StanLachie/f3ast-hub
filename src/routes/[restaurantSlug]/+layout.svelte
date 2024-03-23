@@ -15,7 +15,7 @@
 	ThemeStore.set(themes[data.restaurant.theme]);
 </script>
 
-<div class={`h-dvh w-screen ${currentTheme.colors.background}`}>
+<div class={`h-dvh w-screen ${currentTheme.colors.background} ${currentTheme.colors.primaryText}`}>
 	<div class="mx-auto h-1/2 max-w-5xl p-2 sm:p-8 md:p-16">
 		<slot />
 	</div>

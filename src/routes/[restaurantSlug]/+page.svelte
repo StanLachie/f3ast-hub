@@ -11,6 +11,11 @@
 
 	export let data: PageData;
 
+	let currentTheme = themes.default;
+	ThemeStore.subscribe((value) => {
+		currentTheme = value;
+	});
+
 	let scrollContainer: HTMLDivElement;
 </script>
 
@@ -37,7 +42,7 @@
 	<h1 class="text-2xl font-semibold">
 		{data.restaurant.name}
 	</h1>
-	<div class="group flex items-center gap-1 text-neutral-500">
+	<div class="group flex items-center gap-1 {currentTheme.colors.secondaryText}">
 		<Icon icon="ion:location" class="h-4 w-4 group-hover:text-neutral-600" />
 		<a
 			href={`https://www.google.com/maps/search/?api=1&query=${data.restaurant.address}`}
@@ -48,7 +53,7 @@
 			{data.restaurant.address}
 		</a>
 	</div>
-	<div class="text-pr max-w-xl text-sm text-neutral-500">
+	<div class="text-pr max-w-xl text-sm {currentTheme.colors.secondaryText}">
 		{data.restaurant.bio}
 	</div>
 
@@ -73,7 +78,7 @@
 						<img src={item.img} alt={item.name} class="h-36 w-36 rounded-lg object-cover" />
 						<div class="flex flex-col">
 							<span class="text-md font-semibold">{item.name}</span>
-							<span class="text-neutral-500">${item.price.toFixed(2)}</span>
+							<span class={currentTheme.colors.secondaryText}>${item.price.toFixed(2)}</span>
 						</div>
 					</div>
 				{/each}

@@ -2,7 +2,8 @@ const themes = {
 	default: {
 		colors: {
 			background: 'bg-white',
-			text: 'text-black'
+			primaryText: 'text-black',
+			secondaryText: 'text-neutral-500'
 		},
 		components: {
 			socialButton: `bg-white border border-neutral-100 text-neutral-900 p-1.5 rounded-lg shadow-md hover:bg-neutral-100`,
@@ -12,7 +13,8 @@ const themes = {
 	modern: {
 		colors: {
 			background: 'bg-white',
-			text: 'text-black'
+			primaryText: 'text-black',
+			secondaryText: 'text-neutral-500'
 		},
 		components: {
 			socialButton: `bg-neutral-900 text-white p-1.5 rounded-lg shadow-md hover:bg-neutral-600`,
@@ -22,7 +24,8 @@ const themes = {
 	pink: {
 		colors: {
 			background: 'bg-pink-50',
-			text: 'text-white'
+			primaryText: 'text-black',
+			secondaryText: 'text-neutral-500'
 		},
 		components: {
 			socialButton: `bg-pink-500 text-white p-1.5 rounded-lg shadow-md hover:bg-pink-600`,
@@ -32,7 +35,8 @@ const themes = {
 	chicken: {
 		colors: {
 			background: 'bg-pink-200',
-			text: 'text-white'
+			primaryText: 'text-black',
+			secondaryText: 'text-neutral-500'
 		},
 		components: {
 			socialButton: `bg-pink-500 text-white p-1.5 rounded-lg shadow-md hover:bg-pink-600`,
