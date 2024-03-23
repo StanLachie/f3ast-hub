@@ -9,7 +9,7 @@
 		currentTheme = value;
 	});
 
-	export let scrollContainer: HTMLDivElement;
+	export let scrollContainer: HTMLDivElement | undefined;
 
 	export let direction: 'left' | 'right';
 
@@ -18,7 +18,7 @@
 
 <button
 	class={currentTheme.components.scrollButton}
-	on:click={() => scrollContainer.scrollBy({ left: amount, behavior: 'smooth' })}
+	on:click={() => scrollContainer && scrollContainer.scrollBy({ left: amount, behavior: 'smooth' })}
 >
 	<Icon icon={`mingcute:${direction}-fill`} class="h-5 w-5" />
 </button>

@@ -16,7 +16,7 @@
 		currentTheme = value;
 	});
 
-	let scrollContainer: HTMLDivElement;
+	let scrollContainers: HTMLDivElement[] = [];
 </script>
 
 <meta:head>
@@ -63,16 +63,16 @@
 	</div>
 </div>
 <div class="mt-6 space-y-6">
-	{#each data.categories.sort((a, b) => a.sortingIndex - b.sortingIndex) as category}
+	{#each data.categories.sort((a, b) => a.sortingIndex - b.sortingIndex) as category, index}
 		<div class="space-y-3">
 			<div class="flex items-center justify-between">
 				<h1 class="text-2xl font-semibold">{category.name}</h1>
 				<div class="flex gap-3">
-					<ScrollButton {scrollContainer} amount={-156} direction="left" />
-					<ScrollButton {scrollContainer} amount={156} direction="right" />
+					<ScrollButton scrollContainer={scrollContainers[index]} amount={-156} direction="left" />
+					<ScrollButton scrollContainer={scrollContainers[index]} amount={156} direction="right" />
 				</div>
 			</div>
-			<div class="no-scrollbar flex gap-3 overflow-x-auto" bind:this={scrollContainer}>
+			<div class="no-scrollbar flex gap-3 overflow-x-auto" bind:this={scrollContainers[index]}>
 				{#each category.MenuItems as item}
 					<div class="flex min-w-36 flex-col gap-1">
 						<img src={item.img} alt={item.name} class="h-36 w-36 rounded-lg object-cover" />
