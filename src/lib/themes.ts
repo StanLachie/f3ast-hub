@@ -64,6 +64,17 @@ const themes = {
 			socialButton: `bg-[#1a1006] text-[#efdfc5] p-1.5 rounded-md shadow-md hover:bg-[#412a10]`,
 			scrollButton: `bg-[#1a1006] text-[#efdfc5] p-1.5 rounded-full shadow-md hover:bg-[#412a10]`
 		}
+	},
+	lavender: {
+		colors: {
+			background: 'bg-neutral-50',
+			primaryText: 'text-neutral-800',
+			secondaryText: 'text-neutral-700'
+		},
+		components: {
+			socialButton: `bg-purple-400 text-neutral-50 p-1.5 rounded-lg shadow-md hover:bg-purple-500`,
+			scrollButton: `bg-purple-400 text-neutral-50 p-1.5 rounded-full shadow-md hover:bg-purple-500`
+		}
 	}
 };
 
