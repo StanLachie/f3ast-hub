@@ -43,15 +43,15 @@ const themes = {
 			scrollButton: `bg-pink-500 text-white p-1.5 rounded-full shadow-md hover:bg-pink-600`
 		}
 	},
-	chicken: {
+	chocolate: {
 		colors: {
-			background: 'bg-emerald-100',
-			primaryText: 'text-green-500',
-			secondaryText: 'text-purple-500'
+			background: 'bg-[#271E16]',
+			primaryText: 'text-neutral-50',
+			secondaryText: 'text-neutral-200'
 		},
 		components: {
-			socialButton: `bg-pink-500 text-white p-1.5 rounded-lg shadow-md hover:bg-pink-600`,
-			scrollButton: `bg-pink-500 text-white p-1.5 rounded-full shadow-md hover:bg-pink-600`
+			socialButton: `bg-neutral-50 text-[#271E16] p-1.5 rounded-full shadow-md hover:bg-neutral-300`,
+			scrollButton: `bg-neutral-50 text-[#271E16] p-1.5 rounded-full shadow-md hover:bg-neutral-300`
 		}
 	}
 };
