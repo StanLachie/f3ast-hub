@@ -53,6 +53,17 @@ const themes = {
 			socialButton: `bg-neutral-50 text-[#271E16] p-1.5 rounded-full shadow-md hover:bg-neutral-300`,
 			scrollButton: `bg-neutral-50 text-[#271E16] p-1.5 rounded-full shadow-md hover:bg-neutral-300`
 		}
+	},
+	cream: {
+		colors: {
+			background: 'bg-[#271E16]',
+			primaryText: 'text-neutral-50',
+			secondaryText: 'text-neutral-200'
+		},
+		components: {
+			socialButton: `bg-neutral-50 text-[#271E16] p-1.5 rounded-full shadow-md hover:bg-neutral-300`,
+			scrollButton: `bg-neutral-50 text-[#271E16] p-1.5 rounded-full shadow-md hover:bg-neutral-300`
+		}
 	}
 };
 

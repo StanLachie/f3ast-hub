@@ -103,6 +103,7 @@
 							<option value="modern">Modern</option>
 							<option value="pink">Pink</option>
 							<option value="chocolate">Chocolate</option>
+							<option value="cream">Cream</option>
 						</select>
 						{#if restaurantInfo.theme !== data.restaurant?.theme}
 							<button
