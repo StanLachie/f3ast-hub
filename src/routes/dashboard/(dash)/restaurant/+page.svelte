@@ -105,8 +105,10 @@
 							<option value="chocolate">Chocolate</option>
 							<option value="lavender">Lavender</option>
 							<option value="amber">Amber</option>
+							<option value="pluto">Pluto</option>
 							<option value="bubblegum">Bubblegum</option>
 							<option value="f3ast">F3AST</option>
+
 							
 						</select>
 						{#if restaurantInfo.theme !== data.restaurant?.theme}

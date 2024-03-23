@@ -98,6 +98,17 @@ const themes = {
 			socialButton: `bg-emerald-300 text-neutral-950 p-1.5 rounded-lg shadow-md hover:bg-emerald-400 border border-emerald-950`,
 			scrollButton: `bg-emerald-300 text-neutral-950 p-1.5 rounded-lg shadow-md hover:bg-emerald-400 border border-emerald-950`
 		}
+	},
+	pluto: {
+		colors: {
+			background: 'bg-neutral-800',
+			primaryText: 'text-[#00aeef]',
+			secondaryText: 'text-neutral-100'
+		},
+		components: {
+			socialButton: `bg-[#00aeef] text-neutral-800 p-1.5 rounded-lg shadow-md hover:bg-[#0494c9]`,
+			scrollButton: `bg-[#00aeef] text-neutral-800 p-1.5 rounded-lg shadow-md hover:bg-[#0494c9]`
+		}
 	}
 };
 
