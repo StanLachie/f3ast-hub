@@ -99,6 +99,7 @@
 							class="input h-full appearance-none p-4"
 						>
 							<option value="default">Default</option>
+							<option value="dark">Dark</option>
 							<option value="modern">Modern</option>
 							<option value="pink">Pink</option>
 							<option value="chicken">Chicken</option>
