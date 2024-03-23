@@ -38,7 +38,7 @@
 			>
 				<p>Loading...</p>
 			</div>
-		{:then}
+		{:then client}
 			<div class="my-6 flex flex-col gap-4">
 				<div
 					class="flex w-full flex-col gap-2 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm md:flex-row"
@@ -63,7 +63,7 @@
 							placeholder="John"
 							class="input h-full p-4"
 						/>
-						{#if personalInfo.first_name !== data.client?.first_name}
+						{#if personalInfo.first_name !== client?.first_name}
 							<button
 								transition:fade={{
 									duration: 100
@@ -98,7 +98,7 @@
 							placeholder="Doe"
 							class="input h-full p-4"
 						/>
-						{#if personalInfo.last_name !== data.client?.last_name}
+						{#if personalInfo.last_name !== client?.last_name}
 							<button
 								transition:fade={{
 									duration: 100
@@ -110,33 +110,6 @@
 						{/if}
 					</form>
 				</div>
-				<!-- 
-			<div
-				class="flex w-full flex-col gap-2 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm md:flex-row"
-			>
-				<div class="flex-1">
-					<h2 class="text-lg font-semibold">Email</h2>
-					<p class="text-neutral-600">Your email address.</p>
-				</div>
-				<div class="relative flex-1">
-					<input
-						bind:value={email}
-						type="email"
-						placeholder="johndoe@email.com"
-						class="input h-full p-4"
-					/>
-					{#if email !== data.client?.email}
-						<button
-							transition:fade={{
-								duration: 100
-							}}
-							class="btn-primary absolute bottom-[10px] right-[10px] !p-1"
-						>
-							<Icon icon="material-symbols-light:save-outline" class="h-6 w-6" />
-						</button>
-					{/if}
-				</div>
-			</div> -->
 			</div>
 		{/await}
 	</div>
@@ -151,7 +124,7 @@
 			>
 				<p>Loading...</p>
 			</div>
-		{:then}
+		{:then client}
 			<div class="my-6 flex flex-col gap-4">
 				<div
 					class="flex w-full flex-col gap-2 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm md:flex-row"
