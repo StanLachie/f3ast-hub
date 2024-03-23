@@ -83,8 +83,8 @@ const themes = {
 			secondaryText: 'text-neutral-600'
 		},
 		components: {
-			socialButton: `bg-emerald-300 text-neutral-950 p-1.5 rounded-lg shadow-md hover:emerald-400 border border-emerald-950`,
-			scrollButton: `bg-emerald-300 text-neutral-950 p-1.5 rounded-lg shadow-md hover:emerald-400 border border-emerald-950`
+			socialButton: `bg-emerald-300 text-neutral-950 p-1.5 rounded-lg shadow-md hover:bg-emerald-400 border border-emerald-950`,
+			scrollButton: `bg-emerald-300 text-neutral-950 p-1.5 rounded-lg shadow-md hover:bg-emerald-400 border border-emerald-950`
 		}
 	}
 };
