@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import themes from '$lib/themes';
 	import type { PageData } from './$types';
 	import Icon from '@iconify/svelte';
 	import { fade } from 'svelte/transition';
@@ -8,6 +9,7 @@
 
 	let restaurantInfo = {
 		name: data.restaurant.name,
+		theme: data.restaurant.theme,
 		address: data.restaurant.address
 	};
 </script>
@@ -62,6 +64,45 @@
 							class="input h-full p-4"
 						/>
 						{#if restaurantInfo.name !== data.restaurant?.name}
+							<button
+								transition:fade={{
+									duration: 100
+								}}
+								class="btn-primary absolute bottom-[10px] right-[10px] !p-1"
+							>
+								<Icon icon="material-symbols-light:save-outline" class="h-6 w-6" />
+							</button>
+						{/if}
+					</form>
+				</div>
+				<!-- Theme -->
+				<div
+					class="flex w-full flex-col gap-2 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm md:flex-row"
+				>
+					<div class="flex-1">
+						<h2 class="text-lg font-semibold">Theme</h2>
+						<p class="text-neutral-600">Your restaurant's theme.</p>
+					</div>
+					<form
+						class="relative flex-1"
+						method="post"
+						action="?/update"
+						use:enhance={() => {
+							return async ({ update }) => {
+								update({ reset: false });
+							};
+						}}
+					>
+						<select
+							bind:value={restaurantInfo.theme}
+							name="theme"
+							class="input h-full appearance-none p-4"
+						>
+							<option value="default">Default</option>
+							<option value="modern">Modern</option>
+							<option value="pink">Pink</option>
+						</select>
+						{#if restaurantInfo.theme !== data.restaurant?.theme}
 							<button
 								transition:fade={{
 									duration: 100

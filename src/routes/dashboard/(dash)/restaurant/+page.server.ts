@@ -31,6 +31,7 @@ export const actions = {
 
 		const data = await request.formData();
 		const name = data.get('name') as string;
+		const theme = data.get('theme') as string;
 		const address = data.get('address') as string;
 
 		const { data: userData } = await locals.supabase.auth.getUser();
@@ -56,6 +57,16 @@ export const actions = {
 				},
 				data: {
 					address: address
+				}
+			});
+			return { success: true };
+		} else if (theme) {
+			await prisma.restaurant.update({
+				where: {
+					id: restaurant.id
+				},
+				data: {
+					theme: theme
 				}
 			});
 			return { success: true };
