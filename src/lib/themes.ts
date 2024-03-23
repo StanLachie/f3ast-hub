@@ -6,30 +6,19 @@ const themes = {
 			secondaryText: 'text-neutral-500'
 		},
 		components: {
-			socialButton: `bg-white border border-neutral-100 text-neutral-900 p-1.5 rounded-lg shadow-md hover:bg-neutral-100`,
-			scrollButton: `bg-white border border-neutral-100 text-neutral-900 p-1.5 rounded-full shadow-md hover:bg-neutral-100`
+			socialButton: `bg-neutral-900 text-white p-1.5 rounded-lg shadow-md hover:bg-neutral-600`,
+			scrollButton: `bg-neutral-900 text-white p-1.5 rounded-full shadow-md hover:bg-neutral-600`
 		}
 	},
 	dark: {
 		colors: {
 			background: 'bg-neutral-900',
 			primaryText: 'text-neutral-100',
-			secondaryText: 'text-neutral-200'
+			secondaryText: 'text-neutral-300'
 		},
 		components: {
 			socialButton: 'bg-neutral-800 text-white p-1.5 rounded-lg shadow-md hover:bg-neutral-600',
 			scrollButton: 'bg-neutral-800 text-white p-1.5 rounded-full shadow-md hover:bg-neutral-600'
-		}
-	},
-	modern: {
-		colors: {
-			background: 'bg-white',
-			primaryText: 'text-black',
-			secondaryText: 'text-neutral-500'
-		},
-		components: {
-			socialButton: `bg-neutral-900 text-white p-1.5 rounded-lg shadow-md hover:bg-neutral-600`,
-			scrollButton: `bg-neutral-900 text-white p-1.5 rounded-full shadow-md hover:bg-neutral-600`
 		}
 	},
 	pink: {
@@ -74,6 +63,28 @@ const themes = {
 		components: {
 			socialButton: `bg-purple-400 text-neutral-50 p-1.5 rounded-lg shadow-md hover:bg-purple-500`,
 			scrollButton: `bg-purple-400 text-neutral-50 p-1.5 rounded-full shadow-md hover:bg-purple-500`
+		}
+	},
+	amber: {
+		colors: {
+			background: 'bg-neutral-950',
+			primaryText: 'text-white',
+			secondaryText: 'text-neutral-300'
+		},
+		components: {
+			socialButton: `bg-orange-400 text-neutral-950 p-1.5 rounded-md shadow-md hover:bg-orange-500`,
+			scrollButton: `bg-orange-400 text-neutral-950 p-1.5 rounded-full shadow-md hover:bg-orange-500`
+		}
+	},
+	f3ast: {
+		colors: {
+			background: 'bg-neutral-50',
+			primaryText: 'text-black',
+			secondaryText: 'text-neutral-600'
+		},
+		components: {
+			socialButton: `bg-emerald-300 text-neutral-950 p-1.5 rounded-lg shadow-md hover:emerald-400 border border-emerald-950`,
+			scrollButton: `bg-emerald-300 text-neutral-950 p-1.5 rounded-lg shadow-md hover:emerald-400 border border-emerald-950`
 		}
 	}
 };
