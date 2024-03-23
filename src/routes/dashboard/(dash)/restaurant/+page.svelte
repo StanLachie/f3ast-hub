@@ -100,7 +100,7 @@
 						>
 							<option value="default">Default</option>
 							<option value="dark">Dark</option>
-							<option value="pink">Pink</option>
+							<option value="bubblegum">Bubblegum</option>
 							<option value="chocolate">Chocolate</option>
 							<option value="cream">Cream</option>
 							<option value="lavender">Lavender</option>

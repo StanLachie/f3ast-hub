@@ -21,14 +21,14 @@ const themes = {
 			scrollButton: 'bg-neutral-800 text-white p-1.5 rounded-full shadow-md hover:bg-neutral-600'
 		}
 	},
-	pink: {
+	bubblegum: {
 		colors: {
 			background: 'bg-pink-50',
-			primaryText: 'text-black',
-			secondaryText: 'text-neutral-500'
+			primaryText: 'text-pink-500',
+			secondaryText: 'text-pink-400'
 		},
 		components: {
-			socialButton: `bg-pink-500 text-white p-1.5 rounded-lg shadow-md hover:bg-pink-600`,
+			socialButton: `bg-pink-500 text-white p-1.5 rounded-full shadow-md hover:bg-pink-600`,
 			scrollButton: `bg-pink-500 text-white p-1.5 rounded-full shadow-md hover:bg-pink-600`
 		}
 	},
