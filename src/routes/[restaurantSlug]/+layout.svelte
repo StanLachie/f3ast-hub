@@ -12,7 +12,7 @@
 		currentTheme = value;
 	});
 
-	ThemeStore.set(themes[data.restaurant.theme]);
+	ThemeStore.set(themes[data.restaurant.theme] || themes.default);
 </script>
 
 <div class={`h-dvh w-screen ${currentTheme.colors.background} ${currentTheme.colors.primaryText}`}>

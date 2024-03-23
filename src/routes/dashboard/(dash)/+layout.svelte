@@ -16,6 +16,11 @@
 			link: '/dashboard/restaurant'
 		},
 		{
+			name: 'Menu',
+			icon: 'mingcute:book-6-fill',
+			link: '/dashboard/menu'
+		},
+		{
 			name: 'Billing',
 			icon: 'mingcute:bank-card-fill',
 			link: '/dashboard/billing'
