@@ -21,7 +21,17 @@ const themes = {
 	},
 	pink: {
 		colors: {
-			background: 'bg-pink-100',
+			background: 'bg-pink-50',
+			text: 'text-white'
+		},
+		components: {
+			socialButton: `bg-pink-500 text-white p-1.5 rounded-lg shadow-md hover:bg-pink-600`,
+			scrollButton: `bg-pink-500 text-white p-1.5 rounded-full shadow-md hover:bg-pink-600`
+		}
+	},
+	chicken: {
+		colors: {
+			background: 'bg-pink-200',
 			text: 'text-white'
 		},
 		components: {

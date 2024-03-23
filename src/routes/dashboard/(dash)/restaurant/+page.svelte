@@ -101,6 +101,7 @@
 							<option value="default">Default</option>
 							<option value="modern">Modern</option>
 							<option value="pink">Pink</option>
+							<option value="chicken">Chicken</option>
 						</select>
 						{#if restaurantInfo.theme !== data.restaurant?.theme}
 							<button
