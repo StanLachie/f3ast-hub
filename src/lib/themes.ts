@@ -56,13 +56,13 @@ const themes = {
 	},
 	cream: {
 		colors: {
-			background: 'bg-[#271E16]',
-			primaryText: 'text-neutral-50',
-			secondaryText: 'text-neutral-200'
+			background: 'bg-[#efdfc5]',
+			primaryText: 'text-[#1a1006]',
+			secondaryText: 'text-[#412a10]'
 		},
 		components: {
-			socialButton: `bg-neutral-50 text-[#271E16] p-1.5 rounded-full shadow-md hover:bg-neutral-300`,
-			scrollButton: `bg-neutral-50 text-[#271E16] p-1.5 rounded-full shadow-md hover:bg-neutral-300`
+			socialButton: `bg-[#1a1006] text-[#efdfc5] p-1.5 rounded-md shadow-md hover:bg-[#412a10]`,
+			scrollButton: `bg-[#1a1006] text-[#efdfc5] p-1.5 rounded-full shadow-md hover:bg-[#412a10]`
 		}
 	}
 };
