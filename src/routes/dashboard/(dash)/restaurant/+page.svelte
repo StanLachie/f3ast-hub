@@ -100,13 +100,14 @@
 						>
 							<option value="default">Default</option>
 							<option value="dark">Dark</option>
-							<option value="bubblegum">Bubblegum</option>
-							<option value="chocolate">Chocolate</option>
 							<option value="cream">Cream</option>
+							<option value="pine">Pine</option>
+							<option value="chocolate">Chocolate</option>
 							<option value="lavender">Lavender</option>
 							<option value="amber">Amber</option>
-							<option value="f3ast">F3ast</option>
-							<option value="pine">Pine</option>
+							<option value="bubblegum">Bubblegum</option>
+							<option value="f3ast">F3AST</option>
+							
 						</select>
 						{#if restaurantInfo.theme !== data.restaurant?.theme}
 							<button
