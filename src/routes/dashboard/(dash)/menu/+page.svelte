@@ -62,6 +62,10 @@
 	};
 </script>
 
+<meta:head>
+	<title>Dashboard | Menu Editor</title>
+</meta:head>
+
 <div class="mx-auto flex w-full max-w-3xl flex-col gap-8">
 	<div>
 		<h1 class="my-2 text-3xl font-semibold">Menu Editor</h1>
