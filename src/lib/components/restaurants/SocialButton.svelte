@@ -18,5 +18,5 @@
 	}}
 	class={currentTheme.components.socialButton}
 >
-	<Icon {icon} class="h-5 w-5" />
+	<Icon {icon} class="h-6 w-6" />
 </button>

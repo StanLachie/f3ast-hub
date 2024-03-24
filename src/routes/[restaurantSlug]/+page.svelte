@@ -57,7 +57,7 @@
 		{data.restaurant.bio}
 	</div>
 
-	<div>
+	<div class="mt-2 flex gap-3">
 		<SocialButton url="https://www.facebook.com/swagmanspies/" icon="mingcute:facebook-fill" />
 		<SocialButton url="https://www.facebook.com/swagmanspies/" icon="mingcute:ins-line" />
 	</div>
