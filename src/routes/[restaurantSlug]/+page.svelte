@@ -74,15 +74,21 @@
 				</div>
 			</div>
 			<div class="no-scrollbar flex gap-3 overflow-x-auto" bind:this={scrollContainers[index]}>
-				{#each category.MenuItems as item}
-					<div class="flex min-w-36 flex-col gap-1">
-						<img src={item.img} alt={item.name} class="h-36 w-36 rounded-lg object-cover" />
-						<div class="flex flex-col">
-							<span class="text-md font-semibold">{item.name}</span>
-							<span class={currentTheme.colors.secondaryText}>${item.price.toFixed(2)}</span>
-						</div>
+				{#if category.MenuItems.length === 0}
+					<div class="my-12 w-full text-center">
+						<p class="text-neutral-500">No items in this category.</p>
 					</div>
-				{/each}
+				{:else}
+					{#each category.MenuItems.sort((a, b) => a.sortingIndex - b.sortingIndex) as item}
+						<div class="flex min-w-36 flex-col gap-1">
+							<img src={item.img} alt={item.name} class="h-36 w-36 rounded-lg object-cover" />
+							<div class="flex flex-col">
+								<span class="text-md font-semibold">{item.name}</span>
+								<span class={currentTheme.colors.secondaryText}>${item.price.toFixed(2)}</span>
+							</div>
+						</div>
+					{/each}
+				{/if}
 			</div>
 		</div>
 	{/each}

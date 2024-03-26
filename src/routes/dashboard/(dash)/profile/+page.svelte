@@ -17,10 +17,6 @@
 	};
 
 	let promotionalEmailForm: HTMLFormElement;
-
-	onMount(() => {
-		console.log(personalInfo);
-	});
 </script>
 
 <meta:head>

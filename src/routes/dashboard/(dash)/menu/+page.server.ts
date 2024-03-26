@@ -48,8 +48,6 @@ export const load = (async ({ locals }) => {
 		}
 	}
 
-	console.log('menuItems', menuItems);
-
 	return {
 		session,
 		restaurant,

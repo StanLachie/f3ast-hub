@@ -4,7 +4,7 @@ import prisma from '$lib/prisma';
 
 export const PUT: RequestHandler = async ({ request, locals }) => {
 	const body = await request.json();
-	const { items } = body;
+	const { item } = body;
 
 	const session = await locals.getSession();
 
@@ -32,16 +32,21 @@ export const PUT: RequestHandler = async ({ request, locals }) => {
 		redirect(302, '/dashboard/login');
 	}
 
-	for (const item of items) {
-		await prisma.menuItem.update({
-			where: {
-				id: item.dbId
-			},
-			data: {
-				sortingIndex: item.sortingIndex
-			}
-		});
-	}
+	console.log(item);
 
-	return json({ items: items });
+	await prisma.menuItem.update({
+		where: {
+			id: item.dbId
+		},
+		data: {
+			name: item.name,
+			description: item.description,
+			price: parseFloat(item.price),
+			categoryId: parseInt(item.category)
+		}
+	});
+
+	console.log('Updated item', item.dbId);
+
+	return json({ item: item });
 };

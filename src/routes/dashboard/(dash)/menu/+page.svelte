@@ -5,6 +5,7 @@
 	import type { PageData } from './$types';
 	import Icon from '@iconify/svelte';
 	import Modal from '$lib/components/Modal.svelte';
+	import { json } from '@sveltejs/kit';
 
 	export let data: PageData;
 
@@ -27,7 +28,8 @@
 				id: item.sortingIndex,
 				dbId: item.id,
 				name: item.name,
-				price: item.price
+				price: item.price,
+				category: item.categoryId
 			};
 		});
 
@@ -130,7 +132,6 @@
 						type="submit"
 						class="btn-primary w-full md:w-auto"
 						on:click={() => {
-							console.log('create');
 							openModal = 'categoryCreate';
 						}}
 					>
@@ -274,8 +275,21 @@
 								<Modal open={true} onClose={closeModal}>
 									<form
 										class="flex flex-col gap-3"
-										method="post"
-										action={`?/editCategory&id=${item.dbId}`}
+										on:submit={(e) => {
+											if (e.target.name.value && e.target.price.value && e.target.category.value) {
+												fetch(`/api/item/edit`, {
+													method: 'PUT',
+													body: JSON.stringify({
+														item: {
+															dbId: item.dbId,
+															name: e.target.name.value,
+															price: e.target.price.value,
+															category: e.target.category.value
+														}
+													})
+												});
+											}
+										}}
 									>
 										<input
 											name="name"
@@ -288,11 +302,12 @@
 											name="price"
 											type="number"
 											class="input"
+											step="0.1"
 											placeholder="Price"
 											value={item.price}
 										/>
 
-										<select name="category" class="input">
+										<select name="category" class="input" value={item.category}>
 											{#each formattedCategories as category (category.dbId)}
 												<option value={category.dbId}>{category.name}</option>
 											{/each}
