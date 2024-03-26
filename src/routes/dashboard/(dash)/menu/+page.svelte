@@ -4,6 +4,7 @@
 	import { dndzone } from 'svelte-dnd-action';
 	import type { PageData } from './$types';
 	import Icon from '@iconify/svelte';
+	import Modal from '$lib/components/Modal.svelte';
 
 	export let data: PageData;
 
@@ -19,14 +20,35 @@
 			};
 		});
 
-	const handleConsider = (e: any) => {
-		formattedCategories = e.detail.items;
+	let formattedItems = data.menuItems
+		.sort((a, b) => a.sortingIndex - b.sortingIndex)
+		.map((item) => {
+			return {
+				id: item.sortingIndex,
+				dbId: item.id,
+				name: item.name,
+				price: item.price
+			};
+		});
+
+	const handleConsider = (e: any, type: 'category' | 'item') => {
+		if (type === 'category') {
+			formattedCategories = e.detail.items;
+		} else if (type === 'item') {
+			formattedItems = e.detail.items;
+		}
 	};
 
-	const handleFinalize = async (e: any) => {
+	const handleFinalize = async (e: any, type: 'category' | 'item') => {
 		if (isChangingOrder) return;
-		formattedCategories = e.detail.items;
-		await handleEditCategoryOrder();
+		if (type === 'category') {
+			formattedCategories = e.detail.items;
+			await handleEditCategoryOrder();
+		} else if (type === 'item') {
+			formattedItems = e.detail.items;
+			// Here, you'd have a similar function for handling item order changes
+			await handleEditItemOrder();
+		}
 	};
 
 	const handleDeleteCategory = async (id: number) => {
@@ -60,6 +82,30 @@
 			isChangingOrder = false;
 		}
 	};
+
+	const handleEditItemOrder = async () => {
+		isChangingOrder = true;
+		const res = await fetch(`/api/item/editOrder`, {
+			method: 'PUT',
+			body: JSON.stringify({
+				items: formattedItems.map((item, index) => {
+					return {
+						dbId: item.dbId,
+						sortingIndex: index
+					};
+				})
+			})
+		});
+
+		if (res.ok) {
+			isChangingOrder = false;
+		}
+	};
+
+	let openModal = '';
+	const closeModal = () => {
+		openModal = '';
+	};
 </script>
 
 <meta:head>
@@ -76,17 +122,30 @@
 				class="grid w-full grid-cols-4 gap-2 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm md:flex-row md:items-center"
 			>
 				<div class="col-span-full md:col-span-2">
-					<h2 class="text-lg font-semibold">Category</h2>
-					<p class="text-neutral-600">Create a new category for your menu items.</p>
+					<h2 class="text-lg font-semibold">Categories</h2>
+					<p class="text-neutral-600">Create & edit categories for your restaurant's menu.</p>
 				</div>
-				<form
-					method="post"
-					action="?/createCategory"
-					class="col-span-full flex gap-2 md:col-span-2"
-				>
-					<input name="name" type="text" class="input flex-1" placeholder="Name" />
-					<button type="submit" class={`btn-primary`}> Create </button>
-				</form>
+				<div class="col-span-full flex justify-end md:col-span-2">
+					<button
+						type="submit"
+						class="btn-primary w-full md:w-auto"
+						on:click={() => {
+							console.log('create');
+							openModal = 'categoryCreate';
+						}}
+					>
+						Create Category
+					</button>
+					{#if openModal === 'categoryCreate'}
+						<Modal open={true} onClose={closeModal}>
+							<form class="flex flex-col gap-3" method="post" action="?/createCategory">
+								<input name="name" type="text" class="input" placeholder="Name" />
+								<textarea class="input" placeholder="Description"></textarea>
+								<button type="submit" class="btn-primary"> Create </button>
+							</form>
+						</Modal>
+					{/if}
+				</div>
 				<div
 					class="col-span-full grid grid-cols-1 gap-2"
 					use:dndzone={{
@@ -95,8 +154,8 @@
 						dropTargetStyle: {},
 						dragDisabled: isChangingOrder
 					}}
-					on:consider={handleConsider}
-					on:finalize={handleFinalize}
+					on:consider={(e) => handleConsider(e, 'category')}
+					on:finalize={(e) => handleFinalize(e, 'category')}
 				>
 					{#each formattedCategories as item (item.id)}
 						<form
@@ -107,47 +166,144 @@
 							class="col-span-full flex items-center gap-2"
 							animate:flip={{ duration: 100 }}
 						>
-							<div class={`btn-outline`} draggable="true">
+							<div class={`btn-outline bg-white !p-2`} draggable="true">
 								<Icon icon="carbon:drag-vertical" class="h-5 w-5" />
 							</div>
 							<input name="name" class="input flex-1" value={item.name} />
-							<button type="submit" class={`btn-danger`} draggable="false">
+							<button
+								type="button"
+								class={`btn-primary !p-2`}
+								draggable="false"
+								on:click={() => {
+									openModal = `category-${item.dbId}`;
+								}}
+							>
+								<Icon icon="mingcute:edit-2-fill" class="h-5 w-5" draggable="false" />
+							</button>
+							{#if openModal === `category-${item.dbId}`}
+								<Modal open={true} onClose={closeModal}>
+									<form
+										class="flex flex-col gap-3"
+										method="post"
+										action={`?/editCategory&id=${item.dbId}`}
+									>
+										<input
+											name="name"
+											type="text"
+											class="input"
+											placeholder="Name"
+											value={item.name}
+										/>
+										<textarea class="input" placeholder="Description"></textarea>
+										<button type="submit" class="btn-primary"> Save </button>
+									</form>
+								</Modal>
+							{/if}
+							<button type="submit" class={`btn-danger !p-2`} draggable="false">
 								<Icon icon="mingcute:delete-2-fill" class="h-5 w-5" draggable="false" />
 							</button>
 						</form>
 					{/each}
 				</div>
 			</div>
+
 			<div
 				class="grid w-full grid-cols-4 gap-2 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm md:flex-row md:items-center"
 			>
 				<div class="col-span-full md:col-span-2">
-					<h2 class="text-lg font-semibold">Item</h2>
-					<p class="text-neutral-600">Create a new item for your menu.</p>
+					<h2 class="text-lg font-semibold">Items</h2>
+					<p class="text-neutral-600">Create & edit menu items for your restaurant.</p>
 				</div>
-				<form
-					method="post"
-					action="?/createItem"
-					class="col-span-full grid grid-cols-4 gap-2 md:col-span-2"
+				<div class="col-span-full flex justify-end md:col-span-2">
+					<button
+						type="submit"
+						class="btn-primary w-full md:w-auto"
+						on:click={() => {
+							openModal = 'itemCreate';
+						}}
+					>
+						Create Item
+					</button>
+					{#if openModal === 'itemCreate'}
+						<Modal open={true} onClose={closeModal}>
+							<form class="flex flex-col gap-3" method="post" action="?/createCategory">
+								<input name="name" type="text" class="input" placeholder="Name" />
+								<input name="price" type="number" class="input" placeholder="Price" />
+
+								<textarea class="input" placeholder="Description"></textarea>
+								<button type="submit" class="btn-primary"> Create </button>
+							</form>
+						</Modal>
+					{/if}
+				</div>
+				<div
+					class="col-span-full grid grid-cols-1 gap-2"
+					use:dndzone={{
+						items: formattedItems,
+						flipDurationMs: 100,
+						dropTargetStyle: {},
+						dragDisabled: isChangingOrder
+					}}
+					on:consider={(e) => handleConsider(e, 'item')}
+					on:finalize={(e) => handleFinalize(e, 'item')}
 				>
-					<input name="name" type="text" class="input col-span-3" placeholder="Name" />
-					<input name="price" type="number" class="input" placeholder="Price" />
-					<select name="category" class="input col-span-3">
-						{#each formattedCategories as category (category.id)}
-							<option value={category.dbId}>{category.name}</option>
-						{/each}
-					</select>
-					<button type="submit" class={`btn-primary`}> Create </button>
-				</form>
-				<div class="col-span-full md:col-span-2">
-					<h2 class="text-md font-semibold">Current Menu:</h2>
-				</div>
-				<div class="col-span-full grid grid-cols-1 gap-2">
-					{#each data?.menuItems as item}
-						<form class="flex gap-2">
-							<input type="text" class="input flex-[3]" value={item.name} />
-							<input type="number" class="input flex-1" value={item.price} step={0.1} />
-							<button type="submit" class={`btn-danger`} draggable="false">
+					{#each formattedItems as item (item.id)}
+						<form
+							on:submit={(e) => {
+								e.preventDefault();
+								handleDeleteCategory(item.dbId);
+							}}
+							class="col-span-full flex items-center gap-2"
+							animate:flip={{ duration: 100 }}
+						>
+							<div class={`btn-outline bg-white !p-2`} draggable="true">
+								<Icon icon="carbon:drag-vertical" class="h-5 w-5" />
+							</div>
+							<input name="name" class="input flex-1" value={item.name} />
+							<button
+								type="button"
+								class={`btn-primary !p-2`}
+								draggable="false"
+								on:click={() => {
+									openModal = `item-${item.dbId}`;
+								}}
+							>
+								<Icon icon="mingcute:edit-2-fill" class="h-5 w-5" draggable="false" />
+							</button>
+							{#if openModal === `item-${item.dbId}`}
+								<Modal open={true} onClose={closeModal}>
+									<form
+										class="flex flex-col gap-3"
+										method="post"
+										action={`?/editCategory&id=${item.dbId}`}
+									>
+										<input
+											name="name"
+											type="text"
+											class="input"
+											placeholder="Name"
+											value={item.name}
+										/>
+										<input
+											name="price"
+											type="number"
+											class="input"
+											placeholder="Price"
+											value={item.price}
+										/>
+
+										<select name="category" class="input">
+											{#each formattedCategories as category (category.dbId)}
+												<option value={category.dbId}>{category.name}</option>
+											{/each}
+										</select>
+
+										<textarea class="input" placeholder="Description"></textarea>
+										<button type="submit" class="btn-primary"> Save </button>
+									</form>
+								</Modal>
+							{/if}
+							<button type="submit" class={`btn-danger !p-2`} draggable="false">
 								<Icon icon="mingcute:delete-2-fill" class="h-5 w-5" draggable="false" />
 							</button>
 						</form>

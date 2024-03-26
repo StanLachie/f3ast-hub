@@ -8,6 +8,7 @@
 	import { getContext } from 'svelte';
 	import ThemeStore from '$lib/stores/ThemeStore';
 	import SocialButton from '$lib/components/restaurants/SocialButton.svelte';
+	import Modal from '$lib/components/Modal.svelte';
 
 	export let data: PageData;
 

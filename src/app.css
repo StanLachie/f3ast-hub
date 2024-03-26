@@ -34,7 +34,7 @@
 		@apply flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm font-semibold text-neutral-900 shadow-sm hover:scale-[97.5%] hover:bg-neutral-100;
 	}
 	.btn-danger {
-		@apply flex items-center gap-2 rounded-lg border border-neutral-800 bg-red-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:scale-[97.5%] hover:bg-red-600;
+		@apply flex items-center gap-2 rounded-lg border border-neutral-800 bg-red-400 px-3 py-2 text-sm font-semibold text-neutral-900 shadow-sm hover:scale-[97.5%] hover:bg-red-600;
 	}
 	.btn-dark {
 		@apply flex items-center gap-2 rounded-lg border border-neutral-800 bg-neutral-700 px-3 py-2 text-sm font-semibold text-neutral-100 shadow-sm hover:scale-[97.5%] hover:bg-neutral-800;
