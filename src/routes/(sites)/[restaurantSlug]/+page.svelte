@@ -72,7 +72,7 @@
 			<div class="no-scrollbar flex gap-3 overflow-x-auto" bind:this={scrollContainers[index]}>
 				{#if category.MenuItems.length === 0}
 					<div class="my-12 w-full text-center">
-						<p class="text-neutral-500">No items in this category.</p>
+						<p class="{currentTheme.colors.secondaryText}">No items in this category.</p>
 					</div>
 				{:else}
 					{#each category.MenuItems.sort((a, b) => a.sortingIndex - b.sortingIndex) as item}
