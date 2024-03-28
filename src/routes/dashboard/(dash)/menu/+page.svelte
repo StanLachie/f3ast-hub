@@ -6,6 +6,7 @@
 	import Icon from '@iconify/svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import { json } from '@sveltejs/kit';
+	import Banner from '$lib/components/blocks/restaurant/Banner.svelte';
 
 	export let data: PageData;
 
@@ -279,15 +280,28 @@
 					{#if openModal === 'itemCreate'}
 						<Modal open={true} onClose={closeModal}>
 							<form
-								class="flex flex-col gap-3"
+								class="flex cursor-default flex-col gap-3"
 								on:submit={(e) => {
 									e.preventDefault();
 									handleCreateItem(e);
 								}}
 							>
 								<input name="name" type="text" class="input" placeholder="Name" />
-								<input name="price" type="number" class="input" placeholder="Price" step="0.10" />
-								<select name="category" class="input">
+								<div class="flex items-center">
+									<div
+										class="rounded-l-lg border-y border-l border-neutral-400 px-4 py-2 font-semibold"
+									>
+										$
+									</div>
+									<input
+										name="price"
+										type="number"
+										class="input rounded-l-none"
+										placeholder="Price"
+										step="0.10"
+									/>
+								</div>
+								<select name="category" class="input cursor-pointer">
 									{#each formattedCategories as category (category.dbId)}
 										<option value={category.dbId}>{category.name}</option>
 									{/each}
@@ -305,7 +319,7 @@
 						items: formattedItems,
 						flipDurationMs: 100,
 						dropTargetStyle: {},
-						dragDisabled: isChangingOrder
+						dragDisabled: isChangingOrder || openModal !== ''
 					}}
 					on:consider={(e) => handleConsider(e, 'item')}
 					on:finalize={(e) => handleFinalize(e, 'item')}
@@ -333,42 +347,52 @@
 							>
 								<Icon icon="mingcute:edit-2-fill" class="h-5 w-5" draggable="false" />
 							</button>
-							{#if openModal === `item-${item.dbId}`}
-								<Modal open={true} onClose={closeModal}>
-									<form
-										class="flex flex-col gap-3"
-										on:submit={(e) => {
-											e.preventDefault();
-											handleUpdateItem(item.dbId, e);
-										}}
-									>
-										<input
-											name="name"
-											type="text"
-											class="input"
-											placeholder="Name"
-											value={item.name}
-										/>
-										<input
-											name="price"
-											type="number"
-											class="input"
-											step="0.1"
-											placeholder="Price"
-											value={item.price}
-										/>
+							<div>
+								{#if openModal === `item-${item.dbId}`}
+									<Modal open={true} onClose={closeModal}>
+										<form
+											class="flex flex-col gap-3"
+											on:submit={(e) => {
+												e.preventDefault();
+												handleUpdateItem(item.dbId, e);
+											}}
+										>
+											<input
+												name="name"
+												type="text"
+												class="input"
+												placeholder="Name"
+												value={item.name}
+											/>
+											<div class="flex items-center">
+												<div
+													class="rounded-l-lg border-y border-l border-neutral-400 px-4 py-2 font-semibold"
+												>
+													$
+												</div>
+												<input
+													name="price"
+													type="number"
+													class="input rounded-l-none"
+													placeholder="Price"
+													value={item.price}
+													step="0.10"
+												/>
+											</div>
 
-										<select name="category" class="input" value={item.category}>
-											{#each formattedCategories as category (category.dbId)}
-												<option value={category.dbId}>{category.name}</option>
-											{/each}
-										</select>
+											<select name="category" class="input" value={item.category}>
+												{#each formattedCategories as category (category.dbId)}
+													<option value={category.dbId}>{category.name}</option>
+												{/each}
+											</select>
 
-										<textarea name="description" class="input" placeholder="Description"></textarea>
-										<button type="submit" class="btn-primary"> Save </button>
-									</form>
-								</Modal>
-							{/if}
+											<textarea name="description" class="input" placeholder="Description"
+											></textarea>
+											<button type="submit" class="btn-primary"> Save </button>
+										</form>
+									</Modal>
+								{/if}
+							</div>
 							<button
 								type="button"
 								class={`btn-danger !p-2`}
