@@ -2,6 +2,7 @@ const themes = {
 	default: {
 		colors: {
 			background: 'bg-white',
+			secondaryBackground: 'bg-neutral-50',
 			primaryText: 'text-black',
 			secondaryText: 'text-neutral-500'
 		},
@@ -69,6 +70,7 @@ const themes = {
 	amber: {
 		colors: {
 			background: 'bg-neutral-900',
+			secondaryBackground: 'bg-neutral-800',
 			primaryText: 'text-white',
 			secondaryText: 'text-neutral-300'
 		},

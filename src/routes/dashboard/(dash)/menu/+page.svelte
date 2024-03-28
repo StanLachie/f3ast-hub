@@ -53,6 +53,59 @@
 		}
 	};
 
+	const handleCreateItem = async (event: Event) => {
+		const target = event.target as HTMLFormElement;
+		const formData = new FormData(target);
+
+		if (!formData.get('name') || !formData.get('price') || !formData.get('category')) return;
+
+		const res = await fetch(`/api/menu/item`, {
+			method: 'POST',
+			body: JSON.stringify({
+				name: formData.get('name'),
+				description: formData.get('description'),
+				price: parseFloat(formData.get('price') as string),
+				categoryId: parseFloat(formData.get('category') as string)
+			})
+		});
+
+		if (res.ok) {
+			location.reload();
+		}
+	};
+
+	const handleUpdateItem = async (id: number, event: Event) => {
+		const target = event.target as HTMLFormElement;
+		const formData = new FormData(target);
+
+		if (!formData.get('name') || !formData.get('price') || !formData.get('category')) return;
+
+		const res = await fetch(`/api/menu/item?id=${id}`, {
+			method: 'PUT',
+			body: JSON.stringify({
+				id: id,
+				name: formData.get('name'),
+				description: formData.get('description'),
+				price: parseFloat(formData.get('price') as string),
+				categoryId: parseFloat(formData.get('category') as string)
+			})
+		});
+
+		if (res.ok) {
+			location.reload();
+		}
+	};
+
+	const handleDeleteItem = async (id: number) => {
+		const res = await fetch(`/api/menu/item?id=${id}`, {
+			method: 'DELETE'
+		});
+
+		if (res.ok) {
+			location.reload();
+		}
+	};
+
 	const handleDeleteCategory = async (id: number) => {
 		const res = await fetch(`/api/category/delete`, {
 			method: 'DELETE',
@@ -60,8 +113,6 @@
 		});
 
 		if (res.ok) {
-			formattedCategories = formattedCategories.filter((category) => category.id !== id);
-
 			location.reload();
 		}
 	};
@@ -227,9 +278,20 @@
 					</button>
 					{#if openModal === 'itemCreate'}
 						<Modal open={true} onClose={closeModal}>
-							<form class="flex flex-col gap-3" method="post" action="?/createCategory">
+							<form
+								class="flex flex-col gap-3"
+								on:submit={(e) => {
+									e.preventDefault();
+									handleCreateItem(e);
+								}}
+							>
 								<input name="name" type="text" class="input" placeholder="Name" />
-								<input name="price" type="number" class="input" placeholder="Price" />
+								<input name="price" type="number" class="input" placeholder="Price" step="0.10" />
+								<select name="category" class="input">
+									{#each formattedCategories as category (category.dbId)}
+										<option value={category.dbId}>{category.name}</option>
+									{/each}
+								</select>
 
 								<textarea class="input" placeholder="Description"></textarea>
 								<button type="submit" class="btn-primary"> Create </button>
@@ -276,19 +338,8 @@
 									<form
 										class="flex flex-col gap-3"
 										on:submit={(e) => {
-											if (e.target.name.value && e.target.price.value && e.target.category.value) {
-												fetch(`/api/item/edit`, {
-													method: 'PUT',
-													body: JSON.stringify({
-														item: {
-															dbId: item.dbId,
-															name: e.target.name.value,
-															price: e.target.price.value,
-															category: e.target.category.value
-														}
-													})
-												});
-											}
+											e.preventDefault();
+											handleUpdateItem(item.dbId, e);
 										}}
 									>
 										<input
@@ -313,12 +364,20 @@
 											{/each}
 										</select>
 
-										<textarea class="input" placeholder="Description"></textarea>
+										<textarea name="description" class="input" placeholder="Description"></textarea>
 										<button type="submit" class="btn-primary"> Save </button>
 									</form>
 								</Modal>
 							{/if}
-							<button type="submit" class={`btn-danger !p-2`} draggable="false">
+							<button
+								type="button"
+								class={`btn-danger !p-2`}
+								draggable="false"
+								on:click={(e) => {
+									e.preventDefault();
+									handleDeleteItem(item.dbId);
+								}}
+							>
 								<Icon icon="mingcute:delete-2-fill" class="h-5 w-5" draggable="false" />
 							</button>
 						</form>

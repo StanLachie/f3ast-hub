@@ -1,14 +1,10 @@
 <script lang="ts">
-	import Hero from '$lib/components/blocks/restaurant/Hero.svelte';
 	import type { PageData } from './$types';
 	import Icon from '@iconify/svelte';
-	import { scrollable } from '$lib/scroll.js';
 	import themes from '$lib/themes.js';
 	import ScrollButton from '$lib/components/restaurants/ScrollButton.svelte';
-	import { getContext } from 'svelte';
 	import ThemeStore from '$lib/stores/ThemeStore';
 	import SocialButton from '$lib/components/restaurants/SocialButton.svelte';
-	import Modal from '$lib/components/Modal.svelte';
 
 	export let data: PageData;
 
@@ -81,7 +77,20 @@
 				{:else}
 					{#each category.MenuItems.sort((a, b) => a.sortingIndex - b.sortingIndex) as item}
 						<div class="flex min-w-36 flex-col gap-1">
-							<img src={item.img} alt={item.name} class="h-36 w-36 rounded-lg object-cover" />
+							{#if item.img}
+								<img src={item.img} alt={item.name} class="h-36 w-36 rounded-lg object-cover" />
+							{:else}
+								<div
+									class="flex h-36 w-36 items-center justify-center rounded-lg {currentTheme.colors
+										.secondaryBackground} {currentTheme.colors.primaryText} text-3xl font-semibold"
+								>
+									{item.name
+										.split(' ')
+										.map((word) => word[0])
+										.join('')}
+								</div>
+							{/if}
+
 							<div class="flex flex-col">
 								<span class="text-md font-semibold">{item.name}</span>
 								<span class={currentTheme.colors.secondaryText}>${item.price.toFixed(2)}</span>

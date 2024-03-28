@@ -302,9 +302,9 @@ model MenuCategory {
   id           Int        @id @default(autoincrement())
   name         String
   sortingIndex Int
-  description  String?
   restaurantId Int
   active       Boolean    @default(true)
+  description  String?
   Restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
   MenuItems    MenuItem[]
 
@@ -314,12 +314,12 @@ model MenuCategory {
 model MenuItem {
   id           Int          @id @default(autoincrement())
   name         String
-  sortingIndex Int
   description  String?
   price        Float
   categoryId   Int
   active       Boolean      @default(true)
   img          String?
+  sortingIndex Int
   MenuCategory MenuCategory @relation(fields: [categoryId], references: [id])
 
   @@schema("public")
