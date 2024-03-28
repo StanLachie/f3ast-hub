@@ -2,7 +2,7 @@ const themes = {
 	default: {
 		colors: {
 			background: 'bg-white',
-			secondaryBackground: 'bg-neutral-50',
+			secondaryBackground: 'bg-neutral-200',
 			primaryText: 'text-black',
 			secondaryText: 'text-neutral-500'
 		},
@@ -14,6 +14,7 @@ const themes = {
 	dark: {
 		colors: {
 			background: 'bg-neutral-900',
+			secondaryBackground: 'bg-neutral-800',
 			primaryText: 'text-neutral-100',
 			secondaryText: 'text-neutral-300'
 		},
@@ -25,6 +26,7 @@ const themes = {
 	cream: {
 		colors: {
 			background: 'bg-[#efdfc5]',
+			secondaryBackground: 'bg-[#e7cea7]',
 			primaryText: 'text-[#1a1006]',
 			secondaryText: 'text-[#412a10]'
 		},
@@ -36,6 +38,7 @@ const themes = {
 	pine: {
 		colors: {
 			background: 'bg-[#e1d3bc]',
+			secondaryBackground: 'bg-[#d6c3a4]',
 			primaryText: 'text-[#456140]',
 			secondaryText: 'text-neutral-700'
 		},
@@ -47,6 +50,7 @@ const themes = {
 	chocolate: {
 		colors: {
 			background: 'bg-[#271E16]',
+			secondaryBackground: 'bg-[#453527]',
 			primaryText: 'text-neutral-50',
 			secondaryText: 'text-neutral-200'
 		},
@@ -59,6 +63,7 @@ const themes = {
 	lavender: {
 		colors: {
 			background: 'bg-neutral-50',
+			secondaryBackground: 'bg-neutral-200',
 			primaryText: 'text-neutral-800',
 			secondaryText: 'text-neutral-700'
 		},
@@ -82,6 +87,7 @@ const themes = {
 	bubblegum: {
 		colors: {
 			background: 'bg-pink-50',
+			secondaryBackground: 'bg-[#fcdeef]',
 			primaryText: 'text-pink-500',
 			secondaryText: 'text-pink-400'
 		},
@@ -93,6 +99,7 @@ const themes = {
 	f3ast: {
 		colors: {
 			background: 'bg-neutral-50',
+			secondaryBackground: 'bg-neutral-200',
 			primaryText: 'text-black',
 			secondaryText: 'text-neutral-600'
 		},
@@ -104,6 +111,7 @@ const themes = {
 	pluto: {
 		colors: {
 			background: 'bg-neutral-800',
+			secondaryBackground: 'bg-neutral-700',
 			primaryText: 'text-[#00aeef]',
 			secondaryText: 'text-neutral-100'
 		},
@@ -115,6 +123,7 @@ const themes = {
 	ocean: {
 		colors: {
 			background: 'bg-blue-50',
+			secondaryBackground: 'bg-blue-100',
 			primaryText: 'text-sky-500',
 			secondaryText: 'text-[#58c9f9]'
 		},
