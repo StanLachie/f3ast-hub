@@ -144,7 +144,7 @@ const themes = {
 			primaryBackground: 'bg-emerald-300',
 			secondaryBackground: 'bg-neutral-200',
 			defaultBorder: 'border-neutral-50',
-			primaryBorder: 'border-emerald-300',
+			primaryBorder: 'border-emerald-950',
 			secondaryBorder: 'border-neutral-200',
 			defaultText: 'text-black',
 			primaryText: 'text-neutral-950',

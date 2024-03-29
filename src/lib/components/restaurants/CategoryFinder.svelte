@@ -52,7 +52,9 @@
 	};
 </script>
 
-<div class="flex {currentTheme.colors.primaryBorder} sticky top-6 rounded-lg border-2">
+<div
+	class="flex {currentTheme.colors.primaryBorder} sticky top-6 overflow-hidden rounded-lg border-2"
+>
 	{#if categories.indexOf(activeCategory) !== 0}
 		<button
 			id="scrollBtn"
@@ -64,8 +66,7 @@
 	{/if}
 	<div
 		id="scroller"
-		class="no-scrollbar flex w-full overflow-x-scroll rounded-sm {currentTheme.colors
-			.defaultBackground}"
+		class="no-scrollbar flex w-full overflow-x-scroll {currentTheme.colors.defaultBackground}"
 	>
 		<div class="flex flex-grow">
 			{#each categories as category}
