@@ -1,10 +1,20 @@
 const themes = {
 	default: {
 		colors: {
-			background: 'bg-white',
+			defaultBackground: 'bg-white',
+			primaryBackground: 'bg-neutral-900',
 			secondaryBackground: 'bg-neutral-200',
-			primaryText: 'text-black',
+			defaultBorder: 'border-white',
+			primaryBorder: 'border-neutral-900',
+			secondaryBorder: 'border-neutral-200',
+			defaultText: 'text-black',
+			primaryText: 'text-white',
 			secondaryText: 'text-neutral-500'
+
+			// background: 'bg-white',
+			// secondaryBackground: 'bg-neutral-200',
+			// primaryText: 'text-black',
+			// secondaryText: 'text-neutral-500'
 		},
 		components: {
 			socialButton: `bg-neutral-900 text-white p-1.5 rounded-lg shadow-md hover:bg-neutral-600`,
