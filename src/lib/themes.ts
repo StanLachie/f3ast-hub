@@ -27,7 +27,6 @@ const themes = {
 			defaultText: 'text-neutral-100',
 			primaryText: 'text-white',
 			secondaryText: 'text-neutral-300'
-	
 		},
 		components: {
 			socialButton: 'bg-neutral-800 text-white p-1.5 rounded-lg shadow-md hover:bg-neutral-600',
@@ -45,7 +44,6 @@ const themes = {
 			defaultText: 'text-[#1a1006]',
 			primaryText: 'text-[#efdfc5]',
 			secondaryText: 'text-[#412a10]'
-
 		},
 		components: {
 			socialButton: `bg-[#1a1006] text-[#efdfc5] p-1.5 rounded-md shadow-md hover:bg-[#412a10]`,
@@ -63,7 +61,6 @@ const themes = {
 			defaultText: 'text-[#456140]',
 			primaryText: 'text-[#e1d3bc]',
 			secondaryText: 'text-neutral-700'
-		
 		},
 		components: {
 			socialButton: `bg-[#456140] text-[#e1d3bc] p-1.5 rounded-full shadow-md hover:bg-[#354a31]`,
@@ -81,7 +78,6 @@ const themes = {
 			defaultText: 'text-text-neutral-50',
 			primaryText: 'text-[#271E16]',
 			secondaryText: 'text-neutral-200'
-		
 		},
 		components: {
 			socialButton: `bg-neutral-50 text-[#271E16] p-1.5 rounded-full shadow-md hover:bg-neutral-300`,
@@ -100,7 +96,6 @@ const themes = {
 			defaultText: 'text-neutral-800',
 			primaryText: 'text-neutral-50',
 			secondaryText: 'text-neutral-700'
-		
 		},
 		components: {
 			socialButton: `bg-purple-400 text-neutral-50 p-1.5 rounded-lg shadow-md hover:bg-purple-500`,
@@ -137,7 +132,6 @@ const themes = {
 			defaultText: 'text-pink-500',
 			primaryText: 'text-white',
 			secondaryText: 'text-pink-400'
-			
 		},
 		components: {
 			socialButton: `bg-pink-500 text-white p-1.5 rounded-full shadow-md hover:bg-pink-600`,
@@ -155,7 +149,6 @@ const themes = {
 			defaultText: 'text-black',
 			primaryText: 'text-neutral-950',
 			secondaryText: 'text-neutral-600'
-		
 		},
 		components: {
 			socialButton: `bg-emerald-300 text-neutral-950 p-1.5 rounded-lg shadow-md hover:bg-emerald-400 border border-emerald-950`,
