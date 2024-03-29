@@ -10,11 +10,6 @@ const themes = {
 			defaultText: 'text-black',
 			primaryText: 'text-white',
 			secondaryText: 'text-neutral-500'
-
-			// background: 'bg-white',
-			// secondaryBackground: 'bg-neutral-200',
-			// primaryText: 'text-black',
-			// secondaryText: 'text-neutral-500'
 		},
 		components: {
 			socialButton: `bg-neutral-900 text-white p-1.5 rounded-lg shadow-md hover:bg-neutral-600`,
@@ -23,10 +18,16 @@ const themes = {
 	},
 	dark: {
 		colors: {
-			background: 'bg-neutral-900',
+			defaultBackground: 'bg-neutral-900',
+			primaryBackground: 'bg-neutral-800',
 			secondaryBackground: 'bg-neutral-800',
-			primaryText: 'text-neutral-100',
+			defaultBorder: 'border-neutral-900',
+			primaryBorder: 'border-neutral-800',
+			secondaryBorder: 'border-neutral-800',
+			defaultText: 'text-neutral-100',
+			primaryText: 'text-white',
 			secondaryText: 'text-neutral-300'
+	
 		},
 		components: {
 			socialButton: 'bg-neutral-800 text-white p-1.5 rounded-lg shadow-md hover:bg-neutral-600',
@@ -35,10 +36,16 @@ const themes = {
 	},
 	cream: {
 		colors: {
-			background: 'bg-[#efdfc5]',
+			defaultBackground: 'bg-[#efdfc5]',
+			primaryBackground: 'bg-[#1a1006]',
 			secondaryBackground: 'bg-[#e7cea7]',
-			primaryText: 'text-[#1a1006]',
+			defaultBorder: 'border-[#efdfc5]',
+			primaryBorder: 'border-[#1a1006]',
+			secondaryBorder: 'border-[#e7cea7]',
+			defaultText: 'text-[#1a1006]',
+			primaryText: 'text-[#efdfc5]',
 			secondaryText: 'text-[#412a10]'
+
 		},
 		components: {
 			socialButton: `bg-[#1a1006] text-[#efdfc5] p-1.5 rounded-md shadow-md hover:bg-[#412a10]`,
@@ -47,10 +54,16 @@ const themes = {
 	},
 	pine: {
 		colors: {
-			background: 'bg-[#e1d3bc]',
+			defaultBackground: 'bg-[#e1d3bc]',
+			primaryBackground: 'bg-[#456140]',
 			secondaryBackground: 'bg-[#d6c3a4]',
-			primaryText: 'text-[#456140]',
+			defaultBorder: 'border-[#e1d3bc]',
+			primaryBorder: 'border-[#456140]',
+			secondaryBorder: 'border-[#d6c3a4]',
+			defaultText: 'text-[#456140]',
+			primaryText: 'text-[#e1d3bc]',
 			secondaryText: 'text-neutral-700'
+		
 		},
 		components: {
 			socialButton: `bg-[#456140] text-[#e1d3bc] p-1.5 rounded-full shadow-md hover:bg-[#354a31]`,
@@ -59,10 +72,16 @@ const themes = {
 	},
 	chocolate: {
 		colors: {
-			background: 'bg-[#271E16]',
+			defaultBackground: 'bg-[#271E16]',
+			primaryBackground: 'bg-neutral-50',
 			secondaryBackground: 'bg-[#453527]',
-			primaryText: 'text-neutral-50',
+			defaultBorder: 'border-[#271E16]',
+			primaryBorder: 'border-neutral-50',
+			secondaryBorder: 'border-[#453527]',
+			defaultText: 'text-text-neutral-50',
+			primaryText: 'text-[#271E16]',
 			secondaryText: 'text-neutral-200'
+		
 		},
 		components: {
 			socialButton: `bg-neutral-50 text-[#271E16] p-1.5 rounded-full shadow-md hover:bg-neutral-300`,
@@ -72,10 +91,16 @@ const themes = {
 
 	lavender: {
 		colors: {
-			background: 'bg-neutral-50',
+			defaultBackground: 'bg-neutral-50',
+			primaryBackground: 'bg-purple-400',
 			secondaryBackground: 'bg-neutral-200',
-			primaryText: 'text-neutral-800',
+			defaultBorder: 'border-neutral-50',
+			primaryBorder: 'border-purple-400',
+			secondaryBorder: 'border-neutral-200',
+			defaultText: 'text-neutral-800',
+			primaryText: 'text-neutral-50',
 			secondaryText: 'text-neutral-700'
+		
 		},
 		components: {
 			socialButton: `bg-purple-400 text-neutral-50 p-1.5 rounded-lg shadow-md hover:bg-purple-500`,
@@ -103,10 +128,16 @@ const themes = {
 	},
 	bubblegum: {
 		colors: {
-			background: 'bg-pink-50',
+			defaultBackground: 'bg-pink-50',
+			primaryBackground: 'bg-pink-500',
 			secondaryBackground: 'bg-[#fcdeef]',
-			primaryText: 'text-pink-500',
+			defaultBorder: 'border-pink-50',
+			primaryBorder: 'border-pink-500',
+			secondaryBorder: 'border-[#fcdeef]',
+			defaultText: 'text-pink-500',
+			primaryText: 'text-white',
 			secondaryText: 'text-pink-400'
+			
 		},
 		components: {
 			socialButton: `bg-pink-500 text-white p-1.5 rounded-full shadow-md hover:bg-pink-600`,
@@ -115,10 +146,16 @@ const themes = {
 	},
 	f3ast: {
 		colors: {
-			background: 'bg-neutral-50',
+			defaultBackground: 'bg-neutral-50',
+			primaryBackground: 'bg-emerald-300',
 			secondaryBackground: 'bg-neutral-200',
-			primaryText: 'text-black',
+			defaultBorder: 'border-neutral-50',
+			primaryBorder: 'border-emerald-300',
+			secondaryBorder: 'border-neutral-200',
+			defaultText: 'text-black',
+			primaryText: 'text-neutral-950',
 			secondaryText: 'text-neutral-600'
+		
 		},
 		components: {
 			socialButton: `bg-emerald-300 text-neutral-950 p-1.5 rounded-lg shadow-md hover:bg-emerald-400 border border-emerald-950`,
@@ -127,9 +164,14 @@ const themes = {
 	},
 	pluto: {
 		colors: {
-			background: 'bg-neutral-800',
+			defaultBackground: 'bg-neutral-800',
+			primaryBackground: 'bg-[#00aeef]',
 			secondaryBackground: 'bg-neutral-700',
-			primaryText: 'text-[#00aeef]',
+			defaultBorder: 'border-neutral-800',
+			primaryBorder: 'border-[#00aeef]',
+			secondaryBorder: 'border-neutral-700',
+			defaultText: 'text-[#00aeef]',
+			primaryText: 'text-neutral-800',
 			secondaryText: 'text-neutral-100'
 		},
 		components: {
@@ -139,9 +181,14 @@ const themes = {
 	},
 	ocean: {
 		colors: {
-			background: 'bg-blue-50',
+			defaultBackground: 'bg-blue-50',
+			primaryBackground: 'bg-sky-500',
 			secondaryBackground: 'bg-blue-100',
-			primaryText: 'text-sky-500',
+			defaultBorder: 'border-blue-50',
+			primaryBorder: 'border-sky-500',
+			secondaryBorder: 'border-blue-100',
+			defaultText: 'text-sky-500',
+			primaryText: 'text-blue-50',
 			secondaryText: 'text-[#58c9f9]'
 		},
 		components: {
