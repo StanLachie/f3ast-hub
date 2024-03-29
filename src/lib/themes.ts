@@ -74,12 +74,19 @@ const themes = {
 	},
 	amber: {
 		colors: {
-			background: 'bg-neutral-900',
+			defaultBackground: 'bg-neutral-900',
+			primaryBackground: 'bg-orange-400',
 			secondaryBackground: 'bg-neutral-800',
-			primaryText: 'text-white',
+			defaultBorder: 'border-neutral-900',
+			primaryBorder: 'border-orange-400',
+			secondaryBorder: 'border-neutral-800',
+			defaultText: 'text-white',
+			primaryText: 'text-neutral-950',
 			secondaryText: 'text-neutral-300'
 		},
 		components: {
+			categoryFinder: '',
+			categoryButton: 'text-neutral-900',
 			socialButton: `bg-orange-400 text-neutral-950 p-1.5 rounded-md shadow-md hover:bg-orange-500`,
 			scrollButton: `bg-orange-400 text-neutral-950 p-1.5 rounded-full shadow-md hover:bg-orange-500`
 		}

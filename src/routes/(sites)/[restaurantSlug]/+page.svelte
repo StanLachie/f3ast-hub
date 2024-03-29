@@ -5,6 +5,8 @@
 	import ScrollButton from '$lib/components/restaurants/ScrollButton.svelte';
 	import ThemeStore from '$lib/stores/ThemeStore';
 	import SocialButton from '$lib/components/restaurants/SocialButton.svelte';
+	import CategoryFinder from '$lib/components/restaurants/CategoryFinder.svelte';
+	import ItemCard from '$lib/components/restaurants/ItemCard.svelte';
 
 	export let data: PageData;
 
@@ -59,9 +61,16 @@
 		<SocialButton url="https://www.facebook.com/swagmanspies/" icon="mingcute:ins-line" />
 	</div>
 </div>
+<div class="sticky top-2 mt-6">
+	<CategoryFinder
+		categories={data.categories
+			.sort((a, b) => a.sortingIndex - b.sortingIndex)
+			.map((category) => category.name)}
+	/>
+</div>
 <div class="mt-6 space-y-6">
 	{#each data.categories.sort((a, b) => a.sortingIndex - b.sortingIndex) as category, index}
-		<div class="space-y-3">
+		<div class="space-y-3" id={category.name}>
 			<div class="flex items-center justify-between">
 				<h1 class="text-2xl font-semibold">{category.name}</h1>
 				<div class="flex gap-3">
@@ -72,30 +81,17 @@
 			<div class="no-scrollbar flex gap-3 overflow-x-auto" bind:this={scrollContainers[index]}>
 				{#if category.MenuItems.length === 0}
 					<div class="my-12 w-full text-center">
-						<p class="{currentTheme.colors.secondaryText}">No items in this category.</p>
+						<p class={currentTheme.colors.secondaryText}>No items in this category.</p>
 					</div>
 				{:else}
 					{#each category.MenuItems.sort((a, b) => a.sortingIndex - b.sortingIndex) as item}
-						<div class="flex min-w-36 flex-col gap-1">
-							{#if item.img}
-								<img src={item.img} alt={item.name} class="h-36 w-36 rounded-lg object-cover" />
-							{:else}
-								<div
-									class="flex h-36 w-36 items-center justify-center rounded-lg {currentTheme.colors
-										.secondaryBackground} {currentTheme.colors.primaryText} text-3xl font-semibold"
-								>
-									{item.name
-										.split(' ')
-										.map((word) => word[0])
-										.join('')}
-								</div>
-							{/if}
-
-							<div class="flex flex-col">
-								<span class="text-md font-semibold">{item.name}</span>
-								<span class={currentTheme.colors.secondaryText}>${item.price.toFixed(2)}</span>
-							</div>
-						</div>
+						<ItemCard
+							item={{
+								name: item.name,
+								price: item.price,
+								img: item?.img || undefined
+							}}
+						/>
 					{/each}
 				{/if}
 			</div>

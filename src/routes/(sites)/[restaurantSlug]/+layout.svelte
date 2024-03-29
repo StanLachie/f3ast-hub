@@ -16,7 +16,7 @@
 </script>
 
 <div
-	class={`max-w-screen min-h-dvh ${currentTheme.colors.background} ${currentTheme.colors.primaryText}`}
+	class={`max-w-screen min-h-dvh ${currentTheme.colors.defaultBackground} ${currentTheme.colors.defaultText}`}
 >
 	<div class="mx-auto h-1/2 max-w-5xl p-2 sm:p-8 md:p-16">
 		<slot />
