@@ -1,6 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import sharp from 'sharp';
 import { decode } from 'base64-arraybuffer';
 import prisma from '$lib/prisma';
 import type { FileObject } from '@supabase/storage-js';
@@ -71,22 +70,19 @@ export const actions = {
 
 		const { logoFile } = formData as { logoFile: File };
 
-		const formattedFile = sharp(await logoFile.arrayBuffer())
-			.resize(200, 200)
-			.webp({
-				quality: 80
-			})
-			.toBuffer();
+		// const formattedFile = sharp(await logoFile.arrayBuffer())
+		// 	.resize(200, 200)
+		// 	.webp({
+		// 		quality: 80
+		// 	})
+		// 	.toBuffer();
 
 		const logo = await locals.supabase.storage
 			.from('client-assets')
 			.upload(
 				`logo-${restaurant.id}`,
-				decode(Buffer.from(await formattedFile).toString('base64')),
-				{
-					upsert: true,
-					contentType: 'image/webp'
-				}
+				decode(Buffer.from(await logoFile.arrayBuffer()).toString('base64')),
+				{ upsert: true, contentType: 'image/webp' }
 			);
 
 		await prisma.restaurant.update({
@@ -140,22 +136,19 @@ export const actions = {
 
 		const { bannerFile } = formData as { bannerFile: File };
 
-		const formattedFile = sharp(await bannerFile.arrayBuffer())
-			.resize(1250, 600)
-			.webp({
-				quality: 80
-			})
-			.toBuffer();
+		// const formattedFile = sharp(await bannerFile.arrayBuffer())
+		// 	.resize(1250, 600)
+		// 	.webp({
+		// 		quality: 80
+		// 	})
+		// 	.toBuffer();
 
 		const banner = await locals.supabase.storage
 			.from('client-assets')
 			.upload(
 				`banner-${restaurant.id}`,
-				decode(Buffer.from(await formattedFile).toString('base64')),
-				{
-					upsert: true,
-					contentType: 'image/webp'
-				}
+				decode(Buffer.from(await bannerFile.arrayBuffer()).toString('base64')),
+				{ upsert: true, contentType: 'image/webp' }
 			);
 
 		await prisma.restaurant.update({
@@ -212,21 +205,19 @@ export const actions = {
 
 		const { menuImageFile } = formData as { menuImageFile: File };
 
-		const formattedFile = sharp(await menuImageFile.arrayBuffer())
-			.resize(800, 800)
-			.webp({
-				quality: 80
-			})
-			.toBuffer();
+		// const formattedFile = sharp(await menuImageFile.arrayBuffer())
+		// 	.resize(800, 800)
+		// 	.webp({
+		// 		quality: 80
+		// 	})
+		// 	.toBuffer();
 
 		await locals.supabase.storage
 			.from('client-assets')
 			.upload(
 				`menuImg-${restaurant.id}-${Date.now()}`,
-				decode(Buffer.from(await formattedFile).toString('base64')),
-				{
-					contentType: 'image/webp'
-				}
+				decode(Buffer.from(await menuImageFile.arrayBuffer()).toString('base64')),
+				{ upsert: true, contentType: 'image/webp' }
 			);
 
 		return {
