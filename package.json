@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"host": "vite dev --host",
-		"build": "vite build",
+		"build": "npm prisma generate --no-engine && vite build",
 		"preview": "vite preview",
 		"test": "npm run test:integration && npm run test:unit",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -45,6 +45,7 @@
 	"type": "module",
 	"dependencies": {
 		"@prisma/client": "^5.11.0",
+		"@prisma/extension-accelerate": "^1.0.0",
 		"@stripe/stripe-js": "^3.0.10",
 		"@supabase/ssr": "^0.1.0",
 		"@supabase/supabase-js": "^2.39.8",
