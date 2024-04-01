@@ -225,7 +225,7 @@
 						{/if}
 					</div>
 					{#await assetsData}
-						<div class="col-span-full flex justify-center">
+						<div class="col-span-full my-5 flex justify-center">
 							<p class="font-semibold">Loading Your Menu Images</p>
 						</div>
 					{:then assetsData}

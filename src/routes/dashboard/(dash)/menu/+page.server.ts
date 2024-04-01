@@ -1,49 +1,55 @@
-import { error, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import prisma from '$lib/prisma';
-import type { FileObject } from '@supabase/storage-js';
+// import type { FileObject } from '@supabase/storage-js';
 
-export const load = (async ({ locals, parent }) => {
-	let menuItems: any[] = [];
-	let menuImages: FileObject[] = [];
+export const load = (async ({ parent }) => {
+	// let menuImages: FileObject[] = [];
 
 	const { layoutData } = await parent();
 	const { restaurant } = await layoutData;
 
-	const assets = await locals.supabase.storage
-		.from('client-assets')
-		.list()
-		.then((res) => {
-			return res.data;
+	// const assets = await locals.supabase.storage
+	// 	.from('client-assets')
+	// 	.list()
+	// 	.then((res) => {
+	// 		return res.data;
+	// 	});
+
+	// if (assets) {
+	// 	menuImages = assets.filter((asset) => asset.name.includes(`menuImg-${restaurant?.id}`));
+	// }
+
+	const pageData = async () => {
+		let menuItems: any[] = [];
+
+		const categories = await prisma.menuCategory.findMany({
+			where: {
+				restaurantId: restaurant?.id || 9999
+			}
 		});
 
-	if (assets) {
-		menuImages = assets.filter((asset) => asset.name.includes(`menuImg-${restaurant?.id}`));
-	}
+		if (categories) {
+			for (const category of categories) {
+				const items = await prisma.menuItem.findMany({
+					where: {
+						categoryId: category.id
+					}
+				});
 
-	const categories = await prisma.menuCategory.findMany({
-		where: {
-			restaurantId: restaurant?.id || 9999
+				menuItems = [...menuItems, ...items];
+			}
 		}
-	});
 
-	if (categories) {
-		for (const category of categories) {
-			const items = await prisma.menuItem.findMany({
-				where: {
-					categoryId: category.id
-				}
-			});
-
-			menuItems = [...menuItems, ...items];
-		}
-	}
+		return {
+			categories,
+			menuItems
+		};
+	};
 
 	return {
 		restaurant,
-		categories,
-		menuItems: menuItems || [],
-		menuImages: menuImages || []
+		pageData: pageData()
 	};
 }) satisfies PageServerLoad;
 

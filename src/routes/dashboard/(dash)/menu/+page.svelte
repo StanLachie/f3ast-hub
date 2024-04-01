@@ -1,40 +1,44 @@
 <script lang="ts">
-	import DragList from '$lib/components/DragList.svelte';
 	import { flip } from 'svelte/animate';
 	import { dndzone } from 'svelte-dnd-action';
 	import type { PageData } from './$types';
 	import Icon from '@iconify/svelte';
 	import Modal from '$lib/components/Modal.svelte';
-	import { json } from '@sveltejs/kit';
-	import Banner from '$lib/components/blocks/restaurant/Banner.svelte';
+	import { onMount } from 'svelte';
 
 	export let data: PageData;
+	const { pageData } = data;
 
 	export let isChangingOrder = false;
 
-	let formattedCategories = data.categories
-		.sort((a, b) => a.sortingIndex - b.sortingIndex)
-		.map((category) => {
-			return {
-				id: category.sortingIndex,
-				dbId: category.id,
-				name: category.name
-			};
-		});
+	let formattedCategories: any[] = [];
+	let formattedItems: any[] = [];
 
-	let formattedItems = data.menuItems
-		.sort((a, b) => a.sortingIndex - b.sortingIndex)
-		.map((item) => {
-			return {
-				id: item.sortingIndex,
-				dbId: item.id,
-				name: item.name,
-				price: item.price,
-				img: item.img,
-				description: item.description,
-				category: item.categoryId
-			};
-		});
+	onMount(async () => {
+		formattedCategories = (await pageData).categories
+			.sort((a, b) => a.sortingIndex - b.sortingIndex)
+			.map((category) => {
+				return {
+					id: category.sortingIndex,
+					dbId: category.id,
+					name: category.name
+				};
+			});
+
+		formattedItems = (await pageData).menuItems
+			.sort((a, b) => a.sortingIndex - b.sortingIndex)
+			.map((item) => {
+				return {
+					id: item.sortingIndex,
+					dbId: item.id,
+					name: item.name,
+					price: item.price,
+					img: item.img,
+					description: item.description,
+					category: item.categoryId
+				};
+			});
+	});
 
 	const handleConsider = (e: any, type: 'category' | 'item') => {
 		if (type === 'category') {
