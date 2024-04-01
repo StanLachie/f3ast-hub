@@ -28,22 +28,22 @@
 	<title>Dashboard | Restaurant</title>
 </meta:head>
 
-{#await data.layoutData}
-	<div class="w-full">
-		<div
-			class="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm"
-		>
-			<p class="font-semibold">Loading Your Dashboard</p>
-		</div>
-	</div>
-{:then layoutData}
-	{#if layoutData.subscription?.status === 'active'}
-		<div class="mx-auto flex w-full max-w-3xl flex-col gap-8">
-			<div>
-				<h1 class="my-2 text-3xl font-semibold">Restaurant Info</h1>
-				<p class="text-neutral-600">Update your restaurant's details here.</p>
+<div class="mx-auto flex w-full max-w-3xl flex-col gap-8">
+	<div>
+		<h1 class="my-2 text-3xl font-semibold">Restaurant Info</h1>
+		<p class="text-neutral-600">Update your restaurant's details here.</p>
 
-				<div class="my-6 flex flex-col gap-4">
+		<div class="my-6 flex flex-col gap-4">
+			{#await data.layoutData}
+				<div class="w-full">
+					<div
+						class="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm"
+					>
+						<p class="font-semibold">Loading Your Restaurant Info</p>
+					</div>
+				</div>
+			{:then layoutData}
+				{#if layoutData.subscription?.status === 'active'}
 					<div
 						class="flex w-full flex-col gap-2 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm md:flex-row md:items-center"
 					>
@@ -178,19 +178,19 @@
 							{/if}
 						</form>
 					</div>
-				</div>
-			</div>
+				{:else}
+					<div class="flex min-h-full items-center justify-center">
+						<div class="flex flex-col items-center gap-2">
+							<h1 class="text-4xl font-bold text-emerald-300">
+								{layoutData.restaurant?.name} is currently inactive
+							</h1>
+							<p class="text-lg font-semibold text-neutral-600">
+								Please check the restaurant's billing page to reactivate.
+							</p>
+						</div>
+					</div>
+				{/if}
+			{/await}
 		</div>
-	{:else}
-		<div class="flex min-h-full items-center justify-center">
-			<div class="flex flex-col items-center gap-2">
-				<h1 class="text-4xl font-bold text-emerald-300">
-					{layoutData.restaurant?.name} is currently inactive
-				</h1>
-				<p class="text-lg font-semibold text-neutral-600">
-					Please check the restaurant's billing page to reactivate.
-				</p>
-			</div>
-		</div>
-	{/if}
-{/await}
+	</div>
+</div>
