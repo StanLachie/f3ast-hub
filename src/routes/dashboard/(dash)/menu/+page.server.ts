@@ -5,6 +5,7 @@ import prisma from '$lib/prisma';
 export const load = (async ({ locals }) => {
 	const session = await locals.getSession();
 	let menuItems = [];
+	let menuImages = [];
 
 	if (!session) {
 		redirect(302, '/dashboard/login');
@@ -30,6 +31,17 @@ export const load = (async ({ locals }) => {
 		redirect(302, '/dashboard/login');
 	}
 
+	const assets = await locals.supabase.storage
+		.from('client-assets')
+		.list()
+		.then((res) => {
+			return res.data;
+		});
+
+	if (assets) {
+		menuImages = assets.filter((asset) => asset.name.includes(`menuImg-${restaurant.id}`));
+	}
+
 	const categories = await prisma.menuCategory.findMany({
 		where: {
 			restaurantId: restaurant.id
@@ -53,6 +65,7 @@ export const load = (async ({ locals }) => {
 		restaurant,
 		categories,
 		menuItems: menuItems || [],
+		menuImages: menuImages || [],
 		client
 	};
 }) satisfies PageServerLoad;

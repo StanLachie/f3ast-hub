@@ -1,4 +1,4 @@
-<script lang="ts">
+<script async script lang="ts">
 	import type { PageData } from './$types';
 	import { fade } from 'svelte/transition';
 	import Icon from '@iconify/svelte';
@@ -6,15 +6,26 @@
 	import { onMount } from 'svelte';
 
 	export let data: PageData;
+	const { layoutData } = data;
 
 	let personalInfo = {
-		first_name: data.client?.first_name,
-		last_name: data.client?.last_name
+		first_name: '',
+		last_name: ''
+	};
+	let contactPreferences = {
+		promotional_emails: false
 	};
 
-	let contactPreferences = {
-		promotional_emails: data.client?.promotional_emails
-	};
+	// Set the personal info
+	onMount(async () => {
+		personalInfo = {
+			first_name: (await layoutData).client?.first_name ?? '',
+			last_name: (await layoutData).client?.last_name ?? ''
+		};
+		contactPreferences = {
+			promotional_emails: (await layoutData).client?.promotional_emails ?? false
+		};
+	});
 
 	let promotionalEmailForm: HTMLFormElement;
 </script>
@@ -27,15 +38,14 @@
 	<div>
 		<h1 class="my-2 text-3xl font-semibold">Personal Info</h1>
 		<p class="text-neutral-600">Update your personal details here.</p>
-
-		{#await data.client}
-			<div
-				class="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm"
-			>
-				<p>Loading...</p>
-			</div>
-		{:then client}
-			<div class="my-6 flex flex-col gap-4">
+		<div class="my-6 flex flex-col gap-4">
+			{#await data.layoutData}
+				<div
+					class="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm"
+				>
+					<p class="font-semibold">Loading Your Personal Info</p>
+				</div>
+			{:then layoutData}
 				<div
 					class="flex w-full flex-col gap-2 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm md:flex-row"
 				>
@@ -59,7 +69,7 @@
 							placeholder="John"
 							class="input h-full p-4"
 						/>
-						{#if personalInfo.first_name !== client?.first_name}
+						{#if personalInfo.first_name !== layoutData.client?.first_name}
 							<button
 								transition:fade={{
 									duration: 100
@@ -94,7 +104,7 @@
 							placeholder="Doe"
 							class="input h-full p-4"
 						/>
-						{#if personalInfo.last_name !== client?.last_name}
+						{#if personalInfo.last_name !== layoutData.client?.last_name}
 							<button
 								transition:fade={{
 									duration: 100
@@ -106,21 +116,21 @@
 						{/if}
 					</form>
 				</div>
-			</div>
-		{/await}
+			{/await}
+		</div>
 	</div>
 
 	<div>
 		<h1 class="mb-2 text-3xl font-semibold">Contact Preferences</h1>
 		<p class="text-neutral-600">Update your personal details here.</p>
 
-		{#await data.client}
+		{#await data.layoutData}
 			<div
 				class="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm"
 			>
-				<p>Loading...</p>
+				<p class="font-semibold">Loading Your Contact Preferences</p>
 			</div>
-		{:then client}
+		{:then layoutData}
 			<div class="my-6 flex flex-col gap-4">
 				<div
 					class="flex w-full flex-col gap-2 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm md:flex-row"

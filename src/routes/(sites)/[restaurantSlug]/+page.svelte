@@ -26,7 +26,7 @@
 	<img
 		src={data.restaurant.banner}
 		alt={`${data.restaurant.name} Banner`}
-		class="h-44 w-full rounded-lg object-cover sm:h-48 md:h-60"
+		class="h-44 w-full rounded-lg object-cover sm:h-52 md:h-64"
 	/>
 	<div
 		class="absolute inset-0 rounded-lg bg-gradient-to-t from-gray-900 via-transparent to-transparent"

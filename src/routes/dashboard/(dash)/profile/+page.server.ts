@@ -34,7 +34,7 @@ export const actions = {
 				}
 			});
 			return { success: true };
-		} else {
+		} else if (promotionalEmails) {
 			await prisma.clientAccount.update({
 				where: {
 					email: userData.user.email

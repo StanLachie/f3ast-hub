@@ -21,6 +21,11 @@
 			link: '/dashboard/menu'
 		},
 		{
+			name: 'Gallery',
+			icon: 'mingcute:photo-album-fill',
+			link: '/dashboard/gallery'
+		},
+		{
 			name: 'Billing',
 			icon: 'mingcute:bank-card-fill',
 			link: '/dashboard/billing'
@@ -53,6 +58,7 @@
 			</div>
 			{#each sidebarItems as item}
 				<a
+					data-sveltekit-preload-data
 					href={item.link}
 					title={item.name}
 					class="group flex h-16 items-center justify-center text-2xl hover:bg-neutral-100"
@@ -67,6 +73,7 @@
 		<div class="flex flex-col divide-y divide-neutral-400 border-t border-neutral-400">
 			{#each accountItems as item}
 				<a
+					data-sveltekit-preload-data
 					href={item.link}
 					title={item.name}
 					class="group flex h-16 items-center justify-center text-2xl hover:bg-neutral-100"

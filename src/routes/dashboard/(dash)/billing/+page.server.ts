@@ -1,12 +1,8 @@
+import { BASE_URL } from '$env/static/private';
 import { stripe } from '$lib/stripe';
 import { fail, redirect } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
-import { BASE_URL } from '$env/static/private';
-import prisma from '$lib/prisma';
 
-export const load = (async () => {
-	return {};
-}) satisfies PageServerLoad;
+import prisma from '$lib/prisma';
 
 export const actions = {
 	reactivate: async ({ locals }) => {

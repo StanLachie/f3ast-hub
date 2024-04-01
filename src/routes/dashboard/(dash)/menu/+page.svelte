@@ -30,6 +30,8 @@
 				dbId: item.id,
 				name: item.name,
 				price: item.price,
+				img: item.img,
+				description: item.description,
 				category: item.categoryId
 			};
 		});
@@ -66,6 +68,7 @@
 				name: formData.get('name'),
 				description: formData.get('description'),
 				price: parseFloat(formData.get('price') as string),
+				img: formData.get('img'),
 				categoryId: parseFloat(formData.get('category') as string)
 			})
 		});
@@ -87,6 +90,7 @@
 				id: id,
 				name: formData.get('name'),
 				description: formData.get('description'),
+				img: formData.get('img'),
 				price: parseFloat(formData.get('price') as string),
 				categoryId: parseFloat(formData.get('category') as string)
 			})
@@ -306,7 +310,7 @@
 										<option value={category.dbId}>{category.name}</option>
 									{/each}
 								</select>
-
+								<input name="img" class="input" placeholder="Image URL" />
 								<textarea class="input" placeholder="Description"></textarea>
 								<button type="submit" class="btn-primary"> Create </button>
 							</form>
@@ -386,7 +390,12 @@
 												{/each}
 											</select>
 
-											<textarea name="description" class="input" placeholder="Description"
+											<input name="img" class="input" placeholder="Image URL" value={item.img} />
+											<textarea
+												name="description"
+												class="input"
+												placeholder="Description"
+												value={item.description}
 											></textarea>
 											<button type="submit" class="btn-primary"> Save </button>
 										</form>

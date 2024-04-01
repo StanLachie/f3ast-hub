@@ -9,36 +9,48 @@ export const load = (async ({ locals }) => {
 		redirect(302, '/dashboard/login');
 	}
 
-	const client = await prisma.clientAccount.findUnique({
-		where: {
-			email: session.user.email
+	const layoutData = async () => {
+		const client = await prisma.clientAccount.findUnique({
+			where: {
+				email: session.user.email
+			}
+		});
+
+		if (!client) {
+			redirect(302, '/dashboard/login');
 		}
-	});
 
-	if (!client) {
-		redirect(302, '/dashboard/login');
-	}
+		const restaurant = await prisma.restaurant.findUnique({
+			where: {
+				id: client.restaurantId || 0
+			}
+		});
 
-	const restaurant = await prisma.restaurant.findUnique({
-		where: {
-			id: client.restaurantId || 0
+		if (!restaurant) {
+			redirect(302, '/dashboard/login');
 		}
-	});
 
-	if (!restaurant) {
-		redirect(302, '/dashboard/login');
-	}
+		const subscription = await prisma.subscription.findUnique({
+			where: {
+				restaurantId: restaurant.id
+			}
+		});
 
-	const subscription = await prisma.subscription.findUnique({
-		where: {
-			restaurantId: restaurant.id
+		if (!subscription) {
+			return {
+				error: 'Server error. Please try again later.'
+			};
 		}
-	});
+
+		return {
+			session,
+			restaurant,
+			client,
+			subscription
+		};
+	};
 
 	return {
-		session,
-		restaurant,
-		client,
-		subscription
+		layoutData: layoutData()
 	};
 }) satisfies LayoutServerLoad;
