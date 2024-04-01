@@ -4,7 +4,7 @@ import prisma from '$lib/prisma';
 import type { FileObject } from '@supabase/storage-js';
 
 export const load = (async ({ locals, parent }) => {
-	let menuItems = [];
+	let menuItems: any[] = [];
 	let menuImages: FileObject[] = [];
 
 	const { layoutData } = await parent();
@@ -147,64 +147,6 @@ export const actions = {
 		await prisma.menuCategory.delete({
 			where: {
 				id: category.id
-			}
-		});
-
-		return {
-			body: {
-				success: true
-			}
-		};
-	},
-	createItem: async ({ request, locals }) => {
-		const data = await request.formData();
-		const name = data.get('name') as string;
-		const price = data.get('price') as string;
-		const categoryId = data.get('category') as string;
-
-		const session = await locals.getSession();
-
-		if (!session) {
-			redirect(302, '/dashboard/login');
-		}
-
-		const client = await prisma.clientAccount.findUnique({
-			where: {
-				email: session.user.email
-			}
-		});
-
-		if (!client) {
-			redirect(302, '/dashboard/login');
-		}
-
-		const restaurant = await prisma.restaurant.findUnique({
-			where: {
-				id: client.restaurantId || 0
-			}
-		});
-
-		if (!restaurant) {
-			redirect(302, '/dashboard/login');
-		}
-
-		const category = await prisma.menuCategory.findUnique({
-			where: {
-				id: parseInt(categoryId)
-			}
-		});
-
-		console.log('category', category);
-
-		if (!category) {
-			error(404, 'Category not found');
-		}
-
-		await prisma.menuItem.create({
-			data: {
-				name,
-				price: parseFloat(price),
-				categoryId: category.id
 			}
 		});
 

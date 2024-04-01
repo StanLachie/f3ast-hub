@@ -87,7 +87,7 @@ export const actions = {
 				id: restaurant.id
 			},
 			data: {
-				logo: `https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/object/public/${logo.data?.path}`
+				logo: `https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${logo.data?.path}`
 			}
 		});
 

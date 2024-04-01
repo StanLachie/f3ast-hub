@@ -228,7 +228,7 @@
 						{#each data.menuImages as menuImage}
 							<div>
 								<img
-									src={`https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/object/public/client-assets/${menuImage.name}`}
+									src={`https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}?width=100&height=100`}
 									alt="Menu Item"
 									class="h-24 min-w-24 flex-shrink-0 cursor-pointer rounded-lg object-cover"
 								/>
