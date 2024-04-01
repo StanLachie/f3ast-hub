@@ -1,35 +1,14 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import prisma from '$lib/prisma';
+import type { FileObject } from '@supabase/storage-js';
 
-export const load = (async ({ locals }) => {
-	const session = await locals.getSession();
+export const load = (async ({ locals, parent }) => {
 	let menuItems = [];
-	let menuImages = [];
+	let menuImages: FileObject[] = [];
 
-	if (!session) {
-		redirect(302, '/dashboard/login');
-	}
-
-	const client = await prisma.clientAccount.findUnique({
-		where: {
-			email: session.user.email || ''
-		}
-	});
-
-	if (!client) {
-		redirect(302, '/dashboard/login');
-	}
-
-	const restaurant = await prisma.restaurant.findUnique({
-		where: {
-			id: client.restaurantId || 0
-		}
-	});
-
-	if (!restaurant) {
-		redirect(302, '/dashboard/login');
-	}
+	const { layoutData } = await parent();
+	const { restaurant } = await layoutData;
 
 	const assets = await locals.supabase.storage
 		.from('client-assets')
@@ -39,12 +18,12 @@ export const load = (async ({ locals }) => {
 		});
 
 	if (assets) {
-		menuImages = assets.filter((asset) => asset.name.includes(`menuImg-${restaurant.id}`));
+		menuImages = assets.filter((asset) => asset.name.includes(`menuImg-${restaurant?.id}`));
 	}
 
 	const categories = await prisma.menuCategory.findMany({
 		where: {
-			restaurantId: restaurant.id
+			restaurantId: restaurant?.id || 9999
 		}
 	});
 
@@ -61,12 +40,10 @@ export const load = (async ({ locals }) => {
 	}
 
 	return {
-		session,
 		restaurant,
 		categories,
 		menuItems: menuItems || [],
-		menuImages: menuImages || [],
-		client
+		menuImages: menuImages || []
 	};
 }) satisfies PageServerLoad;
 
