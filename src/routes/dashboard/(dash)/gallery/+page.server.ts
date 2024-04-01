@@ -6,23 +6,29 @@ import prisma from '$lib/prisma';
 import type { FileObject } from '@supabase/storage-js';
 
 export const load = (async ({ locals, parent }) => {
-	let menuImages: FileObject[] = [];
 	const { layoutData } = await parent();
 	const { restaurant } = await layoutData;
 
-	const assets = await locals.supabase.storage
-		.from('client-assets')
-		.list()
-		.then((res) => {
-			return res.data;
-		});
+	const assetsData = async () => {
+		let menuImages: FileObject[] = [];
+		const assets = await locals.supabase.storage
+			.from('client-assets')
+			.list()
+			.then((res) => {
+				return res.data;
+			});
 
-	if (assets) {
-		menuImages = assets.filter((asset) => asset.name.includes(`menuImg-${restaurant?.id}`));
-	}
+		if (assets) {
+			menuImages = assets.filter((asset) => asset.name.includes(`menuImg-${restaurant?.id}`));
+		}
+
+		return {
+			menuImages
+		};
+	};
 
 	return {
-		menuImages
+		assetsData: assetsData()
 	};
 }) satisfies PageServerLoad;
 
