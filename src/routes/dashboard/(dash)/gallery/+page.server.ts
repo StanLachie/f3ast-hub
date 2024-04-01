@@ -73,7 +73,9 @@ export const actions = {
 
 		const formattedFile = sharp(await logoFile.arrayBuffer())
 			.resize(200, 200)
-			.webp()
+			.webp({
+				quality: 80
+			})
 			.toBuffer();
 
 		const logo = await locals.supabase.storage
@@ -83,8 +85,7 @@ export const actions = {
 				decode(Buffer.from(await formattedFile).toString('base64')),
 				{
 					upsert: true,
-					contentType: 'image/webp',
-					cacheControl: '10'
+					contentType: 'image/webp'
 				}
 			);
 
@@ -141,7 +142,9 @@ export const actions = {
 
 		const formattedFile = sharp(await bannerFile.arrayBuffer())
 			.resize(1250, 600)
-			.webp()
+			.webp({
+				quality: 80
+			})
 			.toBuffer();
 
 		const banner = await locals.supabase.storage
@@ -151,8 +154,7 @@ export const actions = {
 				decode(Buffer.from(await formattedFile).toString('base64')),
 				{
 					upsert: true,
-					contentType: 'image/webp',
-					cacheControl: '10'
+					contentType: 'image/webp'
 				}
 			);
 
@@ -212,7 +214,9 @@ export const actions = {
 
 		const formattedFile = sharp(await menuImageFile.arrayBuffer())
 			.resize(800, 800)
-			.webp()
+			.webp({
+				quality: 80
+			})
 			.toBuffer();
 
 		await locals.supabase.storage
@@ -221,8 +225,7 @@ export const actions = {
 				`menuImg-${restaurant.id}-${Date.now()}`,
 				decode(Buffer.from(await formattedFile).toString('base64')),
 				{
-					contentType: 'image/webp',
-					cacheControl: '10'
+					contentType: 'image/webp'
 				}
 			);
 
