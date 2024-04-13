@@ -1,27 +1,15 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import prisma from '$lib/prisma';
-// import type { FileObject } from '@supabase/storage-js';
+import type { FileObject } from '@supabase/storage-js';
 
-export const load = (async ({ parent }) => {
-	// let menuImages: FileObject[] = [];
-
+export const load = (async ({ parent, locals }) => {
 	const { layoutData } = await parent();
 	const { restaurant } = await layoutData;
 
-	// const assets = await locals.supabase.storage
-	// 	.from('client-assets')
-	// 	.list()
-	// 	.then((res) => {
-	// 		return res.data;
-	// 	});
-
-	// if (assets) {
-	// 	menuImages = assets.filter((asset) => asset.name.includes(`menuImg-${restaurant?.id}`));
-	// }
-
 	const pageData = async () => {
 		let menuItems: any[] = [];
+		let gallery: FileObject[] = [];
 
 		const categories = await prisma.menuCategory.findMany({
 			where: {
@@ -41,8 +29,20 @@ export const load = (async ({ parent }) => {
 			}
 		}
 
+		const assets = await locals.supabase.storage
+			.from('client-assets')
+			.list()
+			.then((res) => {
+				return res.data;
+			});
+
+		if (assets) {
+			gallery = assets.filter((asset) => asset.name.includes(`menuImg-${restaurant?.id}`));
+		}
+
 		return {
 			categories,
+			gallery,
 			menuItems
 		};
 	};

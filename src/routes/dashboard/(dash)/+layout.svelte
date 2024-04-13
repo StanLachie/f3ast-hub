@@ -39,6 +39,11 @@
 			link: '/dashboard/profile'
 		},
 		{
+			name: 'Support',
+			icon: 'mingcute:question-fill',
+			link: '/dashboard/support'
+		},
+		{
 			name: 'Logout',
 			icon: 'mingcute:exit-line',
 			link: '/dashboard/logout'

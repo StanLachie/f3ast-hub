@@ -13,6 +13,7 @@
 
 	let formattedCategories: any[] = [];
 	let formattedItems: any[] = [];
+	let galleryImages: any;
 
 	onMount(async () => {
 		formattedCategories = (await pageData).categories
@@ -38,6 +39,8 @@
 					category: item.categoryId
 				};
 			});
+
+		galleryImages = (await pageData).gallery;
 	});
 
 	const handleConsider = (e: any, type: 'category' | 'item') => {
@@ -87,6 +90,8 @@
 		const formData = new FormData(target);
 
 		if (!formData.get('name') || !formData.get('price') || !formData.get('category')) return;
+
+		console.log(formData.get('img'));
 
 		const res = await fetch(`/api/menu/item?id=${id}`, {
 			method: 'PUT',
@@ -394,7 +399,43 @@
 												{/each}
 											</select>
 
-											<input name="img" class="input" placeholder="Image URL" value={item.img} />
+											<input name="img" hidden value={item.img} />
+
+											<div class="grid max-h-64 grid-cols-4 gap-2 overflow-y-auto">
+												{#each galleryImages as menuImage}
+													<button
+														class="relative flex items-center justify-center"
+														on:click={(e) => {
+															e.preventDefault();
+															if (
+																item.img ===
+																`https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}`
+															) {
+																item.img = null;
+															} else {
+																item.img = `https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}`;
+															}
+														}}
+													>
+														{#if item.img === `https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}`}
+															<div
+																class="absolute flex h-full w-full items-center justify-center rounded-lg bg-neutral-950 opacity-50"
+															></div>
+															<Icon
+																icon="mingcute:check-circle-line"
+																class="absolute h-8 w-8 text-emerald-400"
+															/>
+														{/if}
+
+														<img
+															src={`https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}?width=100&height=100`}
+															alt="Menu Item"
+															class="w-full cursor-pointer rounded-lg object-cover"
+														/>
+													</button>
+												{/each}
+											</div>
+
 											<textarea
 												name="description"
 												class="input"
