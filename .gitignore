@@ -5,6 +5,7 @@ node_modules
 /package
 .env
 /src/lib/prisma.ts
+src/lib/prisma.ts
 .env.*
 !.env.example
 vite.config.js.timestamp-*
