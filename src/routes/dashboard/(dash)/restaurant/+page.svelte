@@ -15,6 +15,13 @@
 		address: ''
 	};
 
+	let submittingFields = {
+		published: false,
+		name: false,
+		theme: false,
+		address: false
+	};
+
 	onMount(async () => {
 		restaurantInfo = {
 			name: (await layoutData).restaurant?.name ?? '',
@@ -51,11 +58,25 @@
 							<h2 class="text-lg font-semibold">Published</h2>
 							<p class="text-neutral-600">Whether your restaurant is published or not.</p>
 						</div>
-						<form method="post" action="?/publish" class="">
+						<form
+							method="post"
+							action="?/publish"
+							use:enhance={() => {
+								submittingFields.published = true;
+								return async ({ update }) => {
+									update({ reset: false });
+									submittingFields.published = false;
+								};
+							}}
+						>
 							<button
 								class={`btn-primary hover:bg-emerald-300 ${!layoutData.restaurant?.published && 'bg-red-300 hover:bg-red-400'}`}
 								type="submit"
-								>{layoutData.restaurant?.published ? 'Published' : 'Not Published'}</button
+								>{submittingFields.published
+									? 'Updating...'
+									: layoutData.restaurant?.published
+										? 'Published'
+										: 'Unpublished'}</button
 							>
 						</form>
 					</div>
@@ -71,26 +92,34 @@
 							method="post"
 							action="?/update"
 							use:enhance={() => {
+								submittingFields.name = true;
 								return async ({ update }) => {
 									update({ reset: false });
+									submittingFields.name = false;
 								};
 							}}
 						>
 							<input
 								bind:value={restaurantInfo.name}
 								name="name"
+								disabled={submittingFields.name}
 								type="text"
 								placeholder="John's Diner"
 								class="input h-full p-4"
 							/>
 							{#if restaurantInfo.name !== layoutData.restaurant?.name}
 								<button
+									disabled={submittingFields.name}
 									transition:fade={{
 										duration: 100
 									}}
 									class="btn-primary absolute bottom-[10px] right-[10px] !p-1"
 								>
-									<Icon icon="material-symbols-light:save-outline" class="h-6 w-6" />
+									{#if submittingFields.name}
+										<Icon icon="mingcute:loading-3-fill" class="h-6 w-6 animate-spin" />
+									{:else}
+										<Icon icon="material-symbols-light:save-outline" class="h-6 w-6" />
+									{/if}
 								</button>
 							{/if}
 						</form>
@@ -108,14 +137,17 @@
 							method="post"
 							action="?/update"
 							use:enhance={() => {
+								submittingFields.theme = true;
 								return async ({ update }) => {
 									update({ reset: false });
+									submittingFields.theme = false;
 								};
 							}}
 						>
 							<select
 								bind:value={restaurantInfo.theme}
 								name="theme"
+								disabled={submittingFields.theme}
 								class="input h-full appearance-none p-4"
 							>
 								<option value="default">Default</option>
@@ -132,12 +164,17 @@
 							</select>
 							{#if restaurantInfo.theme !== layoutData.restaurant?.theme}
 								<button
+									disabled={submittingFields.theme}
 									transition:fade={{
 										duration: 100
 									}}
 									class="btn-primary absolute bottom-[10px] right-[10px] !p-1"
 								>
-									<Icon icon="material-symbols-light:save-outline" class="h-6 w-6" />
+									{#if submittingFields.theme}
+										<Icon icon="mingcute:loading-3-fill" class="h-6 w-6 animate-spin" />
+									{:else}
+										<Icon icon="material-symbols-light:save-outline" class="h-6 w-6" />
+									{/if}
 								</button>
 							{/if}
 						</form>
@@ -154,26 +191,34 @@
 							method="post"
 							action="?/update"
 							use:enhance={() => {
+								submittingFields.address = true;
 								return async ({ update }) => {
 									update({ reset: false });
+									submittingFields.address = false;
 								};
 							}}
 						>
 							<input
 								bind:value={restaurantInfo.address}
 								name="address"
+								disabled={submittingFields.address}
 								type="text"
 								placeholder="123 Main St."
 								class="input h-full p-4"
 							/>
 							{#if restaurantInfo.address !== layoutData.restaurant?.address}
 								<button
+									disabled={submittingFields.address}
 									transition:fade={{
 										duration: 100
 									}}
 									class="btn-primary absolute bottom-[10px] right-[10px] !p-1"
 								>
-									<Icon icon="material-symbols-light:save-outline" class="h-6 w-6" />
+									{#if submittingFields.address}
+										<Icon icon="mingcute:loading-3-fill" class="h-6 w-6 animate-spin" />
+									{:else}
+										<Icon icon="material-symbols-light:save-outline" class="h-6 w-6" />
+									{/if}
 								</button>
 							{/if}
 						</form>
