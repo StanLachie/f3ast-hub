@@ -4,9 +4,8 @@ node_modules
 /.svelte-kit
 /package
 .env
-/src/lib/prisma.ts
-src/lib/prisma.ts
 .env.*
 !.env.example
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+src/lib/prisma.ts
