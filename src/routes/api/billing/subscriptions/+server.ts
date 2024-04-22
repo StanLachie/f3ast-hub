@@ -4,14 +4,24 @@ import type { RequestHandler } from './$types';
 import { STRIPE_WEBHOOK_SECRET } from '$env/static/private';
 import prisma from '$lib/prisma';
 
+function toBuffer(ab: ArrayBuffer): Buffer {
+	const buf = Buffer.alloc(ab.byteLength);
+	const view = new Uint8Array(ab);
+	for (let i = 0; i < buf.length; i++) {
+		buf[i] = view[i] as number;
+	}
+	return buf;
+}
+
 export const POST: RequestHandler = async ({ request }) => {
-	const body = await request.text();
+	const _rawBody = await request.arrayBuffer();
+	const payload = toBuffer(_rawBody);
 	const signature = request.headers.get('stripe-signature') as string;
 	const stripe = createStripeClient();
 	let event;
 
 	try {
-		event = stripe.webhooks.constructEvent(body, signature, STRIPE_WEBHOOK_SECRET);
+		event = stripe.webhooks.constructEvent(payload, signature, STRIPE_WEBHOOK_SECRET);
 	} catch (err) {
 		console.error(`⚠️ Webhook signature verification failed.`, err);
 		throw error(400, 'Invalid request.');
