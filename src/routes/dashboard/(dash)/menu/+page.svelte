@@ -152,7 +152,7 @@
 
 	const handleEditItemOrder = async () => {
 		isChangingOrder = true;
-		const res = await fetch(`/api/item/editOrder`, {
+		const res = await fetch(`/api/menu/item/reorder`, {
 			method: 'PUT',
 			body: JSON.stringify({
 				items: formattedItems.map((item, index) => {
