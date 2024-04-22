@@ -1,4 +1,4 @@
-import { stripe } from '$lib/stripe';
+import { createStripeClient } from '$lib/stripe';
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { STRIPE_WEBHOOK_SECRET } from '$env/static/private';
@@ -7,6 +7,7 @@ import prisma from '$lib/prisma';
 export const POST: RequestHandler = async ({ request }) => {
 	const body = await request.text();
 	const signature = request.headers.get('stripe-signature') as string;
+	const stripe = createStripeClient();
 	let event;
 
 	try {
