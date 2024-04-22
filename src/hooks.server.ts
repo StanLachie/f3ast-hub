@@ -28,6 +28,30 @@ export const handle = async ({ event, resolve }) => {
 		return session;
 	};
 
+	event.locals.getUser = async () => {
+		const { data } = await event.locals.supabase.auth.getUser();
+
+		if (data.user) {
+			const { data: account } = await event.locals.supabase
+				.from('ClientAccount')
+				.select('*')
+				.eq('email', data.user.email)
+				.single();
+
+			console.log(account);
+
+			const { data: restaurant } = await event.locals.supabase
+				.from('Restaurant')
+				.select('*')
+				.eq('id', account.restaurantId)
+				.single();
+
+			return { account, restaurant };
+		}
+
+		return null;
+	};
+
 	return resolve(event, {
 		filterSerializedResponseHeaders(name) {
 			return name === 'content-range';
