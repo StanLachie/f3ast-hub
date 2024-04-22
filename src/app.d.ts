@@ -7,6 +7,10 @@ declare global {
 		interface Locals {
 			supabase: import('@supabase/supabase-js').SupabaseClient;
 			getSession: () => Promise<import('@supabase/supabase-js').Session | null>;
+			getUser: () => Promise<{
+				account: any;
+				restaurant: any;
+			} | null>;
 		}
 		// interface PageData {}
 		// interface PageState {}

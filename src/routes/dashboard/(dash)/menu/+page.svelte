@@ -15,6 +15,8 @@
 	let formattedItems: any[] = [];
 	let galleryImages: any;
 
+	let isSaving = false;
+
 	onMount(async () => {
 		formattedCategories = (await pageData).categories
 			.sort((a, b) => a.sortingIndex - b.sortingIndex)
@@ -58,7 +60,7 @@
 			await handleEditCategoryOrder();
 		} else if (type === 'item') {
 			formattedItems = e.detail.items;
-			// Here, you'd have a similar function for handling item order changes
+
 			await handleEditItemOrder();
 		}
 	};
@@ -68,6 +70,8 @@
 		const formData = new FormData(target);
 
 		if (!formData.get('name') || !formData.get('price') || !formData.get('category')) return;
+
+		isSaving = true;
 
 		const res = await fetch(`/api/menu/item`, {
 			method: 'POST',
@@ -82,6 +86,31 @@
 
 		if (res.ok) {
 			location.reload();
+		} else {
+			isSaving = false;
+		}
+	};
+
+	const handleCreateCategory = async (event: Event) => {
+		const target = event.target as HTMLFormElement;
+		const formData = new FormData(target);
+
+		if (!formData.get('name')) return;
+
+		isSaving = true;
+
+		const res = await fetch(`/api/menu/category`, {
+			method: 'POST',
+			body: JSON.stringify({
+				name: formData.get('name'),
+				description: formData.get('description')
+			})
+		});
+
+		if (res.ok) {
+			location.reload();
+		} else {
+			isSaving = false;
 		}
 	};
 
@@ -91,7 +120,7 @@
 
 		if (!formData.get('name') || !formData.get('price') || !formData.get('category')) return;
 
-		console.log(formData.get('img'));
+		isSaving = true;
 
 		const res = await fetch(`/api/menu/item?id=${id}`, {
 			method: 'PUT',
@@ -107,27 +136,61 @@
 
 		if (res.ok) {
 			location.reload();
+		} else {
+			isSaving = false;
+		}
+	};
+
+	const handleUpdateCategory = async (id: number, event: Event) => {
+		const target = event.target as HTMLFormElement;
+		const formData = new FormData(target);
+
+		if (!formData.get('name')) return;
+
+		isSaving = true;
+
+		const res = await fetch(`/api/menu/category?id=${id}`, {
+			method: 'PUT',
+			body: JSON.stringify({
+				id: id,
+				name: formData.get('name'),
+				description: formData.get('description')
+			})
+		});
+
+		if (res.ok) {
+			location.reload();
+		} else {
+			isSaving = false;
 		}
 	};
 
 	const handleDeleteItem = async (id: number) => {
+		isSaving = true;
+
 		const res = await fetch(`/api/menu/item?id=${id}`, {
 			method: 'DELETE'
 		});
 
 		if (res.ok) {
 			location.reload();
+		} else {
+			isSaving = false;
 		}
 	};
 
 	const handleDeleteCategory = async (id: number) => {
-		const res = await fetch(`/api/category/delete`, {
+		isSaving = true;
+
+		const res = await fetch(`/api/menu/category/delete`, {
 			method: 'DELETE',
 			body: JSON.stringify({ id })
 		});
 
 		if (res.ok) {
 			location.reload();
+		} else {
+			isSaving = false;
 		}
 	};
 
@@ -204,10 +267,18 @@
 					</button>
 					{#if openModal === 'categoryCreate'}
 						<Modal open={true} onClose={closeModal}>
-							<form class="flex flex-col gap-3" method="post" action="?/createCategory">
+							<form
+								class="flex flex-col gap-3"
+								on:submit={(e) => {
+									e.preventDefault();
+									handleCreateCategory(e);
+								}}
+							>
 								<input name="name" type="text" class="input" placeholder="Name" />
 								<textarea class="input" placeholder="Description"></textarea>
-								<button type="submit" class="btn-primary"> Create </button>
+								<button type="submit" disabled={isSaving} class="btn-primary"
+									>{isSaving ? 'Creating...' : 'Create'}</button
+								>
 							</form>
 						</Modal>
 					{/if}
@@ -250,8 +321,10 @@
 								<Modal open={true} onClose={closeModal}>
 									<form
 										class="flex flex-col gap-3"
-										method="post"
-										action={`?/editCategory&id=${item.dbId}`}
+										on:submit={(e) => {
+											e.preventDefault();
+											handleUpdateCategory(item.dbId, e);
+										}}
 									>
 										<input
 											name="name"
@@ -261,7 +334,9 @@
 											value={item.name}
 										/>
 										<textarea class="input" placeholder="Description"></textarea>
-										<button type="submit" class="btn-primary"> Save </button>
+										<button type="submit" disabled={isSaving} class="btn-primary"
+											>{isSaving ? 'Saving...' : 'Save'}</button
+										>
 									</form>
 								</Modal>
 							{/if}
@@ -321,7 +396,9 @@
 								</select>
 								<input name="img" class="input" placeholder="Image URL" />
 								<textarea class="input" placeholder="Description"></textarea>
-								<button type="submit" class="btn-primary"> Create </button>
+								<button type="submit" disabled={isSaving} class="btn-primary"
+									>{isSaving ? 'Creating...' : 'Create'}</button
+								>
 							</form>
 						</Modal>
 					{/if}
@@ -442,7 +519,9 @@
 												placeholder="Description"
 												value={item.description}
 											></textarea>
-											<button type="submit" class="btn-primary"> Save </button>
+											<button type="submit" disabled={isSaving} class="btn-primary"
+												>{isSaving ? 'Saving...' : 'Save'}</button
+											>
 										</form>
 									</Modal>
 								{/if}
