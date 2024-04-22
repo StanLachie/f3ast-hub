@@ -38,8 +38,6 @@ export const handle = async ({ event, resolve }) => {
 				.eq('email', data.user.email)
 				.single();
 
-			console.log(account);
-
 			const { data: restaurant } = await event.locals.supabase
 				.from('Restaurant')
 				.select('*')

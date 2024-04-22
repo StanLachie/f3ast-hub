@@ -5,6 +5,8 @@
 	import Icon from '@iconify/svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import { onMount } from 'svelte';
+	import { quintOut } from 'svelte/easing';
+	import { slide } from 'svelte/transition';
 
 	export let data: PageData;
 	const { pageData } = data;
@@ -16,6 +18,7 @@
 	let galleryImages: any;
 
 	let isSaving = false;
+	let isReordering = false;
 
 	onMount(async () => {
 		formattedCategories = (await pageData).categories
@@ -73,22 +76,45 @@
 
 		isSaving = true;
 
+		let newItem: {
+			id: number;
+			dbId: number;
+			name: string;
+			description: string;
+			price: number;
+			img: string;
+			category: number;
+		} = {
+			id: new Date().getTime(),
+			dbId: new Date().getTime(),
+			name: formData.get('name') as string,
+			description: formData.get('description') as string,
+			price: parseFloat(formData.get('price') as string),
+			img: formData.get('img') as string,
+			category: parseFloat(formData.get('category') as string)
+		};
+
 		const res = await fetch(`/api/menu/item`, {
 			method: 'POST',
-			body: JSON.stringify({
-				name: formData.get('name'),
-				description: formData.get('description'),
-				price: parseFloat(formData.get('price') as string),
-				img: formData.get('img'),
-				categoryId: parseFloat(formData.get('category') as string)
-			})
+			body: JSON.stringify(newItem)
 		});
 
 		if (res.ok) {
-			location.reload();
+			let data = await res.json();
+
+			newItem = data.item;
+
+			newItem.dbId = newItem.id;
+			newItem.id = formattedItems.length + 1;
+			newItem.category = data.item.categoryId;
+
+			formattedItems.push(newItem);
+			closeModal();
 		} else {
-			isSaving = false;
+			alert('Failed to create item. Please try again.');
 		}
+
+		isSaving = false;
 	};
 
 	const handleCreateCategory = async (event: Event) => {
@@ -99,19 +125,38 @@
 
 		isSaving = true;
 
+		let newCategory: {
+			id: number;
+			dbId: number;
+			name: string;
+			description: string;
+		};
+
+		newCategory = {
+			id: new Date().getTime(),
+			dbId: new Date().getTime(),
+			name: formData.get('name') as string,
+			description: formData.get('description') as string
+		};
+
 		const res = await fetch(`/api/menu/category`, {
 			method: 'POST',
-			body: JSON.stringify({
-				name: formData.get('name'),
-				description: formData.get('description')
-			})
+			body: JSON.stringify(newCategory)
 		});
 
 		if (res.ok) {
-			location.reload();
-		} else {
-			isSaving = false;
+			let data = await res.json();
+
+			newCategory = data.category;
+
+			newCategory.dbId = newCategory.id;
+			newCategory.id = formattedCategories.length + 1;
+
+			formattedCategories.push(newCategory);
+			closeModal();
 		}
+
+		isSaving = false;
 	};
 
 	const handleUpdateItem = async (id: number, event: Event) => {
@@ -122,23 +167,46 @@
 
 		isSaving = true;
 
+		let updatedItem: {
+			id: number;
+			dbId: number;
+			name: string;
+			description: string;
+			price: number;
+			img: string;
+			category: number;
+		} = {
+			id: id,
+			dbId: id,
+			name: formData.get('name') as string,
+			description: formData.get('description') as string,
+			price: parseFloat(formData.get('price') as string),
+			img: formData.get('img') as string,
+			category: parseFloat(formData.get('category') as string)
+		};
+
 		const res = await fetch(`/api/menu/item?id=${id}`, {
 			method: 'PUT',
-			body: JSON.stringify({
-				id: id,
-				name: formData.get('name'),
-				description: formData.get('description'),
-				img: formData.get('img'),
-				price: parseFloat(formData.get('price') as string),
-				categoryId: parseFloat(formData.get('category') as string)
-			})
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(updatedItem)
 		});
 
 		if (res.ok) {
-			location.reload();
+			let data = await res.json();
+
+			updatedItem = data.item;
+
+			updatedItem.dbId = updatedItem.id;
+			updatedItem.id = data.item.sortingIndex;
+			updatedItem.category = data.item.categoryId;
+
+			formattedItems = formattedItems.map((item) => (item.dbId === id ? updatedItem : item));
+			closeModal();
 		} else {
-			isSaving = false;
+			alert('Failed to update item. Please try again.');
 		}
+
+		isSaving = false;
 	};
 
 	const handleUpdateCategory = async (id: number, event: Event) => {
@@ -149,54 +217,72 @@
 
 		isSaving = true;
 
+		let updatedCategory = {
+			id: id,
+			dbId: id,
+			name: formData.get('name') as string,
+			description: formData.get('description') as string
+		};
+
 		const res = await fetch(`/api/menu/category?id=${id}`, {
 			method: 'PUT',
-			body: JSON.stringify({
-				id: id,
-				name: formData.get('name'),
-				description: formData.get('description')
-			})
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(updatedCategory)
 		});
 
 		if (res.ok) {
-			location.reload();
+			let data = await res.json();
+
+			updatedCategory = data.category;
+
+			updatedCategory.dbId = updatedCategory.id;
+			updatedCategory.id = data.category.sortingIndex;
+
+			formattedCategories = formattedCategories.map((category) =>
+				category.dbId === id ? updatedCategory : category
+			);
+			closeModal();
 		} else {
-			isSaving = false;
+			alert('Failed to update category. Please try again.');
 		}
+
+		isSaving = false;
 	};
 
 	const handleDeleteItem = async (id: number) => {
-		isSaving = true;
-
 		const res = await fetch(`/api/menu/item?id=${id}`, {
 			method: 'DELETE'
 		});
 
 		if (res.ok) {
-			location.reload();
+			formattedItems = formattedItems.filter((item) => item.dbId !== id);
+			closeModal();
 		} else {
-			isSaving = false;
+			alert('Failed to delete item. Please try again.');
 		}
+
+		isSaving = false;
 	};
 
 	const handleDeleteCategory = async (id: number) => {
 		isSaving = true;
-
-		const res = await fetch(`/api/menu/category/delete`, {
-			method: 'DELETE',
-			body: JSON.stringify({ id })
+		const res = await fetch(`/api/menu/category?id=${id}`, {
+			method: 'DELETE'
 		});
 
 		if (res.ok) {
-			location.reload();
+			formattedCategories = formattedCategories.filter((category) => category.dbId !== id);
+			closeModal();
 		} else {
-			isSaving = false;
+			alert('Failed to delete category. Please try again.');
 		}
+
+		isSaving = false;
 	};
 
 	const handleEditCategoryOrder = async () => {
-		isChangingOrder = true;
-		const res = await fetch(`/api/category/editOrder`, {
+		isReordering = true;
+		const res = await fetch(`/api/menu/category/reorder`, {
 			method: 'PUT',
 			body: JSON.stringify({
 				categories: formattedCategories.map((category, index) => {
@@ -209,12 +295,12 @@
 		});
 
 		if (res.ok) {
-			isChangingOrder = false;
+			isReordering = false;
 		}
 	};
 
 	const handleEditItemOrder = async () => {
-		isChangingOrder = true;
+		isReordering = true;
 		const res = await fetch(`/api/menu/item/reorder`, {
 			method: 'PUT',
 			body: JSON.stringify({
@@ -228,7 +314,9 @@
 		});
 
 		if (res.ok) {
-			isChangingOrder = false;
+			isReordering = false;
+		} else {
+			alert('Something went wrong. Please try again.');
 		}
 	};
 
@@ -241,6 +329,17 @@
 <meta:head>
 	<title>Dashboard | Menu Editor</title>
 </meta:head>
+
+{#if isReordering}
+	<!-- Little toast in the bottom right corner letting the user know that the order is updating. -->
+	<div
+		transition:slide={{ delay: 250, duration: 300, easing: quintOut, axis: 'x' }}
+		class="fixed bottom-4 right-4 z-50 flex flex-nowrap items-center justify-center gap-3 rounded-lg border border-neutral-400 bg-white px-3 py-2 shadow-sm"
+	>
+		<Icon icon="mingcute:loading-3-fill" class="h-5 w-5 animate-spin text-emerald-500" />
+		<span class="text-nowrap font-semibold">Updating order...</span>
+	</div>
+{/if}
 
 <div class="mx-auto flex w-full max-w-3xl flex-col gap-8">
 	<div>
@@ -289,7 +388,7 @@
 						items: formattedCategories,
 						flipDurationMs: 100,
 						dropTargetStyle: {},
-						dragDisabled: isChangingOrder
+						dragDisabled: isChangingOrder || openModal !== ''
 					}}
 					on:consider={(e) => handleConsider(e, 'category')}
 					on:finalize={(e) => handleFinalize(e, 'category')}

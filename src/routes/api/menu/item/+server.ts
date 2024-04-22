@@ -2,9 +2,9 @@ import prisma from '$lib/prisma';
 import type { RequestHandler } from '@sveltejs/kit';
 export const POST: RequestHandler = async ({ locals, request }) => {
 	const session = await locals.getSession();
-	const { name, price, description, categoryId, img } = await request.json();
+	const { name, price, description, category, img } = await request.json();
 
-	if (!name || !price || !categoryId) {
+	if (!name || !price || !category) {
 		return new Response(JSON.stringify({ error: 'Missing fields' }), {
 			status: 400,
 			headers: { 'content-type': 'application/json' }
@@ -33,7 +33,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 			sortingIndex: getSortingIndex ? getSortingIndex.sortingIndex + 1 : 0,
 			MenuCategory: {
 				connect: {
-					id: categoryId
+					id: category
 				}
 			}
 		}
@@ -84,9 +84,7 @@ export const GET: RequestHandler = async ({ locals, url }) => {
 export const PUT: RequestHandler = async ({ locals, request, url }) => {
 	const session = await locals.getSession();
 	const id = url.searchParams.get('id');
-	const { name, price, description, categoryId, img } = await request.json();
-
-	console.log(img);
+	const { name, price, description, category, img } = await request.json();
 
 	if (!id) {
 		return new Response(JSON.stringify({ error: 'Missing fields' }), {
@@ -129,11 +127,13 @@ export const PUT: RequestHandler = async ({ locals, request, url }) => {
 			img: img,
 			MenuCategory: {
 				connect: {
-					id: categoryId || item.MenuCategory.id
+					id: category || item.MenuCategory.id
 				}
 			}
 		}
 	});
+
+	console.log(updatedItem);
 
 	return new Response(JSON.stringify({ item: updatedItem }), {
 		headers: { 'content-type': 'application/json' }

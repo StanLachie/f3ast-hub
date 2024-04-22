@@ -4,7 +4,7 @@ import type { RequestHandler } from './$types';
 export const PUT: RequestHandler = async ({ locals, request }) => {
 	const session = await locals.getSession();
 	const user = await locals.getUser();
-	const { items } = await request.json();
+	const { categories } = await request.json();
 
 	if (!session) {
 		return new Response(JSON.stringify({ error: 'Unauthorized' }), {
@@ -20,16 +20,15 @@ export const PUT: RequestHandler = async ({ locals, request }) => {
 		});
 	}
 
-	for (const item of items) {
-		await prisma.menuItem.update({
+	for (const category of categories) {
+		await prisma.menuCategory.update({
 			where: {
-				id: item.dbId
+				id: category.dbId
 			},
 			data: {
-				sortingIndex: item.sortingIndex
+				sortingIndex: category.sortingIndex
 			}
 		});
 	}
-
 	return new Response();
 };
