@@ -33,7 +33,7 @@
 					<div class="col-span-full flex justify-end md:col-span-2">
 						<a
 							class="btn-primary"
-							href={`mailto:support@f3ast.com?subject=Client%20Support%20Needed%20%7C%20%40%20${layoutData.restaurant?.name}}`}
+							href={`mailto:support@f3ast.com?subject=Client%20Support%20Needed%20%7C%20%40%20${layoutData.restaurant?.name}`}
 							target="_blank"
 							rel="noopener noreferrer"
 						>
