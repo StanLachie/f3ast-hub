@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { fade } from 'svelte/transition';
+
 	export let open = false;
 	export let onClose = () => {
 		open = false;
@@ -12,6 +14,7 @@
 {#if open}
 	<a
 		class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50"
+		transition:fade={{ duration: 250 }}
 		on:click={onClose}
 	>
 		<a

@@ -6,7 +6,7 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import { onMount } from 'svelte';
 	import { quintOut } from 'svelte/easing';
-	import { slide } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 
 	export let data: PageData;
 	const { pageData } = data;
@@ -331,9 +331,9 @@
 </meta:head>
 
 {#if isReordering}
-	<!-- Little toast in the bottom right corner letting the user know that the order is updating. -->
 	<div
-		transition:slide={{ delay: 250, duration: 300, easing: quintOut, axis: 'x' }}
+		in:fly={{ x: 100, duration: 200, easing: quintOut }}
+		out:fly={{ x: 100, duration: 200, easing: quintOut }}
 		class="fixed bottom-4 right-4 z-50 flex flex-nowrap items-center justify-center gap-3 rounded-lg border border-neutral-400 bg-white px-3 py-2 shadow-sm"
 	>
 		<Icon icon="mingcute:loading-3-fill" class="h-5 w-5 animate-spin text-emerald-500" />
@@ -364,23 +364,22 @@
 					>
 						Create Category
 					</button>
-					{#if openModal === 'categoryCreate'}
-						<Modal open={true} onClose={closeModal}>
-							<form
-								class="flex flex-col gap-3"
-								on:submit={(e) => {
-									e.preventDefault();
-									handleCreateCategory(e);
-								}}
+
+					<Modal open={openModal === 'categoryCreate'} onClose={closeModal}>
+						<form
+							class="flex flex-col gap-3"
+							on:submit={(e) => {
+								e.preventDefault();
+								handleCreateCategory(e);
+							}}
+						>
+							<input name="name" type="text" class="input" placeholder="Name" />
+							<textarea class="input" placeholder="Description"></textarea>
+							<button type="submit" disabled={isSaving} class="btn-primary"
+								>{isSaving ? 'Creating...' : 'Create'}</button
 							>
-								<input name="name" type="text" class="input" placeholder="Name" />
-								<textarea class="input" placeholder="Description"></textarea>
-								<button type="submit" disabled={isSaving} class="btn-primary"
-									>{isSaving ? 'Creating...' : 'Create'}</button
-								>
-							</form>
-						</Modal>
-					{/if}
+						</form>
+					</Modal>
 				</div>
 				<div
 					class="col-span-full grid grid-cols-1 gap-2"
@@ -416,29 +415,29 @@
 							>
 								<Icon icon="mingcute:edit-2-fill" class="h-5 w-5" draggable="false" />
 							</button>
-							{#if openModal === `category-${item.dbId}`}
-								<Modal open={true} onClose={closeModal}>
-									<form
-										class="flex flex-col gap-3"
-										on:submit={(e) => {
-											e.preventDefault();
-											handleUpdateCategory(item.dbId, e);
-										}}
+
+							<Modal open={openModal === `category-${item.dbId}`} onClose={closeModal}>
+								<form
+									class="flex flex-col gap-3"
+									on:submit={(e) => {
+										e.preventDefault();
+										handleUpdateCategory(item.dbId, e);
+									}}
+								>
+									<input
+										name="name"
+										type="text"
+										class="input"
+										placeholder="Name"
+										value={item.name}
+									/>
+									<textarea class="input" placeholder="Description"></textarea>
+									<button type="submit" disabled={isSaving} class="btn-primary"
+										>{isSaving ? 'Saving...' : 'Save'}</button
 									>
-										<input
-											name="name"
-											type="text"
-											class="input"
-											placeholder="Name"
-											value={item.name}
-										/>
-										<textarea class="input" placeholder="Description"></textarea>
-										<button type="submit" disabled={isSaving} class="btn-primary"
-											>{isSaving ? 'Saving...' : 'Save'}</button
-										>
-									</form>
-								</Modal>
-							{/if}
+								</form>
+							</Modal>
+
 							<button type="submit" class={`btn-danger !p-2`} draggable="false">
 								<Icon icon="mingcute:delete-2-fill" class="h-5 w-5" draggable="false" />
 							</button>
@@ -464,43 +463,42 @@
 					>
 						Create Item
 					</button>
-					{#if openModal === 'itemCreate'}
-						<Modal open={true} onClose={closeModal}>
-							<form
-								class="flex cursor-default flex-col gap-3"
-								on:submit={(e) => {
-									e.preventDefault();
-									handleCreateItem(e);
-								}}
-							>
-								<input name="name" type="text" class="input" placeholder="Name" />
-								<div class="flex items-center">
-									<div
-										class="rounded-l-lg border-y border-l border-neutral-400 px-4 py-2 font-semibold"
-									>
-										$
-									</div>
-									<input
-										name="price"
-										type="number"
-										class="input rounded-l-none"
-										placeholder="Price"
-										step="0.10"
-									/>
-								</div>
-								<select name="category" class="input cursor-pointer">
-									{#each formattedCategories as category (category.dbId)}
-										<option value={category.dbId}>{category.name}</option>
-									{/each}
-								</select>
-								<input name="img" class="input" placeholder="Image URL" />
-								<textarea class="input" placeholder="Description"></textarea>
-								<button type="submit" disabled={isSaving} class="btn-primary"
-									>{isSaving ? 'Creating...' : 'Create'}</button
+
+					<Modal open={openModal === 'itemCreate'} onClose={closeModal}>
+						<form
+							class="flex cursor-default flex-col gap-3"
+							on:submit={(e) => {
+								e.preventDefault();
+								handleCreateItem(e);
+							}}
+						>
+							<input name="name" type="text" class="input" placeholder="Name" />
+							<div class="flex items-center">
+								<div
+									class="rounded-l-lg border-y border-l border-neutral-400 px-4 py-2 font-semibold"
 								>
-							</form>
-						</Modal>
-					{/if}
+									$
+								</div>
+								<input
+									name="price"
+									type="number"
+									class="input rounded-l-none"
+									placeholder="Price"
+									step="0.10"
+								/>
+							</div>
+							<select name="category" class="input cursor-pointer">
+								{#each formattedCategories as category (category.dbId)}
+									<option value={category.dbId}>{category.name}</option>
+								{/each}
+							</select>
+							<input name="img" class="input" placeholder="Image URL" />
+							<textarea class="input" placeholder="Description"></textarea>
+							<button type="submit" disabled={isSaving} class="btn-primary"
+								>{isSaving ? 'Creating...' : 'Create'}</button
+							>
+						</form>
+					</Modal>
 				</div>
 				<div
 					class="col-span-full grid grid-cols-1 gap-2"
@@ -537,93 +535,91 @@
 								<Icon icon="mingcute:edit-2-fill" class="h-5 w-5" draggable="false" />
 							</button>
 							<div>
-								{#if openModal === `item-${item.dbId}`}
-									<Modal open={true} onClose={closeModal}>
-										<form
-											class="flex flex-col gap-3"
-											on:submit={(e) => {
-												e.preventDefault();
-												handleUpdateItem(item.dbId, e);
-											}}
-										>
-											<input
-												name="name"
-												type="text"
-												class="input"
-												placeholder="Name"
-												value={item.name}
-											/>
-											<div class="flex items-center">
-												<div
-													class="rounded-l-lg border-y border-l border-neutral-400 px-4 py-2 font-semibold"
-												>
-													$
-												</div>
-												<input
-													name="price"
-													type="number"
-													class="input rounded-l-none"
-													placeholder="Price"
-													value={item.price}
-													step="0.10"
-												/>
-											</div>
-
-											<select name="category" class="input" value={item.category}>
-												{#each formattedCategories as category (category.dbId)}
-													<option value={category.dbId}>{category.name}</option>
-												{/each}
-											</select>
-
-											<input name="img" hidden value={item.img} />
-
-											<div class="grid max-h-64 grid-cols-4 gap-2 overflow-y-auto">
-												{#each galleryImages as menuImage}
-													<button
-														class="relative flex items-center justify-center"
-														on:click={(e) => {
-															e.preventDefault();
-															if (
-																item.img ===
-																`https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}`
-															) {
-																item.img = null;
-															} else {
-																item.img = `https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}`;
-															}
-														}}
-													>
-														{#if item.img === `https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}`}
-															<div
-																class="absolute flex h-full w-full items-center justify-center rounded-lg bg-neutral-950 opacity-50"
-															></div>
-															<Icon
-																icon="mingcute:check-circle-line"
-																class="absolute h-8 w-8 text-emerald-400"
-															/>
-														{/if}
-
-														<img
-															src={`https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}?width=100&height=100`}
-															alt="Menu Item"
-															class="w-full cursor-pointer rounded-lg object-cover"
-														/>
-													</button>
-												{/each}
-											</div>
-
-											<textarea
-												name="description"
-												class="input"
-												placeholder="Description"
-												value={item.description}
-											></textarea>
-											<button type="submit" disabled={isSaving} class="btn-primary"
-												>{isSaving ? 'Saving...' : 'Save'}</button
+								<Modal open={openModal === `item-${item.dbId}`} onClose={closeModal}>
+									<form
+										class="flex flex-col gap-3"
+										on:submit={(e) => {
+											e.preventDefault();
+											handleUpdateItem(item.dbId, e);
+										}}
+									>
+										<input
+											name="name"
+											type="text"
+											class="input"
+											placeholder="Name"
+											value={item.name}
+										/>
+										<div class="flex items-center">
+											<div
+												class="rounded-l-lg border-y border-l border-neutral-400 px-4 py-2 font-semibold"
 											>
-										</form>
-									</Modal>
-								{/if}
+												$
+											</div>
+											<input
+												name="price"
+												type="number"
+												class="input rounded-l-none"
+												placeholder="Price"
+												value={item.price}
+												step="0.10"
+											/>
+										</div>
+
+										<select name="category" class="input" value={item.category}>
+											{#each formattedCategories as category (category.dbId)}
+												<option value={category.dbId}>{category.name}</option>
+											{/each}
+										</select>
+
+										<input name="img" hidden value={item.img} />
+
+										<div class="grid max-h-64 grid-cols-4 gap-2 overflow-y-auto">
+											{#each galleryImages as menuImage}
+												<button
+													class="relative flex items-center justify-center"
+													on:click={(e) => {
+														e.preventDefault();
+														if (
+															item.img ===
+															`https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}`
+														) {
+															item.img = null;
+														} else {
+															item.img = `https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}`;
+														}
+													}}
+												>
+													{#if item.img === `https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}`}
+														<div
+															class="absolute flex h-full w-full items-center justify-center rounded-lg bg-neutral-950 opacity-50"
+														></div>
+														<Icon
+															icon="mingcute:check-circle-line"
+															class="absolute h-8 w-8 text-emerald-400"
+														/>
+													{/if}
+
+													<img
+														src={`https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}?width=100&height=100`}
+														alt="Menu Item"
+														class="w-full cursor-pointer rounded-lg object-cover"
+													/>
+												</button>
+											{/each}
+										</div>
+
+										<textarea
+											name="description"
+											class="input"
+											placeholder="Description"
+											value={item.description}
+										></textarea>
+										<button type="submit" disabled={isSaving} class="btn-primary"
+											>{isSaving ? 'Saving...' : 'Save'}</button
+										>
+									</form>
+								</Modal>
 							</div>
 							<button
 								type="button"
