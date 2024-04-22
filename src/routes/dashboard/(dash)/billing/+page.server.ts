@@ -1,5 +1,5 @@
 import { BASE_URL } from '$env/static/private';
-import { stripe } from '$lib/stripe';
+import { createStripeClient } from '$lib/stripe';
 import { fail, redirect } from '@sveltejs/kit';
 
 import prisma from '$lib/prisma';
@@ -7,6 +7,7 @@ import prisma from '$lib/prisma';
 export const actions = {
 	reactivate: async ({ locals }) => {
 		const session = await locals.getSession();
+		const stripe = createStripeClient();
 
 		if (!session) {
 			redirect(302, '/dashboard/login');
@@ -60,6 +61,7 @@ export const actions = {
 	},
 	update: async ({ locals }) => {
 		const session = await locals.getSession();
+		const stripe = createStripeClient();
 
 		if (!session) {
 			redirect(302, '/dashboard/login');
