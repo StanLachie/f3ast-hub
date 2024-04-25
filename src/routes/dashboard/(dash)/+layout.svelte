@@ -3,7 +3,9 @@
 	import { page } from '$app/stores';
 	import type { LayoutData } from './$types';
 	import Meta from '$lib/components/utils/Meta.svelte';
-	import SettingHead from '$lib/components/dashboard/SettingHead.svelte';
+	import { fade } from 'svelte/transition';
+	import { slide } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 
 	export let data: LayoutData;
 	let sidebarItems = [
@@ -58,6 +60,8 @@
 		}
 	];
 
+	let expandSidebar = false;
+
 	$: currentRoute = sidebarItems.find((item) => item.link === $page.url.pathname);
 </script>
 
@@ -65,7 +69,14 @@
 
 <div class=" flex min-h-screen w-screen">
 	<div
-		class="fixed flex h-dvh min-w-16 flex-col justify-between border-r border-neutral-400 bg-white"
+		class={`fixed flex h-dvh ${expandSidebar ? 'min-w-64' : 'min-w-16'} z-50 flex-col justify-between border-r border-neutral-400 bg-white transition-all duration-300 ease-in-out`}
+		role="contentinfo"
+		on:mouseenter={() => {
+			expandSidebar = true;
+		}}
+		on:mouseleave={() => {
+			expandSidebar = false;
+		}}
 	>
 		<div class="flex flex-col divide-y divide-neutral-400 border-b border-neutral-400">
 			<div class="flex h-16 cursor-default items-center justify-center font-norwester text-xl">
@@ -77,12 +88,19 @@
 						data-sveltekit-preload-data
 						href={item.link}
 						title={item.name}
-						class="group flex h-16 items-center justify-center text-2xl hover:bg-neutral-100"
+						class={`group flex h-16 items-center justify-start text-2xl hover:bg-neutral-100`}
 					>
 						<Icon
 							icon={item.icon}
-							class={`${currentRoute?.link === item.link ? 'scale-[120%] text-emerald-300' : ''} transition-all group-hover:scale-[125%]`}
+							class={`mx-[19.5px] ${currentRoute?.link === item.link ? 'scale-[120%] text-emerald-300' : ''} transition-all group-hover:scale-[125%]`}
 						/>
+
+						{#if expandSidebar}
+							<span
+								transition:slide={{ duration: 250, axis: 'x' }}
+								class="flex-1 text-nowrap text-sm font-semibold">{item.name}</span
+							>
+						{/if}
 					</a>
 				{/if}
 			{/each}
@@ -94,17 +112,25 @@
 						data-sveltekit-preload-data
 						href={item.link}
 						title={item.name}
-						class="group flex h-16 items-center justify-center text-2xl hover:bg-neutral-100"
+						class={`group flex h-16 items-center justify-start text-2xl hover:bg-neutral-100`}
 					>
 						<Icon
 							icon={item.icon}
-							class={`${currentRoute?.link === item.link ? 'scale-[120%] text-emerald-300' : ''} transition-all group-hover:scale-[125%]`}
+							class={`mx-[19.5px] ${currentRoute?.link === item.link ? 'scale-[120%] text-emerald-300' : ''} transition-all group-hover:scale-[125%]`}
 						/>
+
+						{#if expandSidebar}
+							<span
+								transition:slide={{ duration: 250, axis: 'x' }}
+								class="flex-1 text-sm font-semibold">{item.name}</span
+							>
+						{/if}
 					</a>
 				{/if}
 			{/each}
 		</div>
 	</div>
+
 	<div class="ml-16 flex-grow overflow-y-auto bg-neutral-100 p-2 sm:p-8 md:p-16">
 		<div class="mx-auto flex w-full max-w-3xl flex-col gap-4">
 			<Meta
