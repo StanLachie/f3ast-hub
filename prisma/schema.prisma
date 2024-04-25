@@ -313,15 +313,15 @@ model MenuCategory {
 }
 
 model MenuItem {
-  id           Int          @id @default(autoincrement())
+  id           Int           @id @default(autoincrement())
   name         String
   description  String?
   price        Float
-  categoryId   Int
-  active       Boolean      @default(true)
+  categoryId   Int?
+  active       Boolean       @default(true)
   img          String?
   sortingIndex Int
-  MenuCategory MenuCategory @relation(fields: [categoryId], references: [id])
+  MenuCategory MenuCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull, onUpdate: NoAction)
 
   @@schema("public")
 }

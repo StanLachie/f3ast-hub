@@ -36,12 +36,6 @@ export const load = (async ({ locals }) => {
 			}
 		});
 
-		// if (!subscription) {
-		// 	return {
-		// 		error: 'Server error. Please try again later.'
-		// 	};
-		// }
-
 		return {
 			session,
 			restaurant,

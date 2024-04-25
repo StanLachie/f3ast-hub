@@ -27,7 +27,7 @@ export const actions = {
 			});
 		}
 
-		if (!error && !!signInData.user && !signInData.user.identities.length) {
+		if (!error && !!signInData.user && !signInData.user.identities?.length) {
 			return fail(409, {
 				error: 'User already exists',
 				email: email,
@@ -36,6 +36,6 @@ export const actions = {
 			});
 		}
 
-		return redirect(302, '/dashboard/welcome');
+		return redirect(302, '/dashboard/restaurant');
 	}
 };
