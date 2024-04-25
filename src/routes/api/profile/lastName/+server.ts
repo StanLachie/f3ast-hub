@@ -1,5 +1,5 @@
 import prisma from '$lib/prisma';
-import type { RequestHandler } from '../$types';
+import type { RequestHandler } from './$types';
 
 export const PUT: RequestHandler = async ({ locals, request }) => {
 	const session = await locals.getSession();
@@ -20,25 +20,12 @@ export const PUT: RequestHandler = async ({ locals, request }) => {
 		});
 	}
 
-	const restaurant = await prisma.restaurant.findUnique({
+	await prisma.clientAccount.update({
 		where: {
-			id: user.restaurant.id
-		}
-	});
-
-	if (!restaurant) {
-		return new Response(JSON.stringify({ error: 'Not found' }), {
-			status: 404,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
-
-	await prisma.restaurant.update({
-		where: {
-			id: restaurant.id
+			email: user.account.email
 		},
 		data: {
-			name: value
+			last_name: value
 		}
 	});
 

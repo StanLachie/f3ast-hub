@@ -26,7 +26,7 @@
 		await fetch(select.submitUrl, {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ theme: select.value })
+			body: JSON.stringify({ value: select.value })
 		});
 
 		initialValue = select.value;

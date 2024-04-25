@@ -4,9 +4,14 @@
 	import Icon from '@iconify/svelte';
 	import { enhance } from '$app/forms';
 	import { onMount } from 'svelte';
+	import Meta from '$lib/components/utils/Meta.svelte';
+	import SettingHead from '$lib/components/dashboard/SettingHead.svelte';
+	import SettingInput from '$lib/components/dashboard/SettingInput.svelte';
 
 	export let data: PageData;
 	const { layoutData } = data;
+
+	let initialLoading = true;
 
 	let personalInfo = {
 		first_name: '',
@@ -25,16 +30,44 @@
 		contactPreferences = {
 			promotional_emails: (await layoutData).client?.promotional_emails ?? false
 		};
+
+		initialLoading = false;
 	});
 
 	let promotionalEmailForm: HTMLFormElement;
 </script>
 
-<meta:head>
-	<title>Dashboard | Profile</title>
-</meta:head>
+<SettingHead title="Personal Info" description="Update your personal details here." />
 
-<div class="mx-auto flex w-full max-w-3xl flex-col gap-8">
+<SettingInput
+	title="First Name"
+	description="Your legal first name."
+	loading={initialLoading}
+	initialValue={personalInfo.first_name}
+	input={{
+		name: 'firstName',
+		type: 'text',
+		value: personalInfo.first_name,
+		placeholder: 'John',
+		submitUrl: '/api/profile/firstName'
+	}}
+/>
+
+<SettingInput
+	title="Last Name"
+	description="Your legal last name."
+	loading={initialLoading}
+	initialValue={personalInfo.last_name}
+	input={{
+		name: 'lastName',
+		type: 'text',
+		value: personalInfo.last_name,
+		placeholder: 'Doe',
+		submitUrl: '/api/profile/lastName'
+	}}
+/>
+
+<!-- <div class="mx-auto flex w-full max-w-3xl flex-col gap-8">
 	<div>
 		<h1 class="my-2 text-3xl font-semibold">Personal Info</h1>
 		<p class="text-neutral-600">Update your personal details here.</p>
@@ -164,4 +197,4 @@
 			</div>
 		{/await}
 	</div>
-</div>
+</div> -->

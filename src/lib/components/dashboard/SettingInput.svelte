@@ -25,7 +25,7 @@
 		await fetch(input.submitUrl, {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ name: input.value })
+			body: JSON.stringify({ value: input.value })
 		});
 
 		initialValue = input.value;

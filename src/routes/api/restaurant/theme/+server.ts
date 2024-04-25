@@ -4,7 +4,7 @@ import type { RequestHandler } from './$types';
 export const PUT: RequestHandler = async ({ locals, request }) => {
 	const session = await locals.getSession();
 	const user = await locals.getUser();
-	const { theme } = await request.json();
+	const { value } = await request.json();
 
 	if (!session) {
 		return new Response(JSON.stringify({ error: 'Unauthorized' }), {
@@ -38,11 +38,11 @@ export const PUT: RequestHandler = async ({ locals, request }) => {
 			id: restaurant.id
 		},
 		data: {
-			theme: theme
+			theme: value
 		}
 	});
 
-	return new Response(JSON.stringify({ theme }), {
+	return new Response(JSON.stringify({ value }), {
 		headers: { 'content-type': 'application/json' }
 	});
 };
