@@ -17,14 +17,14 @@
 			link: '/dashboard/restaurant'
 		},
 		{
-			name: 'Your Menu',
+			name: 'Menu',
 			description: 'Make changes to your menu here.',
 			type: 'top',
 			icon: 'mdi:burger',
 			link: '/dashboard/menu'
 		},
 		{
-			name: 'Your Gallery',
+			name: 'Gallery',
 			description: 'Upload, edit and delete images you use all over your site!',
 			type: 'top',
 			icon: 'mingcute:photo-album-fill',
