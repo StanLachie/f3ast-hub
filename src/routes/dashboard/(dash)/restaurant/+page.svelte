@@ -49,7 +49,19 @@
 		action={{
 			name: 'Unpublish',
 			type: 'danger',
-			func: () => {
+			func: async () => {
+				if (!window) return;
+
+				const confirm = window.confirm('Are you sure you want to unpublish your restaurant?');
+
+				if (!confirm) return;
+
+				await fetch('/api/restaurant/published', {
+					method: 'PUT',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ value: false })
+				});
+
 				restaurantInfo.published = false;
 			}
 		}}
@@ -62,7 +74,19 @@
 		action={{
 			name: 'Publish',
 			type: 'primary',
-			func: () => {
+			func: async () => {
+				if (!window) return;
+
+				const confirm = window.confirm('Are you sure you want to publish your restaurant?');
+
+				if (!confirm) return;
+
+				await fetch('/api/restaurant/published', {
+					method: 'PUT',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ value: true })
+				});
+
 				restaurantInfo.published = true;
 			}
 		}}
@@ -86,13 +110,14 @@
 	title="Theme"
 	description="Your restaurant's theme."
 	loading={initialLoading}
+	initialValue={restaurantInfo.theme}
 	select={{
 		name: 'theme',
 		type: 'text',
 		value: restaurantInfo.theme,
 		placeholder: 'Default',
 		options: Object.keys(themes),
-		func: () => {}
+		submitUrl: '/api/restaurant/theme'
 	}}
 />
 <SettingInput
