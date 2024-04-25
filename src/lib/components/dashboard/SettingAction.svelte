@@ -7,7 +7,8 @@
 	export let action: {
 		name: string;
 		type: 'primary' | 'danger';
-		func: () => void;
+		href?: string;
+		func?: () => void;
 	};
 </script>
 
@@ -19,9 +20,15 @@
 			<h2 class="text-lg font-semibold">{title}</h2>
 			<p class="text-neutral-600">{description}</p>
 		</div>
-		<button class={`btn-${action.type}`} on:click={action.func}>
-			{action.name}
-		</button>
+		{#if action.href}
+			<a class="btn-primary" href={action.href} target="_blank" rel="noopener noreferrer">
+				{action.name}
+			</a>
+		{:else if action.func}
+			<button class={`btn-${action.type}`} on:click={action.func}>
+				{action.name}
+			</button>
+		{/if}
 	</div>
 {:else}
 	<SettingSkeleton />
