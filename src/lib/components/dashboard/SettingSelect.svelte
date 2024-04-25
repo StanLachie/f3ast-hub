@@ -1,16 +1,37 @@
 <script lang="ts">
 	import SettingSkeleton from './SettingSkeleton.svelte';
+	import { slide } from 'svelte/transition';
+	import Icon from '@iconify/svelte';
 
 	export let title: string;
 	export let description: string;
 	export let loading: boolean = false;
+	export let initialValue: string;
 	export let select: {
 		name: string;
 		type: string;
 		value: string;
 		placeholder: string;
 		options: string[];
-		func: () => void;
+		submitUrl: string;
+	};
+
+	let updating = false;
+
+	let saveChanges = async () => {
+		if (!select.submitUrl) return;
+
+		updating = true;
+
+		await fetch(select.submitUrl, {
+			method: 'PUT',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ theme: select.value })
+		});
+
+		initialValue = select.value;
+
+		updating = false;
 	};
 </script>
 
@@ -26,14 +47,26 @@
 			<select
 				class="input flex-1 p-3"
 				name={select.name}
-				value={select.value}
+				bind:value={select.value}
 				placeholder={select.placeholder}
-				on:change={select.func}
 			>
 				{#each select.options as option}
 					<option value={option}>{option.toLocaleUpperCase()}</option>
 				{/each}
 			</select>
+			{#if initialValue !== select.value}
+				<button
+					class="btn-primary w-[50px]"
+					on:click={saveChanges}
+					disabled={select.value === initialValue}
+					transition:slide={{ duration: 250, axis: 'x' }}
+				>
+					<Icon
+						icon={updating ? 'mingcute:loading-3-fill' : 'mingcute:save-2-fill'}
+						class={updating ? 'h-6 w-6 animate-spin' : 'h-6 w-6'}
+					/>
+				</button>
+			{/if}
 		</div>
 	</div>
 {:else}
