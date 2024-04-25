@@ -78,10 +78,16 @@
 							<Icon icon="uil:draggabledots" class="h-5 w-5" />
 						</button>
 						<input class="input flex-1" value={item.name} />
-						<button class="btn-outline h-[42px] w-[42px] bg-white !p-2" on:click={() => {}}>
+						<button
+							class="btn-outline flex h-[42px] w-[42px] justify-center bg-white !p-2"
+							on:click={() => {}}
+						>
 							<Icon icon="mingcute:edit-2-fill" class="h-5 w-5" />
 						</button>
-						<button class="btn-danger h-[42px] w-[42px] !p-2" on:click={() => {}}>
+						<button
+							class="btn-danger flex h-[42px] w-[42px] justify-center !p-2"
+							on:click={() => {}}
+						>
 							<Icon icon="mingcute:delete-2-fill" class="h-5 w-5" />
 						</button>
 					</div>

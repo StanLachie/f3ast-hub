@@ -69,7 +69,7 @@
 
 <div class=" flex min-h-screen w-screen">
 	<div
-		class={`fixed flex h-dvh ${expandSidebar ? 'min-w-64' : 'min-w-16'} z-50 flex-col justify-between border-r border-neutral-400 bg-white transition-all duration-300 ease-in-out`}
+		class={`fixed flex h-dvh ${expandSidebar ? 'min-w-64' : 'min-w-16'} z-40 flex-col justify-between border-r border-neutral-400 bg-white transition-all duration-300 ease-in-out`}
 		role="contentinfo"
 		on:pointerenter={() => {
 			if (
