@@ -11,14 +11,14 @@
 			name: 'Restaurant Info',
 			description: "Update your restaurant's details here.",
 			type: 'top',
-			icon: 'mingcute:shop-fill',
+			icon: 'mingcute:chef-hat-fill',
 			link: '/dashboard/restaurant'
 		},
 		{
 			name: 'Your Menu',
 			description: 'Make changes to your menu here.',
 			type: 'top',
-			icon: 'mingcute:book-6-fill',
+			icon: 'mdi:burger',
 			link: '/dashboard/menu'
 		},
 		{

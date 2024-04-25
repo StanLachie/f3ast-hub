@@ -1,9 +1,11 @@
-<script>
+<script lang="ts">
 	import Icon from '@iconify/svelte';
+
+	export let size: 'sm' | 'lg' = 'sm';
 </script>
 
 <div
-	class="flex h-[92px] w-full animate-pulse items-center justify-center rounded-lg border border-neutral-400 bg-white shadow-sm"
+	class={`flex h-[92px] ${size === 'sm' ? 'h-[86px]' : 'h-[172px]'} animate-pulse items-center justify-center rounded-lg border border-neutral-400 bg-white shadow-sm`}
 >
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
