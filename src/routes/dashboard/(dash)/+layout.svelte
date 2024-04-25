@@ -71,10 +71,18 @@
 	<div
 		class={`fixed flex h-dvh ${expandSidebar ? 'min-w-64' : 'min-w-16'} z-50 flex-col justify-between border-r border-neutral-400 bg-white transition-all duration-300 ease-in-out`}
 		role="contentinfo"
-		on:mouseenter={() => {
+		on:pointerenter={() => {
+			if (
+				/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+			)
+				return;
 			expandSidebar = true;
 		}}
-		on:mouseleave={() => {
+		on:pointerleave={() => {
+			if (
+				/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+			)
+				return;
 			expandSidebar = false;
 		}}
 	>
