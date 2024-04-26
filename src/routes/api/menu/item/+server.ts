@@ -2,9 +2,9 @@ import prisma from '$lib/prisma';
 import type { RequestHandler } from '@sveltejs/kit';
 export const POST: RequestHandler = async ({ locals, request }) => {
 	const session = await locals.getSession();
-	const { name, price, description, category, img } = await request.json();
+	const { name, price, description, categoryId, img } = await request.json();
 
-	if (!name || !price || !category) {
+	if (!name || !price || !categoryId) {
 		return new Response(JSON.stringify({ error: 'Missing fields' }), {
 			status: 400,
 			headers: { 'content-type': 'application/json' }
@@ -33,7 +33,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 			sortingIndex: getSortingIndex ? getSortingIndex.sortingIndex + 1 : 0,
 			MenuCategory: {
 				connect: {
-					id: category
+					id: categoryId
 				}
 			}
 		}
