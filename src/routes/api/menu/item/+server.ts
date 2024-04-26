@@ -127,7 +127,7 @@ export const PUT: RequestHandler = async ({ locals, request, url }) => {
 			img: img,
 			MenuCategory: {
 				connect: {
-					id: category || item.MenuCategory.id
+					id: category || item.MenuCategory?.id
 				}
 			}
 		}
