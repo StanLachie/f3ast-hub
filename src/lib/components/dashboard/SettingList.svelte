@@ -11,19 +11,35 @@
 		name: string;
 		type: 'primary' | 'danger';
 		href?: string;
-		func?: () => void;
+		createFunc?: () => void;
+		editFunc?: () => void;
+		deleteFunc?: (id: number) => void;
 	};
+	export let reorderUrl: string;
 	export let listItems: any[] = [];
 
 	let dragDisabled = true;
+	let reordering = false;
 
 	const handleConsider = (event: any) => {
-		console.log(event.detail.items);
 		listItems = event.detail.items;
 	};
 
-	const handleFinalize = (event: any) => {
+	const handleFinalize = async (event: any) => {
 		listItems = event.detail.items;
+
+		if (reorderUrl) {
+			reordering = true;
+
+			await fetch(reorderUrl, {
+				method: 'PUT',
+				body: JSON.stringify({
+					items: listItems
+				})
+			});
+
+			reordering = false;
+		}
 
 		dragDisabled = true;
 	};
@@ -38,7 +54,7 @@
 				<h2 class="text-lg font-semibold">{title}</h2>
 				<p class="text-neutral-600">{description}</p>
 			</div>
-			<button type="submit" class="btn-primary h-full" on:click={action.func}>
+			<button type="submit" class="btn-primary h-full" on:click={action.createFunc}>
 				{action.name}
 			</button>
 		</div>
@@ -63,30 +79,37 @@
 						<button
 							class="btn-outline h-[42px] w-[42px] bg-white !p-2"
 							on:mousedown={() => {
+								if (reordering) return;
 								dragDisabled = false;
 							}}
 							on:mouseup={() => {
+								if (reordering) return;
 								dragDisabled = true;
 							}}
 							on:touchstart={() => {
+								if (reordering) return;
 								dragDisabled = false;
 							}}
 							on:touchend={() => {
+								if (reordering) return;
 								dragDisabled = true;
 							}}
 						>
 							<Icon icon="uil:draggabledots" class="h-5 w-5" />
 						</button>
-						<input class="input flex-1" value={item.name} />
+						<input class="input flex-1 bg-white" disabled value={item.name} />
 						<button
 							class="btn-outline flex h-[42px] w-[42px] justify-center bg-white !p-2"
-							on:click={() => {}}
+							on:click={action.editFunc}
 						>
 							<Icon icon="mingcute:edit-2-fill" class="h-5 w-5" />
 						</button>
 						<button
 							class="btn-danger flex h-[42px] w-[42px] justify-center !p-2"
-							on:click={() => {}}
+							on:click={() => {
+								if (!action.deleteFunc) return;
+								action.deleteFunc(item.dbId);
+							}}
 						>
 							<Icon icon="mingcute:delete-2-fill" class="h-5 w-5" />
 						</button>

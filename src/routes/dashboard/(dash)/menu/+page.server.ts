@@ -1,15 +1,21 @@
-import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import prisma from '$lib/prisma';
-import type { FileObject } from '@supabase/storage-js';
 
-export const load = (async ({ parent, locals }) => {
+interface MenuItem {
+	id: number | null;
+	name: string | null;
+	price: number | null;
+	categoryId: number | null;
+	img: string | null;
+	description: string | null;
+}
+
+export const load = (async ({ parent }) => {
 	const { layoutData } = await parent();
 	const { restaurant } = await layoutData;
 
 	const pageData = async () => {
-		let menuItems: any[] = [];
-		let gallery: FileObject[] = [];
+		let menuItems: MenuItem[] = [];
 
 		const categories = await prisma.menuCategory.findMany({
 			where: {
@@ -27,24 +33,12 @@ export const load = (async ({ parent, locals }) => {
 
 				menuItems = [...menuItems, ...items];
 			}
+
+			return {
+				categories,
+				menuItems
+			};
 		}
-
-		const assets = await locals.supabase.storage
-			.from('client-assets')
-			.list()
-			.then((res) => {
-				return res.data;
-			});
-
-		if (assets) {
-			gallery = assets.filter((asset) => asset.name.includes(`menuImg-${restaurant?.id}`));
-		}
-
-		return {
-			categories,
-			gallery,
-			menuItems
-		};
 	};
 
 	return {
@@ -52,114 +46,3 @@ export const load = (async ({ parent, locals }) => {
 		pageData: pageData()
 	};
 }) satisfies PageServerLoad;
-
-export const actions = {
-	createCategory: async ({ request, locals }) => {
-		const data = await request.formData();
-		const name = data.get('name') as string;
-
-		const session = await locals.getSession();
-
-		if (!session) {
-			redirect(302, '/dashboard/login');
-		}
-
-		const client = await prisma.clientAccount.findUnique({
-			where: {
-				email: session.user.email
-			}
-		});
-
-		if (!client) {
-			redirect(302, '/dashboard/login');
-		}
-
-		const restaurant = await prisma.restaurant.findUnique({
-			where: {
-				id: client.restaurantId || 0
-			}
-		});
-
-		if (!restaurant) {
-			redirect(302, '/dashboard/login');
-		}
-
-		const menuCategories = await prisma.menuCategory.findMany({
-			where: {
-				restaurantId: restaurant.id
-			}
-		});
-
-		const sortingIndex = Math.max(...menuCategories.map((category) => category.sortingIndex)) + 1;
-
-		const category = await prisma.menuCategory.create({
-			data: {
-				name,
-				restaurantId: restaurant.id,
-				sortingIndex: sortingIndex
-			}
-		});
-
-		return {
-			body: category
-		};
-	},
-	deleteCategory: async ({ request, locals }) => {
-		const data = await request.formData();
-		const name = data.get('name') as string;
-
-		const session = await locals.getSession();
-
-		if (!session) {
-			redirect(302, '/dashboard/login');
-		}
-
-		const client = await prisma.clientAccount.findUnique({
-			where: {
-				email: session.user.email
-			}
-		});
-
-		if (!client) {
-			redirect(302, '/dashboard/login');
-		}
-
-		const restaurant = await prisma.restaurant.findUnique({
-			where: {
-				id: client.restaurantId || 0
-			}
-		});
-
-		if (!restaurant) {
-			redirect(302, '/dashboard/login');
-		}
-
-		const category = await prisma.menuCategory.findFirst({
-			where: {
-				name: name,
-				restaurantId: restaurant.id
-			}
-		});
-
-		if (!category) {
-			return {
-				status: 404,
-				body: {
-					error: 'Category not found'
-				}
-			};
-		}
-
-		await prisma.menuCategory.delete({
-			where: {
-				id: category.id
-			}
-		});
-
-		return {
-			body: {
-				success: true
-			}
-		};
-	}
-};

@@ -49,8 +49,6 @@
 				};
 			});
 
-		galleryImages = (await pageData).gallery;
-
 		initialLoading = false;
 	});
 
@@ -252,8 +250,11 @@
 
 	const handleDeleteCategory = async (id: number) => {
 		isSaving = true;
-		const res = await fetch(`/api/menu/category?id=${id}`, {
-			method: 'DELETE'
+		const res = await fetch(`/api/menu/category`, {
+			method: 'DELETE',
+			body: JSON.stringify({
+				id
+			})
 		});
 
 		if (res.ok) {
@@ -333,10 +334,32 @@
 		name: 'Create Category',
 		type: 'primary',
 		href: '/dashboard/menu/category/create',
-		func: () => {
+		createFunc: () => {
 			openModal = 'categoryCreate';
+		},
+		editFunc: () => {
+			openModal = 'categoryEdit';
+		},
+		deleteFunc: async (id) => {
+			if (!window) return;
+			const confirm = window.confirm('Are you sure you want to delete this category?');
+			if (!confirm) return;
+			const res = await fetch(`/api/menu/category`, {
+				method: 'DELETE',
+				body: JSON.stringify({
+					id
+				})
+			});
+
+			if (res.ok) {
+				formattedCategories = formattedCategories.filter((category) => category.dbId !== id);
+				closeModal();
+			} else {
+				alert('Failed to delete category. Please try again.');
+			}
 		}
 	}}
+	reorderUrl="/api/menu/category/reorder"
 	listItems={formattedCategories}
 />
 
@@ -348,10 +371,32 @@
 		name: 'Create Item',
 		type: 'primary',
 		href: '/dashboard/menu/item/create',
-		func: () => {
+		createFunc: () => {
 			openModal = 'itemCreate';
+		},
+		editFunc: () => {
+			openModal = 'itemEdit';
+		},
+		deleteFunc: async (id) => {
+			if (!window) return;
+			const confirm = window.confirm('Are you sure you want to delete this item?');
+			if (!confirm) return;
+			const res = await fetch(`/api/menu/item`, {
+				method: 'DELETE',
+				body: JSON.stringify({
+					id
+				})
+			});
+
+			if (res.ok) {
+				formattedItems = formattedItems.filter((item) => item.dbId !== id);
+				closeModal();
+			} else {
+				alert('Failed to delete item. Please try again.');
+			}
 		}
 	}}
+	reorderUrl="/api/menu/item/reorder"
 	listItems={formattedItems}
 />
 
@@ -361,6 +406,70 @@
 		on:submit={(e) => {
 			e.preventDefault();
 			handleCreateCategory(e);
+		}}
+	>
+		<input name="name" type="text" class="input" placeholder="Name" />
+		<textarea class="input" placeholder="Description"></textarea>
+		<button type="submit" disabled={isSaving} class="btn-primary"
+			>{isSaving ? 'Creating...' : 'Create'}</button
+		>
+	</form>
+</Modal>
+
+<Modal open={openModal === 'categoryEdit'} onClose={closeModal}>
+	<form
+		class="flex flex-col gap-3"
+		on:submit={(e) => {
+			e.preventDefault();
+			handleUpdateCategory();
+		}}
+	>
+		<input name="name" type="text" class="input" placeholder="Name" />
+		<textarea class="input" placeholder="Description"></textarea>
+		<button type="submit" disabled={isSaving} class="btn-primary"
+			>{isSaving ? 'Creating...' : 'Create'}</button
+		>
+	</form>
+</Modal>
+
+<Modal open={openModal === 'itemCreate'} onClose={closeModal}>
+	<form
+		class="flex flex-col gap-3"
+		on:submit={(e) => {
+			e.preventDefault();
+			handleCreateItem(e);
+		}}
+	>
+		<input name="name" type="text" class="input" placeholder="Name" />
+		<div class="flex items-center">
+			<div class="rounded-l-lg border-y border-l border-neutral-400 px-4 py-2 font-semibold">$</div>
+			<input
+				name="price"
+				type="number"
+				class="input rounded-l-none"
+				placeholder="Price"
+				step="0.10"
+			/>
+		</div>
+		<select name="category" class="input cursor-pointer">
+			{#each formattedCategories as category (category.dbId)}
+				<option value={category.dbId}>{category.name}</option>
+			{/each}
+		</select>
+		<input name="img" class="input" placeholder="Image URL" />
+		<textarea class="input" placeholder="Description"></textarea>
+		<button type="submit" disabled={isSaving} class="btn-primary"
+			>{isSaving ? 'Creating...' : 'Create'}</button
+		>
+	</form>
+</Modal>
+
+<Modal open={openModal === 'itemEdit'} onClose={closeModal}>
+	<form
+		class="flex flex-col gap-3"
+		on:submit={(e) => {
+			e.preventDefault();
+			handleUpdateItem();
 		}}
 	>
 		<input name="name" type="text" class="input" placeholder="Name" />
