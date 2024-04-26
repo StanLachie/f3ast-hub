@@ -49,12 +49,16 @@
 	<div
 		class="flex w-full flex-col gap-4 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm"
 	>
-		<div class="flex flex-1 items-center">
-			<div class="flex-1">
+		<div class="flex flex-1 flex-col items-center gap-3 md:flex-row md:items-center">
+			<div class="w-full flex-1 md:w-auto">
 				<h2 class="text-lg font-semibold">{title}</h2>
 				<p class="text-neutral-600">{description}</p>
 			</div>
-			<button type="submit" class="btn-primary h-full" on:click={action.createFunc}>
+			<button
+				type="submit"
+				class="btn-primary h-full w-full md:w-auto"
+				on:click={action.createFunc}
+			>
 				{action.name}
 			</button>
 		</div>

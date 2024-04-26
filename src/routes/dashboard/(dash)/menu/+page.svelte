@@ -180,7 +180,7 @@
 
 		if (!formData.get('name') || !formData.get('price') || !formData.get('category')) return;
 
-		console.log(formData.get('img'));
+		isSaving = true;
 
 		let updatedItem: Partial<MenuItem> = {
 			id: id,
@@ -534,21 +534,26 @@
 						</button>
 					</form>
 				{:else}
-					<form id="img-form" class="w-full" enctype="multipart/form-data">
+					<form id="img-form" class="group relative w-full" enctype="multipart/form-data">
 						<input id="img" type="file" accept="image/*" on:change={handleFileChange} hidden />
+						<div
+							class={`flex aspect-square w-full items-center justify-center rounded-xl border border-neutral-400 bg-neutral-200 text-7xl font-bold`}
+						>
+							{currentItem.name
+								.split(' ')
+								.map((word) => word[0])
+								.join('')}
+						</div>
 						<button
-							class={`flex aspect-square w-full items-center justify-center rounded-xl bg-neutral-200 text-6xl font-bold`}
 							on:click={(e) => {
 								e.stopPropagation();
 								e.preventDefault();
 
 								document.getElementById('img')?.click();
 							}}
+							class="absolute inset-0 flex cursor-pointer items-center justify-center rounded-xl bg-neutral-800 opacity-0 transition-opacity duration-500 group-hover:opacity-80"
 						>
-							{currentItem.name
-								.split(' ')
-								.map((word) => word[0])
-								.join('')}
+							<Icon icon="mingcute:edit-2-fill" class="h-1/3 w-1/3 text-emerald-500" />
 						</button>
 					</form>
 				{/if}

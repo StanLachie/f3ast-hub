@@ -18,7 +18,7 @@
 		on:click={onClose}
 	>
 		<button
-			class="m-6 w-full max-w-lg cursor-default rounded-2xl border-2 border-neutral-400 bg-white p-6 shadow-lg"
+			class="m-6 max-h-screen w-full max-w-lg cursor-default overflow-y-auto rounded-2xl border-2 border-neutral-400 bg-white p-6 shadow-lg"
 			on:click={stopPropagation}
 		>
 			<slot />
