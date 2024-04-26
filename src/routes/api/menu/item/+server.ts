@@ -81,7 +81,7 @@ export const GET: RequestHandler = async ({ locals, url }) => {
 	}
 };
 
-export const PUT: RequestHandler = async ({ locals, request, url }) => {
+export const PUT: RequestHandler = async ({ locals, request }) => {
 	const session = await locals.getSession();
 	const { id, name, price, description, category } = await request.json();
 
