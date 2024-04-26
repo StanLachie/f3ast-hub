@@ -69,13 +69,18 @@
 					transformDraggedElement: (element) => {
 						return element;
 					},
+					dropFromOthersDisabled: true,
 					dragDisabled
 				}}
-				on:consider={handleConsider}
-				on:finalize={handleFinalize}
+				on:consider={(e) => handleConsider(e)}
+				on:finalize={(e) => handleFinalize(e)}
 			>
 				{#each listItems as item (item.id)}
-					<div class="flex items-center gap-2" animate:flip={{ duration: 250 }}>
+					<div
+						id={`${title}-item`}
+						class="col-span-full flex items-center gap-2"
+						animate:flip={{ duration: 100 }}
+					>
 						<button
 							class="btn-outline h-[42px] w-[42px] bg-white !p-2"
 							on:mousedown={() => {
