@@ -24,6 +24,9 @@
 	let isSaving = false;
 	let isReordering = false;
 
+	let currentCategory: any | null = null;
+	let currentItem: any | null = null;
+
 	onMount(async () => {
 		formattedCategories = (await pageData).categories
 			.sort((a, b) => a.sortingIndex - b.sortingIndex)
@@ -337,8 +340,10 @@
 		createFunc: () => {
 			openModal = 'categoryCreate';
 		},
-		editFunc: () => {
+		editFunc: async (id) => {
 			openModal = 'categoryEdit';
+
+			currentCategory = formattedCategories.find((category) => category.dbId === id);
 		},
 		deleteFunc: async (id) => {
 			if (!window) return;
@@ -374,8 +379,10 @@
 		createFunc: () => {
 			openModal = 'itemCreate';
 		},
-		editFunc: () => {
+		editFunc: async (id) => {
 			openModal = 'itemEdit';
+
+			currentItem = formattedItems.find((item) => item.dbId === id);
 		},
 		deleteFunc: async (id) => {
 			if (!window) return;
@@ -421,13 +428,22 @@
 		class="flex flex-col gap-3"
 		on:submit={(e) => {
 			e.preventDefault();
-			handleUpdateCategory();
+			if (!currentCategory) return;
+
+			handleUpdateCategory(currentCategory.dbId, e);
 		}}
 	>
-		<input name="name" type="text" class="input" placeholder="Name" />
-		<textarea class="input" placeholder="Description"></textarea>
+		<input
+			name="name"
+			type="text"
+			bind:value={currentCategory.name}
+			class="input"
+			placeholder="Name"
+		/>
+		<textarea class="input" bind:value={currentCategory.description} placeholder="Description"
+		></textarea>
 		<button type="submit" disabled={isSaving} class="btn-primary"
-			>{isSaving ? 'Creating...' : 'Create'}</button
+			>{isSaving ? 'Updating...' : 'Update'}</button
 		>
 	</form>
 </Modal>
@@ -469,13 +485,34 @@
 		class="flex flex-col gap-3"
 		on:submit={(e) => {
 			e.preventDefault();
-			handleUpdateItem();
+
+			if (!currentItem) return;
+
+			handleUpdateItem(currentItem.dbId, e);
 		}}
 	>
-		<input name="name" type="text" class="input" placeholder="Name" />
-		<textarea class="input" placeholder="Description"></textarea>
+		<input name="name" type="text" bind:value={currentItem.name} class="input" placeholder="Name" />
+		<div class="flex items-center">
+			<div class="rounded-l-lg border-y border-l border-neutral-400 px-4 py-2 font-semibold">$</div>
+			<input
+				name="price"
+				type="number"
+				class="input rounded-l-none"
+				placeholder="Price"
+				bind:value={currentItem.price}
+				step="0.10"
+			/>
+		</div>
+		<select name="category" class="input" value={currentItem.category}>
+			{#each formattedCategories as category (category.dbId)}
+				<option value={category.dbId}>{category.name}</option>
+			{/each}
+		</select>
+		<!-- <input name="img" class="input" placeholder="Image URL" value={currentItem.img} /> -->
+		<textarea class="input" bind:value={currentItem.description} placeholder="Description"
+		></textarea>
 		<button type="submit" disabled={isSaving} class="btn-primary"
-			>{isSaving ? 'Creating...' : 'Create'}</button
+			>{isSaving ? 'Updating...' : 'Update'}</button
 		>
 	</form>
 </Modal>

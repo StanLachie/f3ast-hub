@@ -83,8 +83,7 @@ export const GET: RequestHandler = async ({ locals, url }) => {
 
 export const PUT: RequestHandler = async ({ locals, request, url }) => {
 	const session = await locals.getSession();
-	const id = url.searchParams.get('id');
-	const { name, price, description, category, img } = await request.json();
+	const { id, name, price, description, category } = await request.json();
 
 	if (!id) {
 		return new Response(JSON.stringify({ error: 'Missing fields' }), {
@@ -124,10 +123,9 @@ export const PUT: RequestHandler = async ({ locals, request, url }) => {
 			name: name || item.name,
 			price: price || item.price,
 			description: description || item.description,
-			img: img,
 			MenuCategory: {
 				connect: {
-					id: category || item.MenuCategory.id
+					id: category || item.MenuCategory?.id
 				}
 			}
 		}

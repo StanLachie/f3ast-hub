@@ -12,7 +12,7 @@
 		type: 'primary' | 'danger';
 		href?: string;
 		createFunc?: () => void;
-		editFunc?: () => void;
+		editFunc?: (id: number) => void;
 		deleteFunc?: (id: number) => void;
 	};
 	export let reorderUrl: string;
@@ -100,7 +100,10 @@
 						<input class="input flex-1 bg-white" disabled value={item.name} />
 						<button
 							class="btn-outline flex h-[42px] w-[42px] justify-center bg-white !p-2"
-							on:click={action.editFunc}
+							on:click={() => {
+								if (!action.editFunc) return;
+								action.editFunc(item.dbId);
+							}}
 						>
 							<Icon icon="mingcute:edit-2-fill" class="h-5 w-5" />
 						</button>
