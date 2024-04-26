@@ -23,13 +23,13 @@
 			icon: 'mdi:burger',
 			link: '/dashboard/menu'
 		},
-		{
-			name: 'Gallery',
-			description: 'Upload, edit and delete images you use all over your site!',
-			type: 'top',
-			icon: 'mingcute:photo-album-fill',
-			link: '/dashboard/gallery'
-		},
+		// {
+		// 	name: 'Gallery',
+		// 	description: 'Upload, edit and delete images you use all over your site!',
+		// 	type: 'top',
+		// 	icon: 'mingcute:photo-album-fill',
+		// 	link: '/dashboard/gallery'
+		// },
 		{
 			name: 'Billing',
 			description: 'Your billing',
