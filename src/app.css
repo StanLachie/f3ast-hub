@@ -25,16 +25,16 @@
 
 @layer components {
 	.btn-primary {
-		@apply flex items-center justify-center gap-2 rounded-lg border border-emerald-950 bg-emerald-300 px-3 py-2 text-sm font-semibold text-emerald-950 shadow-sm transition-all hover:scale-[97.5%] hover:bg-emerald-400;
+		@apply flex items-center justify-center gap-2 rounded-lg border border-emerald-950 bg-emerald-300 px-3 py-2 text-sm font-semibold text-emerald-950 shadow-sm transition-colors duration-200 hover:scale-[97.5%] hover:bg-emerald-400;
 	}
 	.btn-outline {
-		@apply flex items-center justify-center gap-2 rounded-lg border border-neutral-400 px-3 py-2 text-sm font-semibold text-neutral-900 shadow-sm transition-all hover:scale-[97.5%] hover:bg-neutral-100;
+		@apply flex items-center justify-center gap-2 rounded-lg border border-neutral-400 px-3 py-2 text-sm font-semibold text-neutral-900 shadow-sm  transition-colors duration-200 hover:scale-[97.5%] hover:bg-neutral-200;
 	}
 	.btn-simple {
 		@apply flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm font-semibold text-neutral-900 shadow-sm hover:scale-[97.5%] hover:bg-neutral-100;
 	}
 	.btn-danger {
-		@apply flex items-center gap-2 rounded-lg border border-neutral-800 bg-red-400 px-3 py-2 text-sm font-semibold text-neutral-900 shadow-sm hover:scale-[97.5%] hover:bg-red-500;
+		@apply flex items-center gap-2 rounded-lg border border-neutral-500 bg-red-300 px-3 py-2 text-sm font-semibold text-neutral-900 shadow-sm transition-colors duration-200 hover:scale-[97.5%] hover:bg-red-400;
 	}
 	.btn-dark {
 		@apply flex items-center gap-2 rounded-lg border border-neutral-800 bg-neutral-700 px-3 py-2 text-sm font-semibold text-neutral-100 shadow-sm hover:scale-[97.5%] hover:bg-neutral-800;

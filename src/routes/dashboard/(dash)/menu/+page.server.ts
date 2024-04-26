@@ -2,11 +2,13 @@ import type { PageServerLoad } from './$types';
 import prisma from '$lib/prisma';
 
 interface MenuItem {
-	id: number | null;
-	name: string | null;
-	price: number | null;
-	categoryId: number | null;
+	id: number;
+	active: boolean;
+	name: string;
+	price: number;
 	img: string | null;
+	categoryId: number | null;
+	sortingIndex: number;
 	description: string | null;
 }
 
