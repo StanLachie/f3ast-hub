@@ -87,10 +87,11 @@ export const PUT: RequestHandler = async ({ locals, request }) => {
 	});
 };
 
-export const DELETE: RequestHandler = async ({ locals, url }) => {
+export const DELETE: RequestHandler = async ({ request, locals }) => {
 	const session = await locals.getSession();
 	const user = await locals.getUser();
-	const id = url.searchParams.get('id');
+	const data = await request.json();
+	const id = data.id as number;
 
 	if (!session) {
 		return new Response(JSON.stringify({ error: 'Unauthorized' }), {
@@ -115,7 +116,7 @@ export const DELETE: RequestHandler = async ({ locals, url }) => {
 
 	const category = await prisma.menuCategory.delete({
 		where: {
-			id: parseInt(id)
+			id
 		}
 	});
 

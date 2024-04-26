@@ -20,13 +20,15 @@ export const PUT: RequestHandler = async ({ locals, request }) => {
 		});
 	}
 
-	for (const item of items) {
+	for (let i = 0; i < items.length; i++) {
+		const item = items[i];
+
 		await prisma.menuItem.update({
 			where: {
 				id: item.dbId
 			},
 			data: {
-				sortingIndex: item.sortingIndex
+				sortingIndex: i
 			}
 		});
 	}

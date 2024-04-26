@@ -2,6 +2,8 @@
 	import type { PageData } from './$types';
 	import Modal from '$lib/components/Modal.svelte';
 	import { enhance } from '$app/forms';
+	import SettingHead from '$lib/components/dashboard/SettingHead.svelte';
+	import Meta from '$lib/components/utils/Meta.svelte';
 
 	export let data: PageData;
 	const { layoutData, assetsData } = data;
@@ -17,10 +19,17 @@
 	let menuImageFile = '';
 </script>
 
+<Meta
+	title="Your Gallery"
+	description="Upload, edit and delete images you use all over your site!"
+/>
+
 <div class="mx-auto flex w-full max-w-3xl flex-col gap-8">
 	<div>
-		<h1 class="my-2 text-3xl font-semibold">Your Gallery</h1>
-		<p class="text-neutral-600">Upload, edit and delete images you use all over your site!</p>
+		<SettingHead
+			title="Your Gallery"
+			description="Upload, edit and delete images you use all over your site!"
+		/>
 		<div class="my-6 flex flex-col gap-4">
 			{#await layoutData}
 				<div

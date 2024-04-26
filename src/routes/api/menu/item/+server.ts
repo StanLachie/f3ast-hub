@@ -83,8 +83,7 @@ export const GET: RequestHandler = async ({ locals, url }) => {
 
 export const PUT: RequestHandler = async ({ locals, request, url }) => {
 	const session = await locals.getSession();
-	const id = url.searchParams.get('id');
-	const { name, price, description, category, img } = await request.json();
+	const { id, name, price, description, category } = await request.json();
 
 	if (!id) {
 		return new Response(JSON.stringify({ error: 'Missing fields' }), {
@@ -124,7 +123,6 @@ export const PUT: RequestHandler = async ({ locals, request, url }) => {
 			name: name || item.name,
 			price: price || item.price,
 			description: description || item.description,
-			img: img,
 			MenuCategory: {
 				connect: {
 					id: category || item.MenuCategory?.id
@@ -140,9 +138,10 @@ export const PUT: RequestHandler = async ({ locals, request, url }) => {
 	});
 };
 
-export const DELETE: RequestHandler = async ({ locals, url }) => {
+export const DELETE: RequestHandler = async ({ request, locals }) => {
 	const session = await locals.getSession();
-	const id = url.searchParams.get('id');
+	const data = await request.json();
+	const id = data.id as number;
 
 	if (!session) {
 		return new Response(JSON.stringify({ error: 'Unauthorized' }), {
@@ -160,7 +159,7 @@ export const DELETE: RequestHandler = async ({ locals, url }) => {
 
 	const item = await prisma.menuItem.findUnique({
 		where: {
-			id: parseInt(id)
+			id
 		}
 	});
 
@@ -173,7 +172,7 @@ export const DELETE: RequestHandler = async ({ locals, url }) => {
 
 	await prisma.menuItem.delete({
 		where: {
-			id: parseInt(id)
+			id
 		}
 	});
 

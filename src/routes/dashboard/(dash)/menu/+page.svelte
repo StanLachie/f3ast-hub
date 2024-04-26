@@ -7,6 +7,9 @@
 	import { onMount } from 'svelte';
 	import { quintOut } from 'svelte/easing';
 	import { fly } from 'svelte/transition';
+	import SettingHead from '$lib/components/dashboard/SettingHead.svelte';
+	import Meta from '$lib/components/utils/Meta.svelte';
+	import SettingList from '$lib/components/dashboard/SettingList.svelte';
 
 	export let data: PageData;
 	const { pageData } = data;
@@ -17,8 +20,12 @@
 	let formattedItems: any[] = [];
 	let galleryImages: any;
 
+	let initialLoading = true;
 	let isSaving = false;
 	let isReordering = false;
+
+	let currentCategory: any | null = null;
+	let currentItem: any | null = null;
 
 	onMount(async () => {
 		formattedCategories = (await pageData).categories
@@ -45,28 +52,8 @@
 				};
 			});
 
-		galleryImages = (await pageData).gallery;
+		initialLoading = false;
 	});
-
-	const handleConsider = (e: any, type: 'category' | 'item') => {
-		if (type === 'category') {
-			formattedCategories = e.detail.items;
-		} else if (type === 'item') {
-			formattedItems = e.detail.items;
-		}
-	};
-
-	const handleFinalize = async (e: any, type: 'category' | 'item') => {
-		if (isChangingOrder) return;
-		if (type === 'category') {
-			formattedCategories = e.detail.items;
-			await handleEditCategoryOrder();
-		} else if (type === 'item') {
-			formattedItems = e.detail.items;
-
-			await handleEditItemOrder();
-		}
-	};
 
 	const handleCreateItem = async (event: Event) => {
 		const target = event.target as HTMLFormElement;
@@ -266,8 +253,11 @@
 
 	const handleDeleteCategory = async (id: number) => {
 		isSaving = true;
-		const res = await fetch(`/api/menu/category?id=${id}`, {
-			method: 'DELETE'
+		const res = await fetch(`/api/menu/category`, {
+			method: 'DELETE',
+			body: JSON.stringify({
+				id
+			})
 		});
 
 		if (res.ok) {
@@ -326,10 +316,6 @@
 	};
 </script>
 
-<meta:head>
-	<title>Dashboard | Menu Editor</title>
-</meta:head>
-
 {#if isReordering}
 	<div
 		in:fly={{ x: 100, duration: 200, easing: quintOut }}
@@ -341,138 +327,349 @@
 	</div>
 {/if}
 
-<div class="mx-auto flex w-full max-w-3xl flex-col gap-8">
-	<div>
-		<h1 class="my-2 text-3xl font-semibold">Menu Editor</h1>
-		<p class="text-neutral-600">Make changes to your menu here.</p>
+<SettingHead title="Your Menu" description="Make changes to your menu here." />
 
-		<div class="my-6 flex flex-col gap-4">
-			<div
-				class="grid w-full grid-cols-4 gap-2 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm md:flex-row md:items-center"
+<SettingList
+	title="Categories"
+	description="Create & edit categories for your restaurant's menu."
+	loading={initialLoading}
+	action={{
+		name: 'Create Category',
+		type: 'primary',
+		href: '/dashboard/menu/category/create',
+		createFunc: () => {
+			openModal = 'categoryCreate';
+		},
+		editFunc: async (id) => {
+			openModal = 'categoryEdit';
+
+			currentCategory = formattedCategories.find((category) => category.dbId === id);
+		},
+		deleteFunc: async (id) => {
+			if (!window) return;
+			const confirm = window.confirm('Are you sure you want to delete this category?');
+			if (!confirm) return;
+			const res = await fetch(`/api/menu/category`, {
+				method: 'DELETE',
+				body: JSON.stringify({
+					id
+				})
+			});
+
+			if (res.ok) {
+				formattedCategories = formattedCategories.filter((category) => category.dbId !== id);
+				closeModal();
+			} else {
+				alert('Failed to delete category. Please try again.');
+			}
+		}
+	}}
+	reorderUrl="/api/menu/category/reorder"
+	listItems={formattedCategories}
+/>
+
+<SettingList
+	title="Items"
+	description="Create & edit menu items for your restaurant."
+	loading={initialLoading}
+	action={{
+		name: 'Create Item',
+		type: 'primary',
+		href: '/dashboard/menu/item/create',
+		createFunc: () => {
+			openModal = 'itemCreate';
+		},
+		editFunc: async (id) => {
+			openModal = 'itemEdit';
+
+			currentItem = formattedItems.find((item) => item.dbId === id);
+		},
+		deleteFunc: async (id) => {
+			if (!window) return;
+			const confirm = window.confirm('Are you sure you want to delete this item?');
+			if (!confirm) return;
+			const res = await fetch(`/api/menu/item`, {
+				method: 'DELETE',
+				body: JSON.stringify({
+					id
+				})
+			});
+
+			if (res.ok) {
+				formattedItems = formattedItems.filter((item) => item.dbId !== id);
+				closeModal();
+			} else {
+				alert('Failed to delete item. Please try again.');
+			}
+		}
+	}}
+	reorderUrl="/api/menu/item/reorder"
+	listItems={formattedItems}
+/>
+
+<Modal open={openModal === 'categoryCreate'} onClose={closeModal}>
+	<form
+		class="flex flex-col gap-3"
+		on:submit={(e) => {
+			e.preventDefault();
+			handleCreateCategory(e);
+		}}
+	>
+		<input name="name" type="text" class="input" placeholder="Name" />
+		<textarea class="input" placeholder="Description"></textarea>
+		<button type="submit" disabled={isSaving} class="btn-primary"
+			>{isSaving ? 'Creating...' : 'Create'}</button
+		>
+	</form>
+</Modal>
+
+<Modal open={openModal === 'categoryEdit'} onClose={closeModal}>
+	<form
+		class="flex flex-col gap-3"
+		on:submit={(e) => {
+			e.preventDefault();
+			if (!currentCategory) return;
+
+			handleUpdateCategory(currentCategory.dbId, e);
+		}}
+	>
+		<input
+			name="name"
+			type="text"
+			bind:value={currentCategory.name}
+			class="input"
+			placeholder="Name"
+		/>
+		<textarea class="input" bind:value={currentCategory.description} placeholder="Description"
+		></textarea>
+		<button type="submit" disabled={isSaving} class="btn-primary"
+			>{isSaving ? 'Updating...' : 'Update'}</button
+		>
+	</form>
+</Modal>
+
+<Modal open={openModal === 'itemCreate'} onClose={closeModal}>
+	<form
+		class="flex flex-col gap-3"
+		on:submit={(e) => {
+			e.preventDefault();
+			handleCreateItem(e);
+		}}
+	>
+		<input name="name" type="text" class="input" placeholder="Name" />
+		<div class="flex items-center">
+			<div class="rounded-l-lg border-y border-l border-neutral-400 px-4 py-2 font-semibold">$</div>
+			<input
+				name="price"
+				type="number"
+				class="input rounded-l-none"
+				placeholder="Price"
+				step="0.10"
+			/>
+		</div>
+		<select name="category" class="input cursor-pointer">
+			{#each formattedCategories as category (category.dbId)}
+				<option value={category.dbId}>{category.name}</option>
+			{/each}
+		</select>
+		<input name="img" class="input" placeholder="Image URL" />
+		<textarea class="input" placeholder="Description"></textarea>
+		<button type="submit" disabled={isSaving} class="btn-primary"
+			>{isSaving ? 'Creating...' : 'Create'}</button
+		>
+	</form>
+</Modal>
+
+<Modal open={openModal === 'itemEdit'} onClose={closeModal}>
+	<form
+		class="flex flex-col gap-3"
+		on:submit={(e) => {
+			e.preventDefault();
+
+			if (!currentItem) return;
+
+			handleUpdateItem(currentItem.dbId, e);
+		}}
+	>
+		<input name="name" type="text" bind:value={currentItem.name} class="input" placeholder="Name" />
+		<div class="flex items-center">
+			<div class="rounded-l-lg border-y border-l border-neutral-400 px-4 py-2 font-semibold">$</div>
+			<input
+				name="price"
+				type="number"
+				class="input rounded-l-none"
+				placeholder="Price"
+				bind:value={currentItem.price}
+				step="0.10"
+			/>
+		</div>
+		<select name="category" class="input" value={currentItem.category}>
+			{#each formattedCategories as category (category.dbId)}
+				<option value={category.dbId}>{category.name}</option>
+			{/each}
+		</select>
+		<!-- <input name="img" class="input" placeholder="Image URL" value={currentItem.img} /> -->
+		<textarea class="input" bind:value={currentItem.description} placeholder="Description"
+		></textarea>
+		<button type="submit" disabled={isSaving} class="btn-primary"
+			>{isSaving ? 'Updating...' : 'Update'}</button
+		>
+	</form>
+</Modal>
+
+<!-- <div class="col-span-full flex justify-end md:col-span-2">
+	<button
+		type="submit"
+		class="btn-primary w-full md:w-auto"
+		on:click={() => {
+			openModal = 'categoryCreate';
+		}}
+	>
+		Create Category
+	</button>
+
+	
+</div> -->
+<!-- <div
+	class="col-span-full grid grid-cols-1 gap-2"
+	use:dndzone={{
+		items: formattedCategories,
+		flipDurationMs: 100,
+		dropTargetStyle: {},
+		dragDisabled: isChangingOrder || openModal !== ''
+	}}
+	on:consider={(e) => handleConsider(e, 'category')}
+	on:finalize={(e) => handleFinalize(e, 'category')}
+>
+	{#each formattedCategories as item (item.id)}
+		<form
+			on:submit={(e) => {
+				e.preventDefault();
+				handleDeleteCategory(item.dbId);
+			}}
+			class="col-span-full flex items-center gap-2"
+			animate:flip={{ duration: 100 }}
+		>
+			<div class={`btn-outline bg-white !p-2`} draggable="true">
+				<Icon icon="carbon:drag-vertical" class="h-5 w-5" />
+			</div>
+			<input name="name" class="input flex-1" value={item.name} />
+			<button
+				type="button"
+				class={`btn-primary !p-2`}
+				draggable="false"
+				on:click={() => {
+					openModal = `category-${item.dbId}`;
+				}}
 			>
-				<div class="col-span-full md:col-span-2">
-					<h2 class="text-lg font-semibold">Categories</h2>
-					<p class="text-neutral-600">Create & edit categories for your restaurant's menu.</p>
-				</div>
-				<div class="col-span-full flex justify-end md:col-span-2">
-					<button
-						type="submit"
-						class="btn-primary w-full md:w-auto"
-						on:click={() => {
-							openModal = 'categoryCreate';
-						}}
-					>
-						Create Category
-					</button>
+				<Icon icon="mingcute:edit-2-fill" class="h-5 w-5" draggable="false" />
+			</button>
 
-					<Modal open={openModal === 'categoryCreate'} onClose={closeModal}>
+			
+
+			<button type="submit" class={`btn-danger !p-2`} draggable="false">
+				<Icon icon="mingcute:delete-2-fill" class="h-5 w-5" draggable="false" />
+			</button>
+		</form>
+	{/each}
+</div>
+
+<div
+	class="grid w-full grid-cols-4 gap-2 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm md:flex-row md:items-center"
+>
+	<div class="col-span-full md:col-span-2">
+		<h2 class="text-lg font-semibold">Items</h2>
+		<p class="text-neutral-600">Create & edit menu items for your restaurant.</p>
+	</div>
+	<div class="col-span-full flex justify-end md:col-span-2">
+		<button
+			type="submit"
+			class="btn-primary w-full md:w-auto"
+			on:click={() => {
+				openModal = 'itemCreate';
+			}}
+		>
+			Create Item
+		</button>
+
+		<Modal open={openModal === 'itemCreate'} onClose={closeModal}>
+			<form
+				class="flex cursor-default flex-col gap-3"
+				on:submit={(e) => {
+					e.preventDefault();
+					handleCreateItem(e);
+				}}
+			>
+				<input name="name" type="text" class="input" placeholder="Name" />
+				<div class="flex items-center">
+					<div class="rounded-l-lg border-y border-l border-neutral-400 px-4 py-2 font-semibold">
+						$
+					</div>
+					<input
+						name="price"
+						type="number"
+						class="input rounded-l-none"
+						placeholder="Price"
+						step="0.10"
+					/>
+				</div>
+				<select name="category" class="input cursor-pointer">
+					{#each formattedCategories as category (category.dbId)}
+						<option value={category.dbId}>{category.name}</option>
+					{/each}
+				</select>
+				<input name="img" class="input" placeholder="Image URL" />
+				<textarea class="input" placeholder="Description"></textarea>
+				<button type="submit" disabled={isSaving} class="btn-primary"
+					>{isSaving ? 'Creating...' : 'Create'}</button
+				>
+			</form>
+		</Modal>
+	</div>
+	<div
+		class="col-span-full grid grid-cols-1 gap-2"
+		use:dndzone={{
+			items: formattedItems,
+			flipDurationMs: 100,
+			dropTargetStyle: {},
+			dragDisabled: isChangingOrder || openModal !== ''
+		}}
+		on:consider={(e) => handleConsider(e, 'item')}
+		on:finalize={(e) => handleFinalize(e, 'item')}
+	>
+		{#each formattedItems as item (item.id)}
+			<form
+				on:submit={(e) => {
+					e.preventDefault();
+					handleDeleteCategory(item.dbId);
+				}}
+				class="col-span-full flex items-center gap-2"
+				animate:flip={{ duration: 100 }}
+			>
+				<div class={`btn-outline bg-white !p-2`} draggable="true">
+					<Icon icon="carbon:drag-vertical" class="h-5 w-5" />
+				</div>
+				<input name="name" class="input flex-1" value={item.name} />
+				<button
+					type="button"
+					class={`btn-primary !p-2`}
+					draggable="false"
+					on:click={() => {
+						openModal = `item-${item.dbId}`;
+					}}
+				>
+					<Icon icon="mingcute:edit-2-fill" class="h-5 w-5" draggable="false" />
+				</button>
+				<div>
+					<Modal open={openModal === `item-${item.dbId}`} onClose={closeModal}>
 						<form
 							class="flex flex-col gap-3"
 							on:submit={(e) => {
 								e.preventDefault();
-								handleCreateCategory(e);
+								handleUpdateItem(item.dbId, e);
 							}}
 						>
-							<input name="name" type="text" class="input" placeholder="Name" />
-							<textarea class="input" placeholder="Description"></textarea>
-							<button type="submit" disabled={isSaving} class="btn-primary"
-								>{isSaving ? 'Creating...' : 'Create'}</button
-							>
-						</form>
-					</Modal>
-				</div>
-				<div
-					class="col-span-full grid grid-cols-1 gap-2"
-					use:dndzone={{
-						items: formattedCategories,
-						flipDurationMs: 100,
-						dropTargetStyle: {},
-						dragDisabled: isChangingOrder || openModal !== ''
-					}}
-					on:consider={(e) => handleConsider(e, 'category')}
-					on:finalize={(e) => handleFinalize(e, 'category')}
-				>
-					{#each formattedCategories as item (item.id)}
-						<form
-							on:submit={(e) => {
-								e.preventDefault();
-								handleDeleteCategory(item.dbId);
-							}}
-							class="col-span-full flex items-center gap-2"
-							animate:flip={{ duration: 100 }}
-						>
-							<div class={`btn-outline bg-white !p-2`} draggable="true">
-								<Icon icon="carbon:drag-vertical" class="h-5 w-5" />
-							</div>
-							<input name="name" class="input flex-1" value={item.name} />
-							<button
-								type="button"
-								class={`btn-primary !p-2`}
-								draggable="false"
-								on:click={() => {
-									openModal = `category-${item.dbId}`;
-								}}
-							>
-								<Icon icon="mingcute:edit-2-fill" class="h-5 w-5" draggable="false" />
-							</button>
-
-							<Modal open={openModal === `category-${item.dbId}`} onClose={closeModal}>
-								<form
-									class="flex flex-col gap-3"
-									on:submit={(e) => {
-										e.preventDefault();
-										handleUpdateCategory(item.dbId, e);
-									}}
-								>
-									<input
-										name="name"
-										type="text"
-										class="input"
-										placeholder="Name"
-										value={item.name}
-									/>
-									<textarea class="input" placeholder="Description"></textarea>
-									<button type="submit" disabled={isSaving} class="btn-primary"
-										>{isSaving ? 'Saving...' : 'Save'}</button
-									>
-								</form>
-							</Modal>
-
-							<button type="submit" class={`btn-danger !p-2`} draggable="false">
-								<Icon icon="mingcute:delete-2-fill" class="h-5 w-5" draggable="false" />
-							</button>
-						</form>
-					{/each}
-				</div>
-			</div>
-
-			<div
-				class="grid w-full grid-cols-4 gap-2 rounded-lg border border-neutral-400 bg-white p-4 shadow-sm md:flex-row md:items-center"
-			>
-				<div class="col-span-full md:col-span-2">
-					<h2 class="text-lg font-semibold">Items</h2>
-					<p class="text-neutral-600">Create & edit menu items for your restaurant.</p>
-				</div>
-				<div class="col-span-full flex justify-end md:col-span-2">
-					<button
-						type="submit"
-						class="btn-primary w-full md:w-auto"
-						on:click={() => {
-							openModal = 'itemCreate';
-						}}
-					>
-						Create Item
-					</button>
-
-					<Modal open={openModal === 'itemCreate'} onClose={closeModal}>
-						<form
-							class="flex cursor-default flex-col gap-3"
-							on:submit={(e) => {
-								e.preventDefault();
-								handleCreateItem(e);
-							}}
-						>
-							<input name="name" type="text" class="input" placeholder="Name" />
+							<input name="name" type="text" class="input" placeholder="Name" value={item.name} />
 							<div class="flex items-center">
 								<div
 									class="rounded-l-lg border-y border-l border-neutral-400 px-4 py-2 font-semibold"
@@ -484,158 +681,78 @@
 									type="number"
 									class="input rounded-l-none"
 									placeholder="Price"
+									value={item.price}
 									step="0.10"
 								/>
 							</div>
-							<select name="category" class="input cursor-pointer">
+
+							<select name="category" class="input" value={item.category}>
 								{#each formattedCategories as category (category.dbId)}
 									<option value={category.dbId}>{category.name}</option>
 								{/each}
 							</select>
-							<input name="img" class="input" placeholder="Image URL" />
-							<textarea class="input" placeholder="Description"></textarea>
+
+							<input name="img" hidden value={item.img} />
+
+							<div class="grid max-h-64 grid-cols-4 gap-2 overflow-y-auto">
+								{#each galleryImages as menuImage}
+									<button
+										class="relative flex items-center justify-center"
+										on:click={(e) => {
+											e.preventDefault();
+											if (
+												item.img ===
+												`https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}`
+											) {
+												item.img = null;
+											} else {
+												item.img = `https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}`;
+											}
+										}}
+									>
+										{#if item.img === `https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}`}
+											<div
+												class="absolute flex h-full w-full items-center justify-center rounded-lg bg-neutral-950 opacity-50"
+											></div>
+											<Icon
+												icon="mingcute:check-circle-line"
+												class="absolute h-8 w-8 text-emerald-400"
+											/>
+										{/if}
+
+										<img
+											src={`https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}?width=100&height=100`}
+											alt="Menu Item"
+											class="w-full cursor-pointer rounded-lg object-cover"
+										/>
+									</button>
+								{/each}
+							</div>
+
+							<textarea
+								name="description"
+								class="input"
+								placeholder="Description"
+								value={item.description}
+							></textarea>
 							<button type="submit" disabled={isSaving} class="btn-primary"
-								>{isSaving ? 'Creating...' : 'Create'}</button
+								>{isSaving ? 'Saving...' : 'Save'}</button
 							>
 						</form>
 					</Modal>
 				</div>
-				<div
-					class="col-span-full grid grid-cols-1 gap-2"
-					use:dndzone={{
-						items: formattedItems,
-						flipDurationMs: 100,
-						dropTargetStyle: {},
-						dragDisabled: isChangingOrder || openModal !== ''
+				<button
+					type="button"
+					class={`btn-danger !p-2`}
+					draggable="false"
+					on:click={(e) => {
+						e.preventDefault();
+						handleDeleteItem(item.dbId);
 					}}
-					on:consider={(e) => handleConsider(e, 'item')}
-					on:finalize={(e) => handleFinalize(e, 'item')}
 				>
-					{#each formattedItems as item (item.id)}
-						<form
-							on:submit={(e) => {
-								e.preventDefault();
-								handleDeleteCategory(item.dbId);
-							}}
-							class="col-span-full flex items-center gap-2"
-							animate:flip={{ duration: 100 }}
-						>
-							<div class={`btn-outline bg-white !p-2`} draggable="true">
-								<Icon icon="carbon:drag-vertical" class="h-5 w-5" />
-							</div>
-							<input name="name" class="input flex-1" value={item.name} />
-							<button
-								type="button"
-								class={`btn-primary !p-2`}
-								draggable="false"
-								on:click={() => {
-									openModal = `item-${item.dbId}`;
-								}}
-							>
-								<Icon icon="mingcute:edit-2-fill" class="h-5 w-5" draggable="false" />
-							</button>
-							<div>
-								<Modal open={openModal === `item-${item.dbId}`} onClose={closeModal}>
-									<form
-										class="flex flex-col gap-3"
-										on:submit={(e) => {
-											e.preventDefault();
-											handleUpdateItem(item.dbId, e);
-										}}
-									>
-										<input
-											name="name"
-											type="text"
-											class="input"
-											placeholder="Name"
-											value={item.name}
-										/>
-										<div class="flex items-center">
-											<div
-												class="rounded-l-lg border-y border-l border-neutral-400 px-4 py-2 font-semibold"
-											>
-												$
-											</div>
-											<input
-												name="price"
-												type="number"
-												class="input rounded-l-none"
-												placeholder="Price"
-												value={item.price}
-												step="0.10"
-											/>
-										</div>
-
-										<select name="category" class="input" value={item.category}>
-											{#each formattedCategories as category (category.dbId)}
-												<option value={category.dbId}>{category.name}</option>
-											{/each}
-										</select>
-
-										<input name="img" hidden value={item.img} />
-
-										<div class="grid max-h-64 grid-cols-4 gap-2 overflow-y-auto">
-											{#each galleryImages as menuImage}
-												<button
-													class="relative flex items-center justify-center"
-													on:click={(e) => {
-														e.preventDefault();
-														if (
-															item.img ===
-															`https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}`
-														) {
-															item.img = null;
-														} else {
-															item.img = `https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}`;
-														}
-													}}
-												>
-													{#if item.img === `https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}`}
-														<div
-															class="absolute flex h-full w-full items-center justify-center rounded-lg bg-neutral-950 opacity-50"
-														></div>
-														<Icon
-															icon="mingcute:check-circle-line"
-															class="absolute h-8 w-8 text-emerald-400"
-														/>
-													{/if}
-
-													<img
-														src={`https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/render/image/public/client-assets/${menuImage.name}?width=100&height=100`}
-														alt="Menu Item"
-														class="w-full cursor-pointer rounded-lg object-cover"
-													/>
-												</button>
-											{/each}
-										</div>
-
-										<textarea
-											name="description"
-											class="input"
-											placeholder="Description"
-											value={item.description}
-										></textarea>
-										<button type="submit" disabled={isSaving} class="btn-primary"
-											>{isSaving ? 'Saving...' : 'Save'}</button
-										>
-									</form>
-								</Modal>
-							</div>
-							<button
-								type="button"
-								class={`btn-danger !p-2`}
-								draggable="false"
-								on:click={(e) => {
-									e.preventDefault();
-									handleDeleteItem(item.dbId);
-								}}
-							>
-								<Icon icon="mingcute:delete-2-fill" class="h-5 w-5" draggable="false" />
-							</button>
-						</form>
-					{/each}
-				</div>
-			</div>
-		</div>
+					<Icon icon="mingcute:delete-2-fill" class="h-5 w-5" draggable="false" />
+				</button>
+			</form>
+		{/each}
 	</div>
-</div>
+</div> -->
