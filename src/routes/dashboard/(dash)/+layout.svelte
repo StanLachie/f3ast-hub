@@ -87,9 +87,7 @@
 		}}
 	>
 		<div class="flex flex-col divide-y divide-neutral-400 border-b border-neutral-400">
-			<div class="flex h-16 cursor-default items-center justify-center font-norwester text-xl">
-				F3AST
-			</div>
+			<a href="/" class="flex h-16 items-center justify-center font-norwester text-xl"> F3AST </a>
 			{#each sidebarItems as item}
 				{#if item.type === 'top'}
 					<a

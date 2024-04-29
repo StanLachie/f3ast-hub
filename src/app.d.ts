@@ -12,10 +12,16 @@ declare global {
 				restaurant: any;
 			} | null>;
 		}
+
 		// interface PageData {}
 		// interface PageState {}
 		// interface Platform {}
 	}
+}
+
+declare module '$env/static/public' {
+	export const MAIL_USER: string;
+	export const MAIL_PASS: string;
 }
 
 declare namespace svelte.JSX {

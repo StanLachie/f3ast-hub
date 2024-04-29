@@ -24,5 +24,12 @@
 		"**/vite.config.js.timestamp-*",
 		"**/vite.config.ts.timestamp-*"
 	],
-	"include": ["src/**/*", "src/node_modules", ".svelte-kit/ambient.d.ts"]
+	"include": [
+		"src/**/*",
+		"src/node_modules",
+		".svelte-kit/ambient.d.ts",
+		"**/*.svelte",
+		"**/*.ts",
+		"**/*.tsx"
+	]
 }

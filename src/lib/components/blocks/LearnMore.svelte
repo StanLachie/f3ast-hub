@@ -1,4 +1,4 @@
-<div class="flex flex-1 flex-col items-center bg-slate-950 px-8 text-white">
+<div class="flex flex-1 flex-col items-center bg-slate-950 px-8 text-white" id="learnMore">
 	<div class="my-12 max-w-4xl">
 		<h1 class="text-pretty text-center text-4xl font-semibold drop-shadow-xl md:text-5xl">
 			So, what exactly is F3AST, and how will it help my business?

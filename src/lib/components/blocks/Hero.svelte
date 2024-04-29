@@ -3,16 +3,10 @@
 	import Button from '../Button.svelte';
 	import Icon from '@iconify/svelte';
 
-	let flickeringLetter = '3';
+	let learnMore: HTMLElement | null = null;
 
 	onMount(() => {
-		const flicker = setInterval(() => {
-			flickeringLetter = flickeringLetter === '3' ? 'E' : '3';
-		}, 1000);
-
-		onDestroy(() => {
-			clearInterval(flicker);
-		});
+		learnMore = document.getElementById('learnMore');
 	});
 </script>
 
@@ -24,7 +18,7 @@
 		>
 			Create an <span class="text-emerald-300">online presence</span><br /> for your food business
 			with
-			<span class="font-norwester font-normal">F{flickeringLetter}AST</span>.
+			<span class="font-norwester font-normal">F3AST</span>.
 		</h1>
 		<h2
 			class=" mt-2 max-w-4xl text-pretty text-center text-xl font-semibold italic text-neutral-500 drop-shadow-xl sm:text-2xl md:text-3xl"
@@ -35,8 +29,15 @@
 			<a class="btn-primary" href="/pricing"
 				>View Pricing <Icon icon="mingcute:arrow-right-circle-fill" class="text-xl" /></a
 			>
-			<a class="btn-outline" href="/learn-more"
-				>Learn More <Icon icon="mingcute:information-fill" class="text-xl" /></a
+			<button
+				class="btn-outline"
+				on:click={() =>
+					learnMore &&
+					learnMore.scrollIntoView({
+						behavior: 'smooth',
+						block: 'center',
+						inline: 'center'
+					})}>Learn More <Icon icon="mingcute:information-fill" class="text-xl" /></button
 			>
 		</div>
 	</div>
