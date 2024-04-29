@@ -51,7 +51,6 @@
 		"@supabase/ssr": "^0.1.0",
 		"@supabase/supabase-js": "^2.39.8",
 		"base64-arraybuffer": "^1.0.2",
-		"nodemailer": "^6.9.13",
 		"stripe": "^14.21.0",
 		"svelte-dnd-action": "^0.9.42",
 		"tailwind-merge": "^2.2.1"
