@@ -47,6 +47,7 @@
 			<select
 				class="input flex-1 p-3"
 				name={select.name}
+				title="Select {select.name}"
 				bind:value={select.value}
 				placeholder={select.placeholder}
 			>

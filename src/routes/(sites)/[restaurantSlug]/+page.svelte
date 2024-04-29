@@ -7,6 +7,7 @@
 	import SocialButton from '$lib/components/restaurants/SocialButton.svelte';
 	import CategoryFinder from '$lib/components/restaurants/CategoryFinder.svelte';
 	import ItemCard from '$lib/components/restaurants/ItemCard.svelte';
+	import Meta from '$lib/components/utils/Meta.svelte';
 
 	export let data: PageData;
 
@@ -18,9 +19,7 @@
 	let scrollContainers: HTMLDivElement[] = [];
 </script>
 
-<meta:head>
-	<title>{data.restaurant.name}</title>
-</meta:head>
+<Meta title={data.restaurant.name} description={`${data.restaurant.name} @ F3AST`} />
 
 <div class="relative">
 	<img
@@ -57,8 +56,18 @@
 	</div>
 
 	<div class="mt-2 flex gap-3">
-		<SocialButton url="https://www.facebook.com/swagmanspies/" icon="mingcute:facebook-fill" />
-		<SocialButton url="https://www.facebook.com/swagmanspies/" icon="mingcute:ins-line" />
+		{#if data.restaurant.facebook}
+			<SocialButton url={data.restaurant.facebook} icon="ic:baseline-facebook" />
+		{/if}
+		{#if data.restaurant.tiktok}
+			<SocialButton url={data.restaurant.tiktok} icon="ic:baseline-tiktok" />
+		{/if}
+		{#if data.restaurant.instagram}
+			<SocialButton url={data.restaurant.instagram} icon="ant-design:instagram-filled" />
+		{/if}
+		{#if data.restaurant.twitter}
+			<SocialButton url={data.restaurant.twitter} icon="icon-park-solid:twitter" />
+		{/if}
 	</div>
 </div>
 <div class="sticky top-2 mt-6">
