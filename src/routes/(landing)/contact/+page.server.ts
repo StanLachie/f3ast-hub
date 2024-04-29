@@ -19,25 +19,31 @@ export const actions: Actions = {
 		}
 
 		try {
-			await sendEmail('lachlan@f3ast.com', 'Lachlan', email, name, subject, null, message).then(
-				async () => {
-					await sendEmail(
-						email,
-						name,
-						'noreply@f3ast.com',
-						'Public Inquiries @ F3AST',
-						`We've received your message.`,
-						null,
-						"Thanks for contacting us. We'll get back to you as soon as possible.\n\nBest regards,\nF3AST"
-					)
-						.then(() => {
-							return { success: true };
-						})
-						.catch((error) => {
-							return { success: false, message: error.message };
-						});
-				}
-			);
+			await sendEmail(
+				'support@f3ast.com',
+				'F3AST Support',
+				email,
+				name,
+				subject,
+				null,
+				message
+			).then(async () => {
+				await sendEmail(
+					email,
+					name,
+					'noreply@f3ast.com',
+					'Public Inquiries @ F3AST',
+					`We've received your message.`,
+					null,
+					"Thanks for contacting us. We'll get back to you as soon as possible.\n\nBest regards,\nF3AST"
+				)
+					.then(() => {
+						return { success: true };
+					})
+					.catch((error) => {
+						return { success: false, message: error.message };
+					});
+			});
 		} catch (error) {
 			console.error('Failed to send email:', error);
 			return fail(500, {
