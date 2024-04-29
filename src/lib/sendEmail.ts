@@ -4,7 +4,8 @@ export const sendEmail = async (
 	toEmail: string,
 	toName: string | null,
 	fromEmail: string,
-	fromName: string,
+	fromName: string | null,
+	replyToEmail: string | null,
 	subject: string,
 	html: string | null,
 	text: string | null
@@ -35,6 +36,7 @@ export const sendEmail = async (
 						name: toName
 					}
 				],
+				...(replyToEmail && { replyTo: { email: replyToEmail } }),
 				...(html ? { htmlContent: html } : { textContent: text || '' }),
 				subject
 			})

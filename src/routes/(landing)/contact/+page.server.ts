@@ -20,10 +20,11 @@ export const actions: Actions = {
 
 		try {
 			await sendEmail(
-				'support@f3ast.com',
-				'F3AST Support',
-				email,
+				'lachlan@f3ast.com',
+				'Lachlan @ F3AST',
+				'noreply@f3ast.com',
 				name,
+				email,
 				subject,
 				null,
 				message
@@ -33,6 +34,7 @@ export const actions: Actions = {
 					name,
 					'noreply@f3ast.com',
 					'Public Inquiries @ F3AST',
+					null,
 					`We've received your message.`,
 					null,
 					"Thanks for contacting us. We'll get back to you as soon as possible.\n\nBest regards,\nF3AST"
