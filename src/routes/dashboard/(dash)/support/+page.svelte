@@ -1,11 +1,13 @@
 <script lang="ts">
 	import SettingHead from '$lib/components/dashboard/SettingHead.svelte';
 	import Meta from '$lib/components/utils/Meta.svelte';
-	import type { PageData } from './$types';
 	import SettingAction from '$lib/components/dashboard/SettingAction.svelte';
-
-	export let data: PageData;
 </script>
+
+<Meta
+	title="Support"
+	description="Need help with your restaurant? Running into issues? We're here to help."
+/>
 
 <SettingHead
 	title="Support"

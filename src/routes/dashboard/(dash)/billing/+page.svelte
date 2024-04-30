@@ -2,8 +2,6 @@
 	import type { PageData } from './$types';
 	import SettingHead from '$lib/components/dashboard/SettingHead.svelte';
 	import SettingAction from '$lib/components/dashboard/SettingAction.svelte';
-
-	export let data: PageData;
 </script>
 
 <SettingHead title="Billing" description="Update your billing details here." />

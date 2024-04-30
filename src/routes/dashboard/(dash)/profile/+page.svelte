@@ -1,8 +1,5 @@
 <script async script lang="ts">
 	import type { PageData } from './$types';
-	import { fade } from 'svelte/transition';
-	import Icon from '@iconify/svelte';
-	import { enhance } from '$app/forms';
 	import { onMount } from 'svelte';
 	import Meta from '$lib/components/utils/Meta.svelte';
 	import SettingHead from '$lib/components/dashboard/SettingHead.svelte';
@@ -21,7 +18,6 @@
 		promotional_emails: false
 	};
 
-	// Set the personal info
 	onMount(async () => {
 		personalInfo = {
 			first_name: (await layoutData).client?.first_name ?? '',
@@ -33,9 +29,9 @@
 
 		initialLoading = false;
 	});
-
-	let promotionalEmailForm: HTMLFormElement;
 </script>
+
+<Meta title="Personal Info" description="Update your personal details here." />
 
 <SettingHead title="Personal Info" description="Update your personal details here." />
 

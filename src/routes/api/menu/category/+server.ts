@@ -1,8 +1,8 @@
-import prisma from '$lib/prisma';
+// import prisma from '$lib/prisma';
 import type { RequestHandler } from '@sveltejs/kit';
 export const POST: RequestHandler = async ({ locals, request }) => {
-	const session = await locals.getSession();
 	const user = await locals.getUser();
+	const supabase = await locals.supabase;
 	const { name, description } = await request.json();
 
 	if (!name) {
@@ -12,43 +12,48 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 		});
 	}
 
-	if (!session) {
-		return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-			status: 401,
+	const { data: sortingIndexData, error: sortingIndexError } = await supabase
+		.from('MenuCategory')
+		.select('*')
+		.eq('restaurantId', user?.restaurant?.id)
+		.order('sortingIndex', { ascending: false })
+		.limit(1);
+
+	if (sortingIndexError) {
+		console.log(sortingIndexError);
+		return new Response(JSON.stringify({ error: 'Failed to get sorting index' }), {
+			status: 400,
 			headers: { 'content-type': 'application/json' }
 		});
 	}
 
-	if (!user) {
-		return new Response(JSON.stringify({ error: 'User not found' }), {
-			status: 404,
+	const { data, error } = await supabase
+		.from('MenuCategory')
+		.insert([
+			{
+				name,
+				description,
+				sortingIndex: sortingIndexData?.[0]?.sortingIndex + 1,
+				restaurantId: user?.restaurant?.id
+			}
+		])
+		.select('*');
+
+	if (error) {
+		console.log(error);
+		return new Response(JSON.stringify({ error }), {
+			status: 400,
 			headers: { 'content-type': 'application/json' }
 		});
 	}
 
-	const getSortingIndex = await prisma.menuCategory.findFirst({
-		orderBy: {
-			sortingIndex: 'desc'
-		}
-	});
-
-	const category = await prisma.menuCategory.create({
-		data: {
-			name,
-			description,
-			sortingIndex: getSortingIndex ? getSortingIndex.sortingIndex + 1 : 0,
-			restaurantId: user.restaurant.id
-		}
-	});
-
-	return new Response(JSON.stringify({ category }), {
+	return new Response(JSON.stringify({ category: data[0] }), {
 		headers: { 'content-type': 'application/json' }
 	});
 };
 
 export const PUT: RequestHandler = async ({ locals, request }) => {
-	const session = await locals.getSession();
-	const user = await locals.getUser();
+	const supabase = await locals.supabase;
 	const { id, name, description } = await request.json();
 
 	if (!name || !id) {
@@ -58,54 +63,41 @@ export const PUT: RequestHandler = async ({ locals, request }) => {
 		});
 	}
 
-	if (!session) {
-		return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-			status: 401,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
-
-	if (!user) {
-		return new Response(JSON.stringify({ error: 'User not found' }), {
-			status: 404,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
-
-	const category = await prisma.menuCategory.update({
-		where: {
-			id: parseInt(id)
-		},
-		data: {
+	const { data, error } = await supabase
+		.from('MenuCategory')
+		.update({
 			name,
 			description
-		}
-	});
+		})
+		.eq('id', id)
+		.select('*');
 
-	return new Response(JSON.stringify({ category }), {
+	if (error) {
+		console.log(error);
+		return new Response(JSON.stringify({ error }), {
+			status: 400,
+			headers: { 'content-type': 'application/json' }
+		});
+	}
+
+	if (data && data.length === 0) {
+		return new Response(
+			JSON.stringify({ error: 'No record updated, check if the id is correct' }),
+			{
+				status: 404,
+				headers: { 'content-type': 'application/json' }
+			}
+		);
+	}
+
+	return new Response(JSON.stringify({ category: data[0] }), {
 		headers: { 'content-type': 'application/json' }
 	});
 };
 
 export const DELETE: RequestHandler = async ({ request, locals }) => {
-	const session = await locals.getSession();
-	const user = await locals.getUser();
-	const data = await request.json();
-	const id = data.id as number;
-
-	if (!session) {
-		return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-			status: 401,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
-
-	if (!user) {
-		return new Response(JSON.stringify({ error: 'User not found' }), {
-			status: 404,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
+	const supabase = await locals.supabase;
+	const { id } = await request.json();
 
 	if (!id) {
 		return new Response(JSON.stringify({ error: 'Missing fields' }), {
@@ -114,13 +106,17 @@ export const DELETE: RequestHandler = async ({ request, locals }) => {
 		});
 	}
 
-	const category = await prisma.menuCategory.delete({
-		where: {
-			id
-		}
-	});
+	const { error } = await supabase.from('MenuCategory').delete().eq('id', id).select('*');
 
-	return new Response(JSON.stringify({ category }), {
+	if (error) {
+		console.log(error);
+		return new Response(JSON.stringify({ error }), {
+			status: 400,
+			headers: { 'content-type': 'application/json' }
+		});
+	}
+
+	return new Response(JSON.stringify({ id }), {
 		headers: { 'content-type': 'application/json' }
 	});
 };

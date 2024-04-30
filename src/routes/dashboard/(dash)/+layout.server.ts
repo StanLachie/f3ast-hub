@@ -3,7 +3,7 @@ import type { LayoutServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
 
 export const load = (async ({ locals }) => {
-	const session = await locals.getSession();
+	const session = await locals.safeGetSession();
 
 	if (!session) {
 		redirect(302, '/dashboard/login');
@@ -12,7 +12,7 @@ export const load = (async ({ locals }) => {
 	const layoutData = async () => {
 		const client = await prisma.clientAccount.findUnique({
 			where: {
-				email: session.user.email
+				email: session.user?.email ?? ''
 			}
 		});
 

@@ -30,7 +30,7 @@
 	export let data: PageData;
 	const { pageData } = data;
 
-	export let isChangingOrder = false;
+	// export let isChangingOrder = false;
 
 	let formattedCategories: Category[] = [];
 	let formattedItems: MenuItem[] = [];
@@ -286,7 +286,6 @@
 			isUploadingImage = true;
 			const formData = new FormData();
 			formData.append('menuImageFile', file);
-			// formData.append('id', currentItem?.dbId);
 
 			await fetch('/api/menu/item/cover', {
 				method: 'POST',

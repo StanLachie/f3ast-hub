@@ -1,13 +1,9 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import { page } from '$app/stores';
-	import type { LayoutData } from './$types';
 	import Meta from '$lib/components/utils/Meta.svelte';
-	import { fade } from 'svelte/transition';
 	import { slide } from 'svelte/transition';
-	import { fly } from 'svelte/transition';
 
-	export let data: LayoutData;
 	let sidebarItems = [
 		{
 			name: 'Restaurant Info',
@@ -23,13 +19,6 @@
 			icon: 'mdi:burger',
 			link: '/dashboard/menu'
 		},
-		// {
-		// 	name: 'Gallery',
-		// 	description: 'Upload, edit and delete images you use all over your site!',
-		// 	type: 'top',
-		// 	icon: 'mingcute:photo-album-fill',
-		// 	link: '/dashboard/gallery'
-		// },
 		{
 			name: 'Billing',
 			description: 'Your billing',

@@ -1,9 +1,6 @@
-export const config = {
-	runtime: 'edge'
-};
+import type { LayoutServerLoad } from './$types';
 
-export const load = async (event) => {
-	const session = await event.locals.getSession();
+export const load: LayoutServerLoad = async ({ locals: { session } }) => {
 	return {
 		session
 	};

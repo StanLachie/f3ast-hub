@@ -51,8 +51,6 @@
 
 		if (!formData.get('url')) return;
 
-		console.log(selectedPlatform.platform + ' | ' + selectedPlatform.url);
-
 		if (
 			selectedPlatform.platform &&
 			selectedPlatform.url &&
