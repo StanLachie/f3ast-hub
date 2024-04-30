@@ -1,8 +1,8 @@
 // import prisma from '$lib/prisma';
 import type { RequestHandler } from '@sveltejs/kit';
 export const POST: RequestHandler = async ({ locals, request }) => {
-	const user = await locals.getUser();
 	const supabase = await locals.supabase;
+	const { restaurant } = await locals.getClientAccount();
 	const { name, description } = await request.json();
 
 	if (!name) {
@@ -12,10 +12,17 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 		});
 	}
 
+	if (!restaurant) {
+		return new Response(JSON.stringify({ error: 'Not found' }), {
+			status: 404,
+			headers: { 'content-type': 'application/json' }
+		});
+	}
+
 	const { data: sortingIndexData, error: sortingIndexError } = await supabase
 		.from('MenuCategory')
 		.select('*')
-		.eq('restaurantId', user?.restaurant?.id)
+		.eq('restaurantId', restaurant?.id)
 		.order('sortingIndex', { ascending: false })
 		.limit(1);
 
@@ -34,7 +41,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 				name,
 				description,
 				sortingIndex: sortingIndexData?.[0]?.sortingIndex + 1,
-				restaurantId: user?.restaurant?.id
+				restaurantId: restaurant?.id
 			}
 		])
 		.select('*');
