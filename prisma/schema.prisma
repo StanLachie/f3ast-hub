@@ -286,7 +286,6 @@ model users {
 model ClientAccount {
   id                 Int         @id @default(autoincrement())
   email              String      @unique
-  password           String
   stripeId           String?
   createdAt          DateTime    @default(now())
   updatedAt          DateTime
@@ -321,7 +320,7 @@ model MenuItem {
   active       Boolean       @default(true)
   img          String?
   sortingIndex Int
-  MenuCategory MenuCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  MenuCategory MenuCategory? @relation(fields: [categoryId], references: [id], onUpdate: NoAction)
 
   @@schema("public")
 }
@@ -337,13 +336,13 @@ model Restaurant {
   instagram     String?
   facebook      String?
   twitter       String?
-  tiktok        String?
   phone         String?
   createdAt     DateTime        @default(now())
   updatedAt     DateTime
   slug          String          @unique
   published     Boolean         @default(false)
   theme         String?
+  tiktok        String?
   ClientAccount ClientAccount[]
   MenuCategory  MenuCategory[]
   Subscription  Subscription?
