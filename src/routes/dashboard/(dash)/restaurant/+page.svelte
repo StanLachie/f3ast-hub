@@ -7,12 +7,15 @@
 	import SettingInput from '$lib/components/dashboard/SettingInput.svelte';
 	import SettingSelect from '$lib/components/dashboard/SettingSelect.svelte';
 	import SettingHead from '$lib/components/dashboard/SettingHead.svelte';
+	import SettingImage from '$lib/components/dashboard/SettingImage.svelte';
 	import Icon from '@iconify/svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import SettingSkeleton from '$lib/components/dashboard/SettingSkeleton.svelte';
 
 	interface RestaurantInfo {
 		published: boolean;
+		logo: string;
+		banner: string;
 		name: string;
 		theme: string;
 		address: string;
@@ -37,6 +40,8 @@
 
 	let restaurantInfo: RestaurantInfo = {
 		published: false,
+		logo: '',
+		banner: '',
 		name: '',
 		theme: '',
 		address: '',
@@ -129,6 +134,8 @@
 	onMount(async () => {
 		restaurantInfo = {
 			published: (await layoutData).restaurant?.published ?? false,
+			logo: (await layoutData).restaurant?.logo ?? '',
+			banner: (await layoutData).restaurant?.banner ?? '',
 			name: (await layoutData).restaurant?.name ?? '',
 			theme: (await layoutData).restaurant?.theme ?? '',
 			address: (await layoutData).restaurant?.address ?? '',
@@ -196,6 +203,24 @@
 	/>
 {/if}
 
+<SettingImage
+	title="Logo"
+	description="Upload a logo for your restaurant."
+	shape="circle"
+	loading={initialLoading}
+	currentImage={restaurantInfo.logo}
+	uploadUrl="/api/restaurant/logo"
+/>
+
+<SettingImage
+	title="Banner"
+	description="Upload a banner for your restaurant."
+	shape="square"
+	loading={initialLoading}
+	currentImage={restaurantInfo.banner}
+	uploadUrl="/api/restaurant/banner"
+/>
+
 <SettingInput
 	title="Name"
 	description="Your restaurant's name."
@@ -209,6 +234,7 @@
 		submitUrl: '/api/restaurant/name'
 	}}
 />
+
 <SettingSelect
 	title="Theme"
 	description="Your restaurant's theme."

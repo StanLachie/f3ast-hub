@@ -14,7 +14,7 @@
 	});
 </script>
 
-<div class="flex min-w-36 flex-col gap-1">
+<div class="flex min-w-36 max-w-36 flex-col gap-1">
 	{#if item.img}
 		<img src={item.img} alt={item.name} class="h-36 w-36 rounded-lg object-cover" />
 	{:else}

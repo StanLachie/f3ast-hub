@@ -56,7 +56,7 @@
 
 <Meta title="Dashboard" description="Your dashboard" />
 
-<div class=" flex min-h-screen w-screen">
+<div class=" max-w-screen flex min-h-screen">
 	<div
 		class={`fixed flex h-dvh ${expandSidebar ? 'min-w-64' : 'min-w-16'} z-40 flex-col justify-between border-r border-neutral-400 bg-white transition-all duration-300 ease-in-out`}
 		role="contentinfo"
@@ -126,7 +126,7 @@
 		</div>
 	</div>
 
-	<div class="ml-16 flex-grow overflow-y-auto bg-neutral-100 p-2 sm:p-8 md:p-16">
+	<div class="ml-16 flex-grow bg-neutral-100 p-2 sm:p-8 md:p-16">
 		<div class="mx-auto flex w-full max-w-3xl flex-col gap-4">
 			<Meta
 				title={currentRoute?.name + ' | Dashboard'}
