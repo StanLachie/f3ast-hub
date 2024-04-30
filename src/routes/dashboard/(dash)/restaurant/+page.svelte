@@ -11,6 +11,18 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import SettingSkeleton from '$lib/components/dashboard/SettingSkeleton.svelte';
 
+	interface RestaurantInfo {
+		published: boolean;
+		name: string;
+		theme: string;
+		address: string;
+		facebook: string;
+		instagram: string;
+		twitter: string;
+		tiktok: string;
+		[key: string]: string | boolean | null;
+	}
+
 	export let data: PageData;
 	const { layoutData } = data;
 
@@ -23,7 +35,7 @@
 		tiktok: /^https?:\/\/(www\.)?tiktok\.com\/[a-zA-Z0-9_]+\/?$/
 	};
 
-	$: restaurantInfo = {
+	let restaurantInfo: RestaurantInfo = {
 		published: false,
 		name: '',
 		theme: '',

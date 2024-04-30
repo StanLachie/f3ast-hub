@@ -44,12 +44,36 @@ const supabase: Handle = async ({ event, resolve }) => {
 			data: { user },
 			error
 		} = await event.locals.supabase.auth.getUser();
+
 		if (error) {
-			// JWT validation has failed
 			return { session: null, user: null };
 		}
 
 		return { session, user };
+	};
+
+	event.locals.getClientAccount = async () => {
+		const { data: clientAccount, error: clientAccountError } = await event.locals.supabase
+			.from('ClientAccount')
+			.select('*')
+			.eq('email', event.locals.user?.email)
+			.single();
+
+		if (clientAccountError || !clientAccount) {
+			return { clientAccount: null, restaurant: null };
+		}
+
+		const { data: restaurant, error: restaurantError } = await event.locals.supabase
+			.from('Restaurant')
+			.select('*')
+			.eq('id', clientAccount.restaurantId)
+			.single();
+
+		if (restaurantError || !restaurant) {
+			return { clientAccount: null, restaurant: null };
+		}
+
+		return { clientAccount, restaurant };
 	};
 
 	return resolve(event, {
