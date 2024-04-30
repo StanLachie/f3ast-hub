@@ -22,7 +22,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 	const { data: sortingIndexData, error: sortingIndexError } = await supabase
 		.from('MenuCategory')
 		.select('*')
-		.eq('restaurantId', restaurant?.id)
+		.eq('restaurantId', restaurant.id)
 		.order('sortingIndex', { ascending: false })
 		.limit(1);
 
@@ -34,13 +34,15 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 		});
 	}
 
+	console.log(sortingIndexData);
+
 	const { data, error } = await supabase
 		.from('MenuCategory')
 		.insert([
 			{
 				name,
 				description,
-				sortingIndex: sortingIndexData?.[0]?.sortingIndex + 1,
+				sortingIndex: sortingIndexData?.[0]?.sortingIndex + 1 || 0,
 				restaurantId: restaurant?.id
 			}
 		])
