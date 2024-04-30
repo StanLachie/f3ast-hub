@@ -1,37 +1,21 @@
-import prisma from '$lib/prisma';
 import type { RequestHandler } from './$types';
 
 export const PUT: RequestHandler = async ({ locals, request }) => {
-	const session = await locals.getSession();
-	const user = await locals.getUser();
 	const { items } = await request.json();
-
-	if (!session) {
-		return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-			status: 401,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
-
-	if (!user) {
-		return new Response(JSON.stringify({ error: 'User not found' }), {
-			status: 404,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
 
 	for (let i = 0; i < items.length; i++) {
 		const item = items[i];
 
-		await prisma.menuItem.update({
-			where: {
-				id: item.dbId
-			},
-			data: {
+		await locals.supabase
+			.from('MenuItem')
+			.update({
 				sortingIndex: i
-			}
-		});
+			})
+			.eq('id', item.dbId)
+			.select('*');
 	}
 
-	return new Response();
+	return new Response(JSON.stringify({ items: items.map((item: { dbId: number }) => item.dbId) }), {
+		headers: { 'content-type': 'application/json' }
+	});
 };

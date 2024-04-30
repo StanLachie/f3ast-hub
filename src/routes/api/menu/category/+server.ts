@@ -65,6 +65,8 @@ export const PUT: RequestHandler = async ({ locals, request }) => {
 	const supabase = await locals.supabase;
 	const { id, name, description } = await request.json();
 
+	console.log(description);
+
 	if (!name || !id) {
 		return new Response(JSON.stringify({ error: 'Missing fields' }), {
 			status: 400,

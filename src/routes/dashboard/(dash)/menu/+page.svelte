@@ -417,7 +417,7 @@
 		}}
 	>
 		<input name="name" type="text" class="input" placeholder="Name" />
-		<textarea class="input" placeholder="Description"></textarea>
+		<textarea name="description" class="input" placeholder="Description"></textarea>
 		<button type="submit" disabled={isSaving} class="btn-primary"
 			>{isSaving ? 'Creating...' : 'Create'}</button
 		>
@@ -442,7 +442,11 @@
 				class="input"
 				placeholder="Name"
 			/>
-			<textarea class="input" bind:value={currentCategory.description} placeholder="Description"
+			<textarea
+				name="description"
+				class="input"
+				bind:value={currentCategory.description}
+				placeholder="Description"
 			></textarea>
 			<button type="submit" disabled={isSaving} class="btn-primary"
 				>{isSaving ? 'Updating...' : 'Update'}</button
@@ -526,7 +530,7 @@
 			{/each}
 		</select>
 
-		<textarea class="input" placeholder="Description"></textarea>
+		<textarea name="description" class="input" placeholder="Description"></textarea>
 		<button type="submit" disabled={isSaving} class="btn-primary"
 			>{isSaving ? 'Creating...' : 'Create'}</button
 		>
@@ -625,7 +629,11 @@
 				{/each}
 			</select>
 			<!-- <input name="img" class="input" placeholder="Image URL" value={currentItem.img} /> -->
-			<textarea class="input" bind:value={currentItem.description} placeholder="Description"
+			<textarea
+				name="description"
+				class="input"
+				bind:value={currentItem.description}
+				placeholder="Description"
 			></textarea>
 			<button type="submit" disabled={isSaving} class="btn-primary"
 				>{isSaving ? 'Updating...' : 'Update'}</button
