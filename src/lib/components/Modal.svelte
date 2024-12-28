@@ -1,27 +1,28 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition';
-
-	export let open = false;
-	export let onClose = () => {
-		open = false;
-	};
-
-	function stopPropagation(event: MouseEvent) {
-		event.stopPropagation();
-	}
+  export let showModal: boolean;
+  export let onClose: () => void;
+  export let title: string;
 </script>
 
-{#if open}
-	<button
-		class=" fixed inset-0 z-50 flex cursor-default items-center justify-center bg-black bg-opacity-50"
-		transition:fade={{ duration: 250 }}
-		on:click={onClose}
-	>
-		<button
-			class="m-6 max-h-screen w-full max-w-lg cursor-default overflow-y-auto rounded-2xl border-2 border-neutral-400 bg-white p-6 shadow-lg"
-			on:click={stopPropagation}
-		>
-			<slot />
-		</button>
-	</button>
+{#if showModal}
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+    role="presentation"
+    on:click|self={onClose}
+  >
+    <dialog
+      open
+      class="relative m-0 max-h-[90vh] w-full max-w-lg cursor-default overflow-y-auto rounded-2xl border-2 border-neutral-400 bg-white p-6 shadow-lg"
+      aria-labelledby="modal-title"
+      aria-modal="true"
+    >
+      <h2 id="modal-title" class="sr-only">{title}</h2>
+
+      <div class="mt-2">
+        <slot />
+      </div>
+    </dialog>
+  </div>
 {/if}
+
+<svelte:window on:keydown={(e) => e.key === "Escape" && onClose()} />

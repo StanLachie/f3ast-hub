@@ -1,25 +1,37 @@
-import type { RequestHandler } from './$types';
+import { json, redirect } from "@sveltejs/kit";
 
-export const PUT: RequestHandler = async ({ locals, request }) => {
-	const supabase = await locals.supabase;
-	const { restaurant } = await locals.getClientAccount();
-	const { value } = await request.json();
+import type { RequestHandler } from "./$types";
+import { auth } from "$lib/auth";
+import prisma from "$lib/prisma";
 
-	const { error } = await supabase
-		.from('Restaurant')
-		.update({ published: value })
-		.eq('id', restaurant.id)
-		.select('*');
+export const PUT: RequestHandler = async ({ request }) => {
+  const { value } = await request.json();
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
 
-	if (error) {
-		console.log(error);
-		return new Response(JSON.stringify({ error }), {
-			status: 400,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
+  if (!session?.user) {
+    redirect(302, "/dashboard/login");
+  }
 
-	return new Response(JSON.stringify({ value }), {
-		headers: { 'content-type': 'application/json' }
-	});
+  const restaurant = await prisma.restaurant.findFirst({
+    where: {
+      Users: {
+        some: {
+          id: session.user.id,
+        },
+      },
+    },
+  });
+
+  if (!restaurant) {
+    return json({ error: "Not found" }, { status: 404 });
+  }
+
+  await prisma.restaurant.update({
+    where: { id: restaurant.id },
+    data: { published: value },
+  });
+
+  return json({ success: true });
 };

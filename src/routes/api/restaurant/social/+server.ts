@@ -1,55 +1,52 @@
-import type { RequestHandler } from './$types';
+import { json, redirect } from "@sveltejs/kit";
 
-export const GET: RequestHandler = async () => {
-	return new Response();
-};
+import type { RequestHandler } from "./$types";
+import { auth } from "$lib/auth";
+import prisma from "$lib/prisma";
 
-export const PUT: RequestHandler = async ({ locals, request }) => {
-	const supabase = await locals.supabase;
-	const { restaurant } = await locals.getClientAccount();
-	const { platform, url } = await request.json();
+export const PUT: RequestHandler = async ({ request }) => {
+  const { platform, url } = await request.json();
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
 
-	const validPlatforms = ['facebook', 'instagram', 'twitter', 'tiktok'];
+  if (!session?.user) {
+    redirect(302, "/dashboard/login");
+  }
 
-	if (!validPlatforms.some((p) => platform.includes(p))) {
-		return new Response(JSON.stringify({ error: 'Invalid platform' }), {
-			status: 400,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
+  const restaurant = await prisma.restaurant.findFirst({
+    where: {
+      Users: {
+        some: {
+          id: session.user.id,
+        },
+      },
+    },
+  });
 
-	if (!restaurant) {
-		return new Response(JSON.stringify({ error: 'Not found' }), {
-			status: 404,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
+  if (!restaurant) {
+    return json({ error: "Not found" }, { status: 404 });
+  }
 
-	const updateData: { [key: string]: string } = validPlatforms.reduce(
-		(data, p) => {
-			if (platform.includes(p)) {
-				data[p] = url;
-			}
-			return data;
-		},
-		{} as { [key: string]: string }
-	);
+  const validPlatforms = ["facebook", "instagram", "twitter", "tiktok"];
+  if (!validPlatforms.some((p) => platform.includes(p))) {
+    return json({ error: "Invalid platform" }, { status: 400 });
+  }
 
-	const { error } = await supabase
-		.from('Restaurant')
-		.update(updateData)
-		.eq('id', restaurant.id)
-		.select('*');
+  const updateData = validPlatforms.reduce(
+    (data, p) => {
+      if (platform.includes(p)) {
+        data[p] = url;
+      }
+      return data;
+    },
+    {} as { [key: string]: string }
+  );
 
-	if (error) {
-		console.log(error);
-		return new Response(JSON.stringify({ error }), {
-			status: 400,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
+  await prisma.restaurant.update({
+    where: { id: restaurant.id },
+    data: updateData,
+  });
 
-	return new Response(JSON.stringify({ platform, url }), {
-		headers: { 'content-type': 'application/json' }
-	});
+  return json({ success: true });
 };

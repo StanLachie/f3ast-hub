@@ -1,50 +1,52 @@
-import prisma from '$lib/prisma';
-import type { LayoutServerLoad } from './$types';
-import { redirect } from '@sveltejs/kit';
+import { auth } from "$lib/auth";
+import prisma from "$lib/prisma";
+import type { LayoutServerLoad } from "./$types";
+import { redirect } from "@sveltejs/kit";
 
-export const load = (async ({ locals }) => {
-	const session = await locals.safeGetSession();
+export const load = (async ({ request }) => {
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
 
-	if (!session) {
-		redirect(302, '/dashboard/login');
-	}
+  if (!session?.user) {
+    console.log("no session user");
+    redirect(303, "/dashboard/login");
+  }
 
-	const layoutData = async () => {
-		const client = await prisma.clientAccount.findUnique({
-			where: {
-				email: session.user?.email ?? ''
-			}
-		});
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session?.user.email,
+    },
+  });
 
-		if (!client) {
-			redirect(302, '/dashboard/login');
-		}
+  if (!user?.restaurantId) {
+    console.log("no restaurant id");
+    redirect(303, "/dashboard/setup-restaurant");
+  }
 
-		const restaurant = await prisma.restaurant.findUnique({
-			where: {
-				id: client.restaurantId || 0
-			}
-		});
+  const restaurant = await prisma.restaurant.findUnique({
+    where: {
+      id: user?.restaurantId,
+    },
+  });
 
-		if (!restaurant) {
-			redirect(302, '/dashboard/login');
-		}
+  if (!restaurant) {
+    console.log("no restaurant");
+    redirect(303, "/dashboard/login");
+  }
 
-		const subscription = await prisma.subscription.findUnique({
-			where: {
-				restaurantId: restaurant.id
-			}
-		});
+  const subscription = await prisma.subscription.findUnique({
+    where: {
+      restaurantId: restaurant.id,
+    },
+  });
 
-		return {
-			session,
-			restaurant,
-			client,
-			subscription
-		};
-	};
-
-	return {
-		layoutData: layoutData()
-	};
+  return {
+    layoutData: {
+      session,
+      restaurant,
+      user,
+      subscription,
+    },
+  };
 }) satisfies LayoutServerLoad;

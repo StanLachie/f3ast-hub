@@ -1,35 +1,33 @@
-import prisma from '$lib/prisma';
-import type { RequestHandler } from './$types';
+import { json, redirect } from "@sveltejs/kit";
 
-export const PUT: RequestHandler = async ({ locals, request }) => {
-	const session = await locals.getSession();
-	const user = await locals.getUser();
-	const { value } = await request.json();
+import type { RequestHandler } from "./$types";
+import { auth } from "$lib/auth";
+import prisma from "$lib/prisma";
 
-	if (!session) {
-		return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-			status: 401,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
+export const PUT: RequestHandler = async ({ request }) => {
+  const { value } = await request.json();
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
 
-	if (!user) {
-		return new Response(JSON.stringify({ error: 'User not found' }), {
-			status: 404,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
+  if (!session?.user) {
+    redirect(302, "/dashboard/login");
+  }
 
-	await prisma.clientAccount.update({
-		where: {
-			email: user.account.email
-		},
-		data: {
-			first_name: value
-		}
-	});
+  const user = await prisma.user.findUnique({
+    where: {
+      id: session.user.id,
+    },
+  });
 
-	return new Response(JSON.stringify({ value }), {
-		headers: { 'content-type': 'application/json' }
-	});
+  if (!user) {
+    return json({ error: "User not found" }, { status: 404 });
+  }
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { firstName: value },
+  });
+
+  return json({ value });
 };
