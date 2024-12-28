@@ -1,126 +1,93 @@
-import type { RequestHandler } from '@sveltejs/kit';
-export const POST: RequestHandler = async ({ locals, request }) => {
-	const supabase = await locals.supabase;
+import { json, redirect } from "@sveltejs/kit";
 
-	const { name, price, description, categoryId, img } = await request.json();
+import type { RequestHandler } from "./$types";
+import { auth } from "$lib/auth";
+import prisma from "$lib/prisma";
 
-	if (!name || !price || !categoryId) {
-		return new Response(JSON.stringify({ error: 'Missing fields' }), {
-			status: 400,
-			headers: {
-				'content-type': 'application/json'
-			}
-		});
-	}
+export const POST: RequestHandler = async ({ request }) => {
+  const { name, price, description, categoryId, img } = await request.json();
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
 
-	const { data: sortingIndexData, error: sortingIndexError } = await supabase
-		.from('MenuItem')
-		.select('*')
-		.order('sortingIndex', { ascending: false })
-		.limit(1);
+  if (!session?.user) {
+    redirect(302, "/dashboard/login");
+  }
 
-	if (sortingIndexError) {
-		console.log(sortingIndexError);
-		return new Response(JSON.stringify({ error: 'Failed to get sorting index' }), {
-			status: 400,
-			headers: {
-				'content-type': 'application/json'
-			}
-		});
-	}
+  if (!name || !price || !categoryId) {
+    return json({ error: "Missing required fields" }, { status: 400 });
+  }
 
-	const { data, error } = await supabase
-		.from('MenuItem')
-		.insert([
-			{
-				name,
-				price,
-				description,
-				categoryId,
-				img,
-				sortingIndex: sortingIndexData?.[0]?.sortingIndex + 1
-			}
-		])
-		.select('*');
+  // Get the highest sorting index
+  const lastItem = await prisma.menuItem.findFirst({
+    orderBy: { sortingIndex: "desc" },
+  });
 
-	if (error) {
-		console.log(error);
-		return new Response(JSON.stringify({ error }), {
-			status: 400,
-			headers: {
-				'content-type': 'application/json'
-			}
-		});
-	}
+  const newItem = await prisma.menuItem.create({
+    data: {
+      name,
+      price,
+      description,
+      categoryId,
+      img,
+      sortingIndex: (lastItem?.sortingIndex ?? 0) + 1,
+    },
+  });
 
-	return new Response(JSON.stringify({ item: data[0] }), {
-		headers: {
-			'content-type': 'application/json'
-		}
-	});
+  return json({ item: newItem });
 };
 
-export const PUT: RequestHandler = async ({ locals, request, url }) => {
-	const supabase = locals.supabase;
-	const id = url.searchParams.get('id');
-	const { name, price, description, categoryId, img } = await request.json();
+export const PUT: RequestHandler = async ({ request, url }) => {
+  const idParam = url.searchParams.get("id");
+  if (!idParam) {
+    return json({ error: "Missing id" }, { status: 400 });
+  }
+  const id = parseInt(idParam);
 
-	console.log(categoryId);
+  const { name, price, description, categoryId, img } = await request.json();
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
 
-	if (!name || !price || !categoryId) {
-		return new Response(JSON.stringify({ error: 'Missing fields' }), {
-			status: 400,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
+  if (!session?.user) {
+    redirect(302, "/dashboard/login");
+  }
 
-	const { data, error } = await supabase
-		.from('MenuItem')
-		.update({
-			name,
-			price,
-			description,
-			categoryId,
-			img
-		})
-		.eq('id', id)
-		.select('*');
+  if (!name || !price || !categoryId) {
+    return json({ error: "Missing required fields" }, { status: 400 });
+  }
 
-	if (error) {
-		console.log(error);
-		return new Response(JSON.stringify({ error }), {
-			status: 400,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
+  const updatedItem = await prisma.menuItem.update({
+    where: { id },
+    data: {
+      name,
+      price,
+      description,
+      categoryId,
+      img,
+    },
+  });
 
-	return new Response(JSON.stringify({ item: data[0] }), {
-		headers: { 'content-type': 'application/json' }
-	});
+  return json({ item: updatedItem });
 };
 
-export const DELETE: RequestHandler = async ({ request, locals }) => {
-	const supabase = await locals.supabase;
-	const { id } = await request.json();
+export const DELETE: RequestHandler = async ({ request }) => {
+  const { id } = await request.json();
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
 
-	if (!id) {
-		return new Response(JSON.stringify({ error: 'Missing fields' }), {
-			status: 400,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
+  if (!session?.user) {
+    redirect(302, "/dashboard/login");
+  }
 
-	const { error } = await supabase.from('MenuItem').delete().eq('id', id).select('*');
+  if (!id) {
+    return json({ error: "Missing id" }, { status: 400 });
+  }
 
-	if (error) {
-		console.log(error);
-		return new Response(JSON.stringify({ error }), {
-			status: 400,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
+  await prisma.menuItem.delete({
+    where: { id },
+  });
 
-	return new Response(JSON.stringify({ id }), {
-		headers: { 'content-type': 'application/json' }
-	});
+  return json({ id });
 };
