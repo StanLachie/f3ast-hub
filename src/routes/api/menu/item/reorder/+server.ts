@@ -1,21 +1,31 @@
-import type { RequestHandler } from './$types';
+import { json, redirect } from "@sveltejs/kit";
 
-export const PUT: RequestHandler = async ({ locals, request }) => {
-	const { items } = await request.json();
+import type { RequestHandler } from "./$types";
+import { auth } from "$lib/auth";
+import prisma from "$lib/prisma";
 
-	for (let i = 0; i < items.length; i++) {
-		const item = items[i];
+export const PUT: RequestHandler = async ({ request }) => {
+  const { items } = await request.json();
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
 
-		await locals.supabase
-			.from('MenuItem')
-			.update({
-				sortingIndex: i
-			})
-			.eq('id', item.dbId)
-			.select('*');
-	}
+  if (!session?.user) {
+    redirect(302, "/dashboard/login");
+  }
 
-	return new Response(JSON.stringify({ items: items.map((item: { dbId: number }) => item.dbId) }), {
-		headers: { 'content-type': 'application/json' }
-	});
+  if (!items || !Array.isArray(items)) {
+    return json({ error: "Invalid items array" }, { status: 400 });
+  }
+
+  await prisma.$transaction(
+    items.map((item, index) =>
+      prisma.menuItem.update({
+        where: { id: item.dbId },
+        data: { sortingIndex: index },
+      })
+    )
+  );
+
+  return json({ success: true });
 };
