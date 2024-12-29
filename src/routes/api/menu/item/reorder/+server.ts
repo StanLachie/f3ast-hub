@@ -21,7 +21,7 @@ export const PUT: RequestHandler = async ({ request }) => {
   await prisma.$transaction(
     items.map((item, index) =>
       prisma.menuItem.update({
-        where: { id: item.dbId },
+        where: { id: item.id },
         data: { sortingIndex: index },
       })
     )

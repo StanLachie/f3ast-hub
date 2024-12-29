@@ -37,14 +37,9 @@ export const POST: RequestHandler = async ({ request }) => {
   return json({ item: newItem });
 };
 
-export const PUT: RequestHandler = async ({ request, url }) => {
-  const idParam = url.searchParams.get("id");
-  if (!idParam) {
-    return json({ error: "Missing id" }, { status: 400 });
-  }
-  const id = parseInt(idParam);
-
-  const { name, price, description, categoryId, img } = await request.json();
+export const PUT: RequestHandler = async ({ request }) => {
+  const { id, name, price, description, categoryId, img } =
+    await request.json();
   const session = await auth.api.getSession({
     headers: request.headers,
   });
@@ -73,6 +68,9 @@ export const PUT: RequestHandler = async ({ request, url }) => {
 
 export const DELETE: RequestHandler = async ({ request }) => {
   const { id } = await request.json();
+
+  console.log(id);
+
   const session = await auth.api.getSession({
     headers: request.headers,
   });

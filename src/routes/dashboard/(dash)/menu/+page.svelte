@@ -2,343 +2,201 @@
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
   import { fly } from "svelte/transition";
+  import { quintOut } from "svelte/easing";
+  import type { MenuItem, MenuCategory } from "@prisma/client";
+
   import SettingHead from "$lib/components/dashboard/SettingHead.svelte";
   import SettingList from "$lib/components/dashboard/SettingList.svelte";
   import Modal from "$lib/components/Modal.svelte";
-  import { quintOut } from "svelte/easing";
+  import ItemModalForm from "$lib/components/dashboard/menu/ItemModalForm.svelte";
   import Icon from "@iconify/svelte";
-
-  interface Category {
-    id: number;
-    dbId: number;
-    name: string;
-    description: string | null;
-    sortingIndex: number;
-  }
-
-  interface MenuItem {
-    id: number;
-    dbId: number;
-    name: string;
-    price: number;
-    img: string | null;
-    categoryId: number | null;
-    description: string | null;
-    sortingIndex: number;
-  }
+  import CategoryModalForm from "$lib/components/dashboard/menu/CategoryModalForm.svelte";
 
   export let data: PageData;
-  const { pageData } = data;
 
-  // export let isChangingOrder = false;
-
-  let formattedCategories: Category[] = [];
-  let formattedItems: MenuItem[] = [];
-
-  let initialLoading = true;
-  let isUploadingImage = false;
-  let isSaving = false;
-  let isReordering = false;
-
+  let currentCategory: MenuCategory | null = null;
+  let currentItem: MenuItem | null = null;
+  let categories: MenuCategory[] = [];
+  let menuItems: MenuItem[] = [];
   let previewImage: string | null = null;
 
-  let currentCategory: Category | null = null;
-  let currentItem: MenuItem | null = null;
+  let initialLoading = true;
+  let isSaving = false;
+  let isReordering = false;
+  let openModal = "";
+
+  const closeModal = () => {
+    openModal = "";
+    previewImage = null;
+    currentCategory = null;
+    currentItem = null;
+  };
 
   onMount(async () => {
-    const categories = (await pageData)?.categories;
-    formattedCategories = categories
-      ? categories
-          .sort((a, b) => a.sortingIndex - b.sortingIndex)
-          .map((category) => ({
-            id: category.sortingIndex,
-            dbId: category.id,
-            name: category.name,
-            description: category.description,
-            sortingIndex: category.sortingIndex,
-          }))
-      : [];
-
-    const items = (await pageData)?.menuItems;
-    formattedItems = items
-      ? items
-          .sort((a, b) => a.sortingIndex - (b.sortingIndex ?? 0))
-          .map((item) => ({
-            id: item.sortingIndex,
-            dbId: item.id,
-            name: item.name,
-            price: item.price,
-            img: item.img,
-            description: item.description,
-            categoryId: item.categoryId,
-            sortingIndex: item.sortingIndex,
-          }))
-      : [];
+    categories = (await data.pageData).categories.sort(
+      (a, b) => a.sortingIndex - b.sortingIndex
+    );
+    menuItems = (await data.pageData).menuItems.sort(
+      (a, b) => a.sortingIndex - b.sortingIndex
+    );
 
     initialLoading = false;
   });
 
-  const handleCreateItem = async (event: Event) => {
-    const target = event.target as HTMLFormElement;
-    const formData = new FormData(target);
+  async function handleCreateCategory(event: SubmitEvent) {
+    const form = event.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const name = formData.get("name") as string;
 
-    if (
-      !formData.get("name") ||
-      !formData.get("price") ||
-      !formData.get("category")
-    )
-      return;
+    if (!name) return;
 
     isSaving = true;
 
-    let newItem: Partial<MenuItem> = {
-      id: new Date().getTime(),
-      dbId: new Date().getTime(),
-      name: formData.get("name") as string,
-      description: formData.get("description") as string,
-      price: parseFloat(formData.get("price") as string),
-      img: formData.get("img") as string,
-      categoryId: parseFloat(formData.get("category") as string),
-    };
-
-    const res = await fetch(`/api/menu/item`, {
-      method: "POST",
-      body: JSON.stringify(newItem),
-    });
-
-    if (res.ok) {
-      let { item }: { item: MenuItem } = await res.json();
-
-      if (!data) return;
-
-      newItem = item;
-
-      newItem.dbId = newItem.id ?? 0;
-      newItem.id = formattedItems.length + 1;
-      newItem.sortingIndex = item.sortingIndex;
-      newItem.categoryId = item.categoryId;
-
-      formattedItems = [...formattedItems, {
-        ...newItem,
-        id: newItem.id,
-        dbId: newItem.dbId,
-        name: newItem.name ?? "",
-        price: newItem.price ?? 0,
-        img: newItem.img ?? null,
-        description: newItem.description ?? null,
-        categoryId: newItem.categoryId,
-        sortingIndex: newItem.sortingIndex,
-      }];
-      closeModal();
-    } else {
-      alert("Failed to create item. Please try again.");
-    }
-
-    isSaving = false;
-  };
-
-  const handleCreateCategory = async (event: Event) => {
-    const target = event.target as HTMLFormElement;
-    const formData = new FormData(target);
-
-    if (!formData.get("name")) return;
-
-    isSaving = true;
-
-    let newCategory: Partial<Category> = {
-      id: new Date().getTime(),
-      dbId: new Date().getTime(),
-      name: formData.get("name") as string,
-    };
-
-    const res = await fetch(`/api/menu/category`, {
-      method: "POST",
-      body: JSON.stringify(newCategory),
-    });
-
-    if (res.ok) {
-      let { category }: { category: Category } = await res.json();
-
-      newCategory = category;
-
-      newCategory.dbId = newCategory.id ?? 0;
-      newCategory.id = formattedCategories.length + 1;
-      newCategory.sortingIndex = category.sortingIndex;
-
-      formattedCategories = [...formattedCategories, {
-        ...newCategory,
-        id: newCategory.id,
-        dbId: newCategory.dbId,
-        name: newCategory.name ?? "",
-        description: newCategory.description ?? null,
-        sortingIndex: newCategory.sortingIndex,
-      }];
-      closeModal();
-    }
-
-    isSaving = false;
-  };
-
-  const handleUpdateItem = async (id: number, event: Event) => {
-    const target = event.target as HTMLFormElement;
-    const formData = new FormData(target);
-
-    if (
-      !formData.get("name") ||
-      !formData.get("price") ||
-      !formData.get("category")
-    )
-      return;
-
-    isSaving = true;
-
-    let updatedItem: Partial<MenuItem> = {
-      id: id,
-      dbId: id,
-      name: formData.get("name") as string,
-      description: formData.get("description") as string,
-      price: parseFloat(formData.get("price") as string),
-      img: previewImage || (formData.get("img") as string),
-      categoryId: parseFloat(formData.get("category") as string),
-    };
-
-    const res = await fetch(`/api/menu/item?id=${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updatedItem),
-    });
-
-    if (res.ok) {
-      let { item }: { item: MenuItem } = await res.json();
-
-      updatedItem = item;
-
-      updatedItem.dbId = item.id;
-      updatedItem.id = item.sortingIndex;
-      updatedItem.categoryId = item.categoryId;
-
-      formattedItems = formattedItems.map((item) =>
-        item.dbId === id
-          ? {
-              ...updatedItem,
-              id: item.id,
-              dbId: item.dbId,
-              sortingIndex: item.sortingIndex,
-              categoryId: item.categoryId,
-              name: updatedItem.name ?? item.name,
-              price: updatedItem.price ?? item.price,
-              img: previewImage ?? updatedItem.img ?? item.img,
-              description: updatedItem.description ?? item.description,
-            }
-          : item
-      );
-      closeModal();
-    } else {
-      alert("Failed to update item. Please try again.");
-    }
-
-    isSaving = false;
-  };
-
-  const handleUpdateCategory = async (id: number, event: Event) => {
-    const target = event.target as HTMLFormElement;
-    const formData = new FormData(target);
-
-    if (!formData.get("name")) return;
-
-    isSaving = true;
-
-    let updatedCategory: Partial<Category> = {
-      id: id,
-      dbId: id,
-      name: formData.get("name") as string,
-      description: formData.get("description") as string,
-    };
-
-    const res = await fetch(`/api/menu/category?id=${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updatedCategory),
-    });
-
-    if (res.ok) {
-      let { category }: { category: Category } = await res.json();
-
-      updatedCategory = category;
-
-      updatedCategory.dbId = category.id;
-      updatedCategory.id = category.sortingIndex;
-      updatedCategory.sortingIndex = category.sortingIndex;
-
-      formattedCategories = formattedCategories.map((category) =>
-        category.dbId === id
-          ? {
-              ...updatedCategory,
-              id: category.id,
-              dbId: category.dbId,
-              name: updatedCategory.name ?? category.name,
-              description: updatedCategory.description ?? category.description,
-              sortingIndex:
-                updatedCategory.sortingIndex ?? category.sortingIndex,
-            }
-          : category
-      );
-      closeModal();
-    } else {
-      alert("Failed to update category. Please try again.");
-    }
-
-    isSaving = false;
-  };
-
-  const handleFileChange = async (event: Event) => {
-    const file = (event.target as HTMLInputElement)?.files?.[0];
-    if (file) {
-      isUploadingImage = true;
-      const formData = new FormData();
-      formData.append("menuImageFile", file);
-
-      await fetch("/api/menu/item/cover", {
+    try {
+      const res = await fetch("/api/menu/category", {
         method: "POST",
-        body: formData,
-      })
-        .then(async (response) => {
-          if (response.ok) {
-            console.log("Image uploaded successfully");
-            if (!currentItem) return;
+        body: JSON.stringify({
+          name,
+          description: formData.get("description"),
+          sortingIndex: Date.now(),
+        }),
+      });
 
-            previewImage = (await response.json()).url;
-          } else {
-            console.error("Failed to upload image");
-          }
-        })
-        .catch((error) => {
-          console.error("Error uploading image:", error);
-        })
-        .finally(() => {
-          isUploadingImage = false;
-        });
+      if (!res.ok) throw new Error("Failed to create category");
+
+      const { category } = await res.json();
+      categories = [...categories, category];
+      closeModal();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to create category. Please try again.");
+    } finally {
+      isSaving = false;
     }
-  };
+  }
 
-  let openModal = "";
-  const closeModal = () => {
-    openModal = "";
-    previewImage = null;
-  };
+  async function handleUpdateCategory(id: number, event: SubmitEvent) {
+    const form = event.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const name = formData.get("name") as string;
+
+    if (!name) return;
+
+    isSaving = true;
+
+    try {
+      const res = await fetch(`/api/menu/category`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id,
+          name,
+          description: formData.get("description"),
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to update category");
+
+      const { category } = await res.json();
+      categories = categories.map((c) => (c.id === id ? category : c));
+      closeModal();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to update category. Please try again.");
+    } finally {
+      isSaving = false;
+    }
+  }
+
+  async function handleCreateItem(event: SubmitEvent) {
+    const form = event.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    const name = formData.get("name") as string;
+    const price = formData.get("price") as string;
+    const categoryId = formData.get("category") as string;
+
+    if (!name || !price || !categoryId) return;
+
+    isSaving = true;
+
+    try {
+      const res = await fetch("/api/menu/item", {
+        method: "POST",
+        body: JSON.stringify({
+          name,
+          price: parseFloat(price),
+          categoryId: parseInt(categoryId),
+          description: formData.get("description"),
+          img: previewImage,
+          sortingIndex: Date.now(),
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to create item");
+
+      const { item } = await res.json();
+      menuItems = [...menuItems, item];
+      closeModal();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to create item. Please try again.");
+    } finally {
+      isSaving = false;
+    }
+  }
+
+  async function handleUpdateItem(id: number, event: SubmitEvent) {
+    const form = event.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    const name = formData.get("name") as string;
+    const price = formData.get("price") as string;
+    const categoryId = formData.get("category") as string;
+
+    if (!name || !price || !categoryId) return;
+
+    isSaving = true;
+
+    try {
+      const res = await fetch(`/api/menu/item`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id,
+          name,
+          price: parseFloat(price),
+          categoryId: parseInt(categoryId),
+          description: formData.get("description"),
+          img: previewImage,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to update item");
+
+      const { item } = await res.json();
+      menuItems = menuItems.map((i) => (i.id === id ? item : i));
+      closeModal();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to update item. Please try again.");
+    } finally {
+      isSaving = false;
+    }
+  }
 </script>
 
 {#if isReordering}
   <div
     in:fly={{ x: 100, duration: 200, easing: quintOut }}
     out:fly={{ x: 100, duration: 200, easing: quintOut }}
-    class="fixed bottom-4 right-4 z-50 flex flex-nowrap items-center justify-center gap-3 rounded-lg border border-neutral-400 bg-white px-3 py-2 shadow-sm"
+    class="fixed bottom-4 right-4 z-50 flex items-center gap-3 rounded-lg border border-neutral-400 bg-white px-3 py-2 shadow-sm"
   >
     <Icon
       icon="mingcute:loading-3-fill"
       class="h-5 w-5 animate-spin text-emerald-500"
     />
-    <span class="text-nowrap font-semibold">Updating order...</span>
+    <span class="font-semibold">Updating order...</span>
   </div>
 {/if}
 
@@ -351,103 +209,91 @@
   action={{
     name: "Create Category",
     type: "primary",
-    href: "/dashboard/menu/category/create",
     createFunc: () => {
       openModal = "categoryCreate";
     },
     editFunc: async (id) => {
+      console.log(categories);
+      currentCategory = categories.find((c) => c.sortingIndex === id) ?? null;
       openModal = "categoryEdit";
-
-      currentCategory =
-        formattedCategories.find((category) => category.dbId === id) || null;
     },
     deleteFunc: async (id) => {
-      if (!window) return;
-      const confirm = window.confirm(
-        "Are you sure you want to delete this category?"
-      );
-      if (!confirm) return;
+      if (!confirm("Are you sure you want to delete this category?")) return;
+
+      let category = categories.find((c) => c.sortingIndex === id);
+
+      if (!category) return;
+
       const res = await fetch(`/api/menu/category`, {
         method: "DELETE",
-        body: JSON.stringify({
-          id,
-        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: category?.id }),
       });
 
       if (res.ok) {
-        formattedCategories = formattedCategories.filter(
-          (category) => category.dbId !== id
-        );
-        closeModal();
+        categories = categories.filter((c) => c.id !== category.id);
       } else {
-        alert("Failed to delete category. Please try again.");
+        alert("Failed to delete category");
       }
     },
   }}
   reorderUrl="/api/menu/category/reorder"
-  listItems={formattedCategories}
+  listItems={categories}
 />
 
-<SettingList
-  title="Items"
-  description="Create & edit menu items for your restaurant."
-  loading={initialLoading}
-  action={{
-    name: "Create Item",
-    type: "primary",
-    href: "/dashboard/menu/item/create",
-    createFunc: () => {
-      openModal = "itemCreate";
-    },
-    editFunc: async (id) => {
-      openModal = "itemEdit";
+{#if categories.length > 0}
+  <SettingList
+    title="Items"
+    description="Create & edit menu items for your restaurant."
+    loading={initialLoading}
+    action={{
+      name: "Create Item",
+      type: "primary",
+      createFunc: () => {
+        openModal = "itemCreate";
+      },
+      editFunc: async (id) => {
+        currentItem = menuItems.find((i) => i.sortingIndex === id) ?? null;
+        openModal = "itemEdit";
+      },
+      deleteFunc: async (id) => {
+        if (!confirm("Are you sure you want to delete this item?")) return;
+        let item = menuItems.find((i) => i.sortingIndex === id);
 
-      currentItem = formattedItems.find((item) => item.dbId === id) || null;
-    },
-    deleteFunc: async (id) => {
-      if (!window) return;
-      const confirm = window.confirm(
-        "Are you sure you want to delete this item?"
-      );
-      if (!confirm) return;
-      const res = await fetch(`/api/menu/item`, {
-        method: "DELETE",
-        body: JSON.stringify({
-          id,
-        }),
-      });
+        if (!item) return;
 
-      if (res.ok) {
-        formattedItems = formattedItems.filter((item) => item.dbId !== id);
-        closeModal();
-      } else {
-        alert("Failed to delete item. Please try again.");
-      }
-    },
-  }}
-  reorderUrl="/api/menu/item/reorder"
-  listItems={formattedItems}
-/>
+        const res = await fetch("/api/menu/item", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: item?.id }),
+        });
+
+        if (res.ok) {
+          menuItems = menuItems.filter((i) => i.id !== item?.id);
+        } else {
+          alert("Failed to delete item");
+        }
+      },
+    }}
+    reorderUrl="/api/menu/item/reorder"
+    listItems={menuItems}
+  />
+{/if}
 
 <Modal
   title="Create Category"
   showModal={openModal === "categoryCreate"}
   onClose={closeModal}
 >
-  <form
-    class="flex flex-col gap-3"
-    on:submit={(e) => {
-      e.preventDefault();
-      handleCreateCategory(e);
-    }}
-  >
-    <input name="name" type="text" class="input" placeholder="Name" />
-    <textarea name="description" class="input" placeholder="Description"
-    ></textarea>
-    <button type="submit" disabled={isSaving} class="btn-primary"
-      >{isSaving ? "Creating..." : "Create"}</button
-    >
-  </form>
+  <CategoryModalForm
+    currentCategory={null}
+    {isSaving}
+    handleCreateCategory={(e: SubmitEvent) => handleCreateCategory(e)}
+  />
 </Modal>
 
 <Modal
@@ -455,34 +301,12 @@
   showModal={openModal === "categoryEdit"}
   onClose={closeModal}
 >
-  <form
-    class="flex flex-col gap-3"
-    on:submit={(e) => {
-      e.preventDefault();
-      if (!currentCategory) return;
-
-      handleUpdateCategory(currentCategory.dbId, e);
-    }}
-  >
-    {#if currentCategory}
-      <input
-        name="name"
-        type="text"
-        bind:value={currentCategory.name}
-        class="input"
-        placeholder="Name"
-      />
-      <textarea
-        name="description"
-        class="input"
-        bind:value={currentCategory.description}
-        placeholder="Description"
-      ></textarea>
-      <button type="submit" disabled={isSaving} class="btn-primary"
-        >{isSaving ? "Updating..." : "Update"}</button
-      >
-    {/if}
-  </form>
+  <CategoryModalForm
+    {currentCategory}
+    {isSaving}
+    handleUpdateCategory={(id: number, e: SubmitEvent) =>
+      handleUpdateCategory(id, e)}
+  />
 </Modal>
 
 <Modal
@@ -490,122 +314,12 @@
   showModal={openModal === "itemCreate"}
   onClose={closeModal}
 >
-  <form
-    class="flex flex-col gap-3"
-    on:submit={(e) => {
-      e.preventDefault();
-      handleCreateItem(e);
-    }}
-  >
-    <input name="name" type="text" class="input" placeholder="Name" />
-    <div class="flex items-center justify-center">
-      {#if isUploadingImage}
-        <div
-          class="flex aspect-square w-full animate-pulse items-center justify-center rounded-xl bg-neutral-200 text-6xl font-bold"
-        >
-          <Icon
-            icon="mingcute:loading-3-fill"
-            class="h-32 w-32 animate-spin text-emerald-500"
-          />
-        </div>
-      {:else if previewImage}
-        <form
-          id="img-form"
-          class="group relative w-full"
-          enctype="multipart/form-data"
-        >
-          <input
-            id="img"
-            type="file"
-            accept="image/*"
-            on:change={handleFileChange}
-            hidden
-          />
-          <img
-            src={previewImage}
-            alt=""
-            class="aspect-square w-full cursor-pointer rounded-xl border border-neutral-400 object-cover"
-          />
-          <button
-            on:click={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-
-              document.getElementById("img")?.click();
-            }}
-            class="absolute inset-0 flex cursor-pointer items-center justify-center rounded-xl bg-neutral-800 opacity-0 transition-opacity duration-500 group-hover:opacity-80"
-          >
-            <Icon
-              icon="mingcute:edit-2-fill"
-              class="h-1/3 w-1/3 text-emerald-500"
-            />
-          </button>
-        </form>
-      {:else}
-        <form
-          id="img-form"
-          class="group relative w-full"
-          enctype="multipart/form-data"
-        >
-          <input
-            id="img"
-            type="file"
-            accept="image/*"
-            on:change={handleFileChange}
-            hidden
-          />
-          <div
-            class={`flex aspect-square w-full items-center justify-center rounded-xl border border-neutral-400 bg-neutral-200 text-7xl font-bold`}
-          >
-            <Icon
-              icon="mingcute:edit-2-fill"
-              class="h-1/3 w-1/3 text-emerald-500"
-            />
-          </div>
-          <button
-            on:click={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-
-              document.getElementById("img")?.click();
-            }}
-            class="absolute inset-0 flex cursor-pointer items-center justify-center rounded-xl bg-neutral-800 opacity-0 transition-opacity duration-500 group-hover:opacity-80"
-          >
-            <Icon
-              icon="mingcute:edit-2-fill"
-              class="h-1/3 w-1/3 text-emerald-500"
-            />
-          </button>
-        </form>
-      {/if}
-    </div>
-    <input name="img" type="text" bind:value={previewImage} hidden />
-    <div class="flex items-center">
-      <div
-        class="rounded-l-lg border-y border-l border-neutral-400 px-4 py-2 font-semibold"
-      >
-        $
-      </div>
-      <input
-        name="price"
-        type="number"
-        class="input rounded-l-none"
-        placeholder="Price"
-        step="0.10"
-      />
-    </div>
-    <select name="category" class="input cursor-pointer">
-      {#each formattedCategories as category (category.dbId)}
-        <option value={category.dbId}>{category.name}</option>
-      {/each}
-    </select>
-
-    <textarea name="description" class="input" placeholder="Description"
-    ></textarea>
-    <button type="submit" disabled={isSaving} class="btn-primary"
-      >{isSaving ? "Creating..." : "Create"}</button
-    >
-  </form>
+  <ItemModalForm
+    currentItem={null}
+    {categories}
+    {isSaving}
+    handleCreateItem={(e: SubmitEvent) => handleCreateItem(e)}
+  />
 </Modal>
 
 <Modal
@@ -613,137 +327,10 @@
   showModal={openModal === "itemEdit"}
   onClose={closeModal}
 >
-  <form
-    class="flex flex-col gap-3"
-    on:submit={(e) => {
-      e.preventDefault();
-
-      if (!currentItem) return;
-
-      handleUpdateItem(currentItem.dbId, e);
-    }}
-  >
-    {#if currentItem}
-      <input
-        name="name"
-        type="text"
-        bind:value={currentItem.name}
-        class="input"
-        placeholder="Name"
-      />
-      <div class="flex items-center justify-center">
-        {#if isUploadingImage}
-          <div
-            class="flex aspect-square w-full animate-pulse items-center justify-center rounded-xl bg-neutral-200 text-6xl font-bold"
-          >
-            <Icon
-              icon="mingcute:loading-3-fill"
-              class="h-32 w-32 animate-spin text-emerald-500"
-            />
-          </div>
-        {:else if currentItem.img || previewImage}
-          <form
-            id="img-form"
-            class="group relative w-full"
-            enctype="multipart/form-data"
-          >
-            <input
-              id="img"
-              type="file"
-              accept="image/*"
-              on:change={handleFileChange}
-              hidden
-            />
-            <img
-              src={previewImage || currentItem.img}
-              alt=""
-              class="aspect-square w-full cursor-pointer rounded-xl border border-neutral-400 object-cover"
-            />
-            <button
-              on:click={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-
-                document.getElementById("img")?.click();
-              }}
-              class="absolute inset-0 flex cursor-pointer items-center justify-center rounded-xl bg-neutral-800 opacity-0 transition-opacity duration-500 group-hover:opacity-80"
-            >
-              <Icon
-                icon="mingcute:edit-2-fill"
-                class="h-1/3 w-1/3 text-emerald-500"
-              />
-            </button>
-          </form>
-        {:else}
-          <form
-            id="img-form"
-            class="group relative w-full"
-            enctype="multipart/form-data"
-          >
-            <input
-              id="img"
-              type="file"
-              accept="image/*"
-              on:change={handleFileChange}
-              hidden
-            />
-            <div
-              class={`flex aspect-square w-full items-center justify-center rounded-xl border border-neutral-400 bg-neutral-200 text-7xl font-bold`}
-            >
-              {currentItem.name
-                .split(" ")
-                .map((word) => word[0])
-                .join("")}
-            </div>
-            <button
-              on:click={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-
-                document.getElementById("img")?.click();
-              }}
-              class="absolute inset-0 flex cursor-pointer items-center justify-center rounded-xl bg-neutral-800 opacity-0 transition-opacity duration-500 group-hover:opacity-80"
-            >
-              <Icon
-                icon="mingcute:edit-2-fill"
-                class="h-1/3 w-1/3 text-emerald-500"
-              />
-            </button>
-          </form>
-        {/if}
-      </div>
-      <input name="img" type="text" bind:value={currentItem.img} hidden />
-
-      <div class="flex items-center">
-        <div
-          class="rounded-l-lg border-y border-l border-neutral-400 px-4 py-2 font-semibold"
-        >
-          $
-        </div>
-        <input
-          name="price"
-          type="number"
-          class="input rounded-l-none"
-          placeholder="Price"
-          bind:value={currentItem.price}
-          step="0.10"
-        />
-      </div>
-      <select name="category" class="input" value={currentItem.categoryId}>
-        {#each formattedCategories as category (category.dbId)}
-          <option value={category.dbId}>{category.name}</option>
-        {/each}
-      </select>
-      <!-- <input name="img" class="input" placeholder="Image URL" value={currentItem.img} /> -->
-      <textarea
-        name="description"
-        class="input"
-        bind:value={currentItem.description}
-        placeholder="Description"
-      ></textarea>
-      <button type="submit" disabled={isSaving} class="btn-primary"
-        >{isSaving ? "Updating..." : "Update"}</button
-      >
-    {/if}
-  </form>
+  <ItemModalForm
+    {currentItem}
+    {categories}
+    {isSaving}
+    handleUpdateItem={(id: number, e: SubmitEvent) => handleUpdateItem(id, e)}
+  />
 </Modal>

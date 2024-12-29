@@ -1,50 +1,28 @@
-import type { PageServerLoad } from './$types';
-import prisma from '$lib/prisma';
-
-interface MenuItem {
-	id: number;
-	active: boolean;
-	name: string;
-	price: number;
-	img: string | null;
-	categoryId: number | null;
-	sortingIndex: number;
-	description: string | null;
-}
+import type { PageServerLoad } from "./$types";
+import prisma from "$lib/prisma";
 
 export const load = (async ({ parent }) => {
-	const { layoutData } = await parent();
-	const { restaurant } = await layoutData;
+  const { layoutData } = await parent();
+  const { restaurant } = await layoutData;
 
-	const pageData = async () => {
-		let menuItems: MenuItem[] = [];
+  if (!restaurant?.id) {
+    throw new Error("Restaurant not found");
+  }
 
-		const categories = await prisma.menuCategory.findMany({
-			where: {
-				restaurantId: restaurant?.id || 9999
-			}
-		});
+  const pageData = async () => {
+    const categories = await prisma.menuCategory.findMany({
+      where: { restaurantId: restaurant.id },
+      include: { MenuItems: true },
+    });
 
-		if (categories) {
-			for (const category of categories) {
-				const items = await prisma.menuItem.findMany({
-					where: {
-						categoryId: category.id
-					}
-				});
+    return {
+      categories,
+      menuItems: categories.flatMap((category) => category.MenuItems),
+    };
+  };
 
-				menuItems = [...menuItems, ...items];
-			}
-
-			return {
-				categories,
-				menuItems
-			};
-		}
-	};
-
-	return {
-		restaurant,
-		pageData: pageData()
-	};
+  return {
+    restaurant,
+    pageData: pageData(),
+  };
 }) satisfies PageServerLoad;
