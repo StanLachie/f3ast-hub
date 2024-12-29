@@ -11,6 +11,7 @@
   let initialLoading = true;
 
   let personalInfo = {
+    name: "",
     firstName: "",
     lastName: "",
   };
@@ -20,6 +21,7 @@
 
   onMount(async () => {
     personalInfo = {
+      name: (await layoutData).user?.name ?? "",
       firstName: (await layoutData).user?.firstName ?? "",
       lastName: (await layoutData).user?.lastName ?? "",
     };
@@ -36,6 +38,20 @@
 <SettingHead
   title="Personal Info"
   description="Update your personal details here."
+/>
+
+<SettingInput
+  title="Username"
+  description="Your username."
+  loading={initialLoading}
+  initialValue={personalInfo.name}
+  input={{
+    name: "username",
+    type: "text",
+    value: personalInfo.name,
+    placeholder: "john_doe",
+    submitUrl: "/api/profile/username",
+  }}
 />
 
 <SettingInput

@@ -29,8 +29,9 @@
     });
 
     if (!response.ok) {
+      const error = await response.json();
       updating = false;
-      alert("Failed to save changes");
+      alert(error.error || "Failed to save changes");
       return;
     }
 
