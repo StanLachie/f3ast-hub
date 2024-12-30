@@ -2,6 +2,7 @@ import type { Actions, PageServerLoad } from "./$types";
 import { fail, redirect } from "@sveltejs/kit";
 
 import { auth } from "$lib/auth";
+import { createStripeCustomer } from "$lib/stripe/functions/customers";
 import prisma from "$lib/prisma";
 
 export const load: PageServerLoad = async ({ request }) => {
@@ -68,6 +69,8 @@ export const actions: Actions = {
       });
     }
 
+    const stripeCustomer = await createStripeCustomer(session.user.email);
+
     try {
       await prisma.$transaction(async (tx) => {
         const restaurant = await tx.restaurant.create({
@@ -78,6 +81,7 @@ export const actions: Actions = {
             active: true,
             published: false,
             updatedAt: new Date(),
+            stripeCustomerId: stripeCustomer.id,
           },
         });
 

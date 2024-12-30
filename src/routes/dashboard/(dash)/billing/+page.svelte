@@ -1,18 +1,67 @@
 <script lang="ts">
-	import type { PageData } from './$types';
-	import SettingHead from '$lib/components/dashboard/SettingHead.svelte';
-	import SettingAction from '$lib/components/dashboard/SettingAction.svelte';
+  import SettingHead from "$lib/components/dashboard/SettingHead.svelte";
+  import SettingAction from "$lib/components/dashboard/SettingAction.svelte";
+  import type { PageData } from "./$types";
+  import { onMount } from "svelte";
+
+  export let data: PageData;
+  const { layoutData } = data;
+
+  let initialLoading = true;
+
+  let subscription = {
+    status: "",
+  };
+
+  onMount(async () => {
+    subscription.status = layoutData.subscription?.status ?? "";
+
+    initialLoading = false;
+  });
 </script>
 
 <SettingHead title="Billing" description="Update your billing details here." />
 
-<SettingAction
-	title="Update Billing"
-	description="Update your billing details here."
-	loading={false}
-	action={{
-		name: 'Update',
-		type: 'primary',
-		href: '/dashboard/billing'
-	}}
-/>
+{#if subscription.status !== "active"}
+  <SettingAction
+    title="Subscribe"
+    description="Subscribe to a plan to get started."
+    loading={initialLoading}
+    action={{
+      name: "Subscribe",
+      type: "primary",
+      func: async () => {
+        const res = await fetch(
+          "/api/billing/subscriptions?subscriptionTier=Basic"
+        );
+        const data = await res.json();
+
+        if (!res.ok) {
+          return alert(data.error);
+        }
+
+        window.location.href = data.url;
+      },
+    }}
+  />
+{:else}
+  <SettingAction
+    title="Update Billing"
+    description="Update your billing details here."
+    loading={initialLoading}
+    action={{
+      name: "Update",
+      type: "primary",
+      func: async () => {
+        const res = await fetch("/api/billing/subscriptions/active");
+        const data = await res.json();
+
+        if (!res.ok) {
+          return alert(data.error);
+        }
+
+        window.open(data.url, "_blank");
+      },
+    }}
+  />
+{/if}

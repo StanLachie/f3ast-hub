@@ -2,7 +2,6 @@
   import { goto } from "$app/navigation";
   import { authClient } from "$lib/auth-client";
 
-  let name: string;
   let firstName: string;
   let lastName: string;
   let email: string;
@@ -19,7 +18,7 @@
 
     await authClient.signUp.email(
       {
-        name,
+        name: email,
         email,
         password,
         firstName,
@@ -30,7 +29,7 @@
           isSubmitting = true;
         },
         onSuccess: () => {
-          // goto("/dashboard/restaurant");
+          goto("/dashboard/setup-restaurant");
         },
         onError(ctx: any) {
           isSubmitting = false;
@@ -50,14 +49,6 @@
       {error}
     </div>
   {/if}
-  <input
-    class="input"
-    type="text"
-    name="name"
-    placeholder="Username"
-    required
-    bind:value={name}
-  />
   <input
     class="input"
     type="text"

@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,7 +15,7 @@ model MenuCategory {
   restaurantId Int
   active       Boolean    @default(true)
   description  String?
-  Restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  Restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   MenuItems    MenuItem[]
 }
 
@@ -27,54 +28,54 @@ model MenuItem {
   active       Boolean       @default(true)
   img          String?
   sortingIndex Int
-  MenuCategory MenuCategory? @relation(fields: [categoryId], references: [id], onUpdate: NoAction)
+  MenuCategory MenuCategory? @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model Restaurant {
-  id           Int            @id @default(autoincrement())
-  active       Boolean        @default(false)
-  name         String
-  address      String
-  bio          String?
-  banner       String?
-  logo         String?
-  instagram    String?
-  facebook     String?
-  twitter      String?
-  phone        String?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime
-  slug         String         @unique
-  published    Boolean        @default(false)
-  theme        String         @default("default")
-  tiktok       String?
-  Users        User[]
-  MenuCategory MenuCategory[]
-  Subscription Subscription?
+  id               Int            @id @default(autoincrement())
+  active           Boolean        @default(false)
+  name             String
+  address          String
+  bio              String?
+  banner           String?
+  logo             String?
+  instagram        String?
+  facebook         String?
+  twitter          String?
+  phone            String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime
+  slug             String         @unique
+  published        Boolean        @default(false)
+  theme            String         @default("default")
+  tiktok           String?
+  stripeCustomerId String         @unique @default("")
+  Users            User[]
+  MenuCategory     MenuCategory[]
+  Subscription     Subscription?
 }
 
 enum SubscriptionStatus {
-  ACTIVE
-  INACTIVE
-  PAST_DUE
-  CANCELED
-  INCOMPLETE
-  INCOMPLETE_EXPIRED
-  UNPAID
+  active
+  canceled
+  incomplete
+  incomplete_expired
+  past_due
+  paused
 }
 
 model Subscription {
-  id                   Int              @id @default(autoincrement())
-  stripeSubscriptionId String           @unique
+  id                   Int                @id @default(autoincrement())
+  stripeSubscriptionId String             @unique
   stripeCustomerId     String
-  status              SubscriptionStatus
-  currentPeriodStart  DateTime
-  currentPeriodEnd    DateTime
-  canceledAt          DateTime?
-  createdAt           DateTime          @default(now())
-  updatedAt           DateTime          @updatedAt
-  restaurantId        Int               @unique
-  Restaurant          Restaurant        @relation(fields: [restaurantId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  status               SubscriptionStatus
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  canceledAt           DateTime?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  restaurantId         Int                @unique
+  Restaurant           Restaurant         @relation(fields: [restaurantId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model User {
