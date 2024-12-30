@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "vite dev",
     "host": "vite dev --host",
-    "build": "prisma generate && vite build",
-    "vercel-build": "prisma generate --data-proxy && vite build",
+    "build": "vite build",
+    "post-install": "prisma generate",
     "preview": "vite preview",
     "test": "npm run test:integration && npm run test:unit",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -41,6 +41,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@prisma/adapter-neon": "^6.1.0",
     "@prisma/client": "^6.1.0",
     "@stripe/stripe-js": "^3.0.10",
     "base64-arraybuffer": "^1.0.2",
