@@ -1,10 +1,10 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
-  import type { MenuCategory, MenuItem } from "@prisma/client";
+  // import type { MenuCategory, MenuItem } from "@prisma/client";
 
   interface Props {
-    currentItem: MenuItem | null;
-    categories: MenuCategory[];
+    currentItem: any | null;
+    categories: any[];
     handleUpdateItem?: (id: number, e: SubmitEvent) => Promise<void>;
     handleCreateItem?: (e: SubmitEvent) => Promise<void>;
     isSaving: boolean;

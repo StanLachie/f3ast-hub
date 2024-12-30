@@ -3,7 +3,7 @@
   import type { PageData } from "./$types";
   import { fly } from "svelte/transition";
   import { quintOut } from "svelte/easing";
-  import type { MenuItem, MenuCategory } from "@prisma/client";
+  // import type { MenuItem, MenuCategory } from "@prisma/client";
 
   import SettingHead from "$lib/components/dashboard/SettingHead.svelte";
   import SettingList from "$lib/components/dashboard/SettingList.svelte";
@@ -14,10 +14,10 @@
 
   export let data: PageData;
 
-  let currentCategory: MenuCategory | null = null;
-  let currentItem: MenuItem | null = null;
-  let categories: MenuCategory[] = [];
-  let menuItems: MenuItem[] = [];
+  let currentCategory: any | null = null;
+  let currentItem: any | null = null;
+  let categories: any[] = [];
+  let menuItems: any[] = [];
   let previewImage: string | null = null;
 
   let initialLoading = true;

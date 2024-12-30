@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { MenuCategory } from "@prisma/client";
+  // import type { MenuCategory } from "@prisma/client";
 
   interface Props {
-    currentCategory: MenuCategory | null;
+    currentCategory: any | null;
     isSaving: boolean;
     handleUpdateCategory?: (id: number, e: SubmitEvent) => Promise<void>;
     handleCreateCategory?: (e: SubmitEvent) => Promise<void>;

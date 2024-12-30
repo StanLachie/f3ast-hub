@@ -1,6 +1,7 @@
 import type Stripe from "stripe";
-import type { SubscriptionStatus } from "@prisma/client";
 import prisma from "$lib/prisma";
+
+// import type { SubscriptionStatus } from "@prisma/client";
 
 export async function handleCustomerSubscriptionCreated(
   event: Stripe.CustomerSubscriptionCreatedEvent
@@ -27,7 +28,7 @@ export async function handleCustomerSubscriptionCreated(
           restaurantId: restaurant.id,
         },
         data: {
-          status: event.data.object.status as SubscriptionStatus,
+          status: event.data.object.status as any,
           stripeSubscriptionId: event.data.object.id,
           stripeCustomerId: String(event.data.object.customer),
           currentPeriodStart: new Date(
@@ -41,11 +42,11 @@ export async function handleCustomerSubscriptionCreated(
       });
       return subscription;
     }
-    
+
     const subscription = await prisma.subscription.create({
       data: {
         restaurantId: restaurant.id,
-        status: event.data.object.status as SubscriptionStatus,
+        status: event.data.object.status as any,
         stripeSubscriptionId: event.data.object.id,
         stripeCustomerId: String(event.data.object.customer),
         currentPeriodStart: new Date(
