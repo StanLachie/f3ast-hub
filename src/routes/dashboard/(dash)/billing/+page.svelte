@@ -24,7 +24,7 @@
 
 {#if subscription.status !== "active"}
   <SettingAction
-    title="Subscribe"
+    title="Subscribe to F3AST"
     description="Subscribe to a plan to get started."
     loading={initialLoading}
     action={{

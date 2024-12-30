@@ -5,62 +5,135 @@ import prisma from "$lib/prisma";
 export async function handleCustomerSubscriptionCreated(
   event: Stripe.CustomerSubscriptionCreatedEvent
 ) {
-  const restaurant = await prisma.restaurant.findUnique({
-    where: {
-      stripeCustomerId: String(event.data.object.customer),
-    },
-  });
+  try {
+    const restaurant = await prisma.restaurant.findUnique({
+      where: {
+        stripeCustomerId: String(event.data.object.customer),
+      },
+      include: {
+        Subscription: true,
+      },
+    });
 
-  if (!restaurant) {
-    console.error("Restaurant not found");
-    return;
+    if (!restaurant) {
+      throw new Error(
+        `Restaurant not found for customer ID: ${event.data.object.customer}`
+      );
+    }
+
+    if (restaurant.Subscription) {
+      const subscription = await prisma.subscription.update({
+        where: {
+          restaurantId: restaurant.id,
+        },
+        data: {
+          status: event.data.object.status as SubscriptionStatus,
+          stripeSubscriptionId: event.data.object.id,
+          stripeCustomerId: String(event.data.object.customer),
+          currentPeriodStart: new Date(
+            event.data.object.current_period_start * 1000
+          ),
+          currentPeriodEnd: new Date(
+            event.data.object.current_period_end * 1000
+          ),
+          canceledAt: null,
+        },
+      });
+      return subscription;
+    }
+    
+    const subscription = await prisma.subscription.create({
+      data: {
+        restaurantId: restaurant.id,
+        status: event.data.object.status as SubscriptionStatus,
+        stripeSubscriptionId: event.data.object.id,
+        stripeCustomerId: String(event.data.object.customer),
+        currentPeriodStart: new Date(
+          event.data.object.current_period_start * 1000
+        ),
+        currentPeriodEnd: new Date(event.data.object.current_period_end * 1000),
+      },
+    });
+
+    return subscription;
+  } catch (error) {
+    console.error("Error in handleCustomerSubscriptionCreated:", error);
+    throw error;
   }
-
-  const subscription = await prisma.subscription.create({
-    data: {
-      restaurantId: restaurant.id,
-      status: event.data.object.status as SubscriptionStatus,
-      stripeSubscriptionId: event.data.object.id,
-      stripeCustomerId: String(event.data.object.customer),
-      currentPeriodStart: new Date(
-        event.data.object.current_period_start * 1000
-      ),
-      currentPeriodEnd: new Date(event.data.object.current_period_end * 1000),
-    },
-  });
-
-  return subscription;
 }
 
 export async function handleCustomerSubscriptionUpdated(
   event: Stripe.CustomerSubscriptionUpdatedEvent
 ) {
-  const subscription = await prisma.subscription.upsert({
-    where: {
-      stripeSubscriptionId: event.data.object.id,
-    },
-    create: {
-      stripeSubscriptionId: event.data.object.id,
-      stripeCustomerId: String(event.data.object.customer),
-      status: event.data.object.status as SubscriptionStatus,
-      currentPeriodStart: new Date(
-        event.data.object.current_period_start * 1000
-      ),
-      currentPeriodEnd: new Date(event.data.object.current_period_end * 1000),
-      restaurantId: (
-        await prisma.restaurant.findUniqueOrThrow({
-          where: { stripeCustomerId: String(event.data.object.customer) },
-        })
-      ).id,
-    },
-    update: {
-      status: event.data.object.status as SubscriptionStatus,
-      currentPeriodStart: new Date(
-        event.data.object.current_period_start * 1000
-      ),
-      currentPeriodEnd: new Date(event.data.object.current_period_end * 1000),
-    },
-  });
+  try {
+    const restaurant = await prisma.restaurant.findUnique({
+      where: {
+        stripeCustomerId: String(event.data.object.customer),
+      },
+    });
 
-  return subscription;
+    if (!restaurant) {
+      throw new Error(
+        `Restaurant not found for customer ID: ${event.data.object.customer}`
+      );
+    }
+
+    const subscription = await prisma.subscription.update({
+      where: {
+        restaurantId: restaurant.id,
+      },
+      data: {
+        status: event.data.object.status as SubscriptionStatus,
+        stripeSubscriptionId: event.data.object.id,
+        currentPeriodStart: new Date(
+          event.data.object.current_period_start * 1000
+        ),
+        currentPeriodEnd: new Date(event.data.object.current_period_end * 1000),
+        canceledAt: event.data.object.cancel_at
+          ? new Date(event.data.object.cancel_at * 1000)
+          : null,
+      },
+    });
+
+    return subscription;
+  } catch (error) {
+    console.error("Error in handleCustomerSubscriptionUpdated:", error);
+    throw error;
+  }
+}
+
+export async function handleCustomerSubscriptionDeleted(
+  event: Stripe.CustomerSubscriptionDeletedEvent
+) {
+  try {
+    const restaurant = await prisma.restaurant.findUnique({
+      where: {
+        stripeCustomerId: String(event.data.object.customer),
+      },
+    });
+
+    if (!restaurant) {
+      throw new Error(
+        `Restaurant not found for customer ID: ${event.data.object.customer}`
+      );
+    }
+
+    const subscription = await prisma.subscription.update({
+      where: {
+        restaurantId: restaurant.id,
+      },
+      data: {
+        status: "canceled",
+        stripeSubscriptionId: event.data.object.id,
+        canceledAt: event.data.object.cancel_at
+          ? new Date(event.data.object.cancel_at * 1000)
+          : new Date(),
+      },
+    });
+
+    return subscription;
+  } catch (error) {
+    console.error("Error in handleCustomerSubscriptionDeleted:", error);
+    throw error;
+  }
 }
