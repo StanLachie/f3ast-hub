@@ -11,18 +11,20 @@
 </script>
 
 <div
-  class="my-16 flex flex-col lg:flex-row w-full items-center justify-between px-4 md:px-8 lg:px-16"
+  class="my-16 flex flex-col lg:flex-row w-full items-center justify-center xl:justify-between px-4 md:px-8 lg:px-16"
 >
-  <div class="flex max-w-3xl flex-col items-start text-left">
+  <div class="flex max-w-3xl flex-col items-center xl:items-start text-left">
     <h1
-      class="text-pretty font-bold leading-snug text-4xl sm:text-5xl lg:text-6xl xl:text-7xl"
+      class="text-pretty font-bold leading-snug text-5xl sm:text-6xl lg:text-6xl xl:text-7xl text-center xl:text-left"
     >
       <span class="text-emerald-300 text-outline font-[775]"
         >Connect with Your Customers Online</span
       >
     </h1>
 
-    <p class="mt-6 text-lg sm:text-xl lg:text-2xl text-neutral-700 font-[400]">
+    <p
+      class="mt-6 text-lg sm:text-lg lg:text-xl xl:text-2xl text-neutral-700 font-[400] text-center xl:text-left mx-4 xl:mx-0"
+    >
       With <span class="font-norwester">F3AST</span>, you can easily create a
       stunning online menu, share it with QR codes, and help your food business
       evolve into the modern age.
@@ -52,7 +54,7 @@
     </div>
   </div>
 
-  <div class="mt-12 lg:mt-0 lg:ml-8">
+  <div class="mt-12 hidden xl:block lg:ml-8">
     <img
       src="/hero.png"
       alt="hero"
