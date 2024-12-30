@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite dev",
     "host": "vite dev --host",
-    "build": "vite build",
+    "build": "prisma generate && vite build",
     "post-install": "prisma generate",
     "preview": "vite preview",
     "test": "npm run test:integration && npm run test:unit",
@@ -24,9 +24,11 @@
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@types/eslint": "9.6.1",
     "@types/nodemailer": "^6.4.14",
+    "@types/ws": "^8.5.13",
     "@typescript-eslint/eslint-plugin": "^8.18.2",
     "@typescript-eslint/parser": "^8.18.2",
     "autoprefixer": "^10.4.20",
+    "bufferutil": "^4.0.9",
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
     "postcss": "^8.4.49",
@@ -41,6 +43,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@neondatabase/serverless": "^0.10.4",
     "@prisma/adapter-neon": "^6.1.0",
     "@prisma/client": "^6.1.0",
     "@stripe/stripe-js": "^3.0.10",
@@ -48,6 +51,7 @@
     "better-auth": "^1.1.4",
     "stripe": "^14.21.0",
     "svelte-dnd-action": "^0.9.54",
-    "tailwind-merge": "^2.2.1"
+    "tailwind-merge": "^2.2.1",
+    "ws": "^8.18.0"
   }
 }
