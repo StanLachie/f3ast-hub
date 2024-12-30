@@ -23,7 +23,7 @@ const prisma =
     adapter,
   });
 
-if (process.env.NODE_ENV === "development") {
+if (import.meta.env.DEV) {
   globalThis.__prisma = prisma;
 }
 
