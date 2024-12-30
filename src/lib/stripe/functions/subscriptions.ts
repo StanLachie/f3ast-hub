@@ -1,3 +1,4 @@
+import { BASE_URL } from "$env/static/public";
 import { createStripeClient } from "../stripe-client";
 import { fail } from "@sveltejs/kit";
 import prisma from "$lib/prisma";
@@ -24,23 +25,21 @@ export async function createStripeSubscriptionCheckoutSession(
       { price: getStripeSubscriptionPrice(subscriptionTier), quantity: 1 },
     ],
     mode: "subscription",
-    success_url: `http://localhost:5173/dashboard/restaurant`,
-    cancel_url: `http://localhost:5173/dashboard/billing`,
+    success_url: `${BASE_URL}/dashboard/restaurant`,
+    cancel_url: `${BASE_URL}/dashboard/billing`,
   });
 
   return checkoutSession;
 }
 
-export async function createStripeCustomerPortalSession(
-  restaurantId: number
-) {
+export async function createStripeCustomerPortalSession(restaurantId: number) {
   const stripe = createStripeClient();
 
   const restaurant = await prisma.restaurant.findUnique({
     where: {
       id: restaurantId,
     },
-  });       
+  });
 
   if (!restaurant) {
     throw fail(404, { message: "Restaurant not found" });
@@ -48,7 +47,7 @@ export async function createStripeCustomerPortalSession(
 
   const customerPortalSession = await stripe.billingPortal.sessions.create({
     customer: restaurant.stripeCustomerId,
-    return_url: `http://localhost:5173/dashboard/billing`,
+    return_url: `${BASE_URL}/dashboard/billing`,
   });
 
   return customerPortalSession;
