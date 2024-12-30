@@ -1,4 +1,4 @@
-import { BASE_URL } from "$env/static/public";
+import { PUBLIC_BASE_URL } from "$env/static/public";
 import { createStripeClient } from "../stripe-client";
 import { fail } from "@sveltejs/kit";
 import prisma from "$lib/prisma";
@@ -25,8 +25,8 @@ export async function createStripeSubscriptionCheckoutSession(
       { price: getStripeSubscriptionPrice(subscriptionTier), quantity: 1 },
     ],
     mode: "subscription",
-    success_url: `${BASE_URL}/dashboard/restaurant`,
-    cancel_url: `${BASE_URL}/dashboard/billing`,
+    success_url: `${PUBLIC_BASE_URL}/dashboard/restaurant`,
+    cancel_url: `${PUBLIC_BASE_URL}/dashboard/billing`,
   });
 
   return checkoutSession;
@@ -47,7 +47,7 @@ export async function createStripeCustomerPortalSession(restaurantId: number) {
 
   const customerPortalSession = await stripe.billingPortal.sessions.create({
     customer: restaurant.stripeCustomerId,
-    return_url: `${BASE_URL}/dashboard/billing`,
+    return_url: `${PUBLIC_BASE_URL}/dashboard/billing`,
   });
 
   return customerPortalSession;
