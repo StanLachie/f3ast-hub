@@ -10,27 +10,26 @@
   });
 </script>
 
-<div class="my-24 flex w-full items-center justify-center">
-  <div class="flex max-w-4xl flex-col items-center">
-    <img src="/hero.png" alt="hero" class="w-64" />
+<div
+  class="my-16 flex flex-col lg:flex-row w-full items-center justify-between px-4 md:px-8 lg:px-16"
+>
+  <div class="flex max-w-3xl flex-col items-start text-left">
     <h1
-      class="text-pretty text-center text-2xl font-semibold drop-shadow-2xl sm:text-4xl md:text-5xl"
+      class="text-pretty font-bold leading-snug text-4xl sm:text-5xl lg:text-6xl xl:text-7xl"
     >
-      Create an <span class="text-emerald-300 text-outline"
-        >online presence</span
-      ><br /> for your food business with
-      <span class="font-norwester font-normal">F3AST</span>.
+      <span class="text-emerald-300 text-outline font-[775]"
+        >Connect with Your Customers Online</span
+      >
     </h1>
-    <h2
-      class=" mt-2 max-w-4xl text-pretty text-center text-xl font-semibold italic text-neutral-500 drop-shadow-xl sm:text-2xl md:text-3xl"
-    >
-      Starting from just <span class="text-emerald-400 text-outline"
-        >$19.99</span
-      > a month.
-    </h2>
-    <div class="my-8 flex gap-4">
+
+    <p class="mt-6 text-lg sm:text-xl lg:text-2xl text-neutral-700 font-[400]">
+      With <span class="font-norwester">F3AST</span>, you can easily create a
+      stunning online menu, share it with QR codes, and help your food business
+      evolve into the modern age.
+    </p>
+    <div class="mt-8 flex gap-4">
       <a class="btn-primary" href="/pricing"
-        >View Pricing <Icon
+        >View Pricing<Icon
           icon="mingcute:arrow-right-circle-fill"
           class="text-xl"
         /></a
@@ -44,11 +43,20 @@
             block: "center",
             inline: "center",
           })}
-        >Learn More <Icon
+      >
+        See How It Works <Icon
           icon="mingcute:information-fill"
           class="text-xl"
-        /></button
-      >
+        />
+      </button>
     </div>
+  </div>
+
+  <div class="mt-12 lg:mt-0 lg:ml-8">
+    <img
+      src="/hero.png"
+      alt="hero"
+      class="w-[350px] sm:w-[400px] lg:w-[450px] xl:w-[500px]"
+    />
   </div>
 </div>
