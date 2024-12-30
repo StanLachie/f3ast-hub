@@ -5,11 +5,26 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import ws from "ws";
 
-export const runtime = "edge";
+// Configure neon to use ws
 neonConfig.webSocketConstructor = ws;
+const connectionString = DATABASE_URL;
 
-const pool = new Pool({ connectionString: DATABASE_URL });
+// Create a singleton
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
+
+const pool = new Pool({ connectionString });
 const adapter = new PrismaNeon(pool);
-const prisma = new PrismaClient({ adapter });
+
+export const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    adapter,
+    // Enable direct connections for edge compatibility
+    log: ["query"],
+  });
+
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 export default prisma;
