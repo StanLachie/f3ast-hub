@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import ws from "ws";
 
+export const runtime = "edge";
 neonConfig.webSocketConstructor = ws;
 const connectionString = import.meta.env.VITE_DATABASE_URL;
 
