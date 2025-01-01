@@ -28,6 +28,41 @@ export const PUT: RequestHandler = async ({ request }) => {
     return json({ error: "Not found" }, { status: 404 });
   }
 
+  const subscription = await prisma.subscription.findUnique({
+    where: {
+      restaurantId: restaurant.id,
+    },
+  });
+
+  if (value && (!subscription || subscription.status !== "active")) {
+    return json(
+      { error: "You need to subscribe to publish your site!" },
+      { status: 400 }
+    );
+  }
+
+  const menuCategories = await prisma.menuCategory.findMany({
+    where: {
+      restaurantId: restaurant.id,
+    },
+    include: {
+      MenuItems: true,
+    },
+  });
+
+  if (
+    menuCategories.length === 0 ||
+    menuCategories.some((category) => category.MenuItems.length === 0)
+  ) {
+    return json(
+      {
+        error:
+          "Your menu is empty, please add some items to your menu to publish your site!",
+      },
+      { status: 400 }
+    );
+  }
+
   await prisma.restaurant.update({
     where: { id: restaurant.id },
     data: { published: value },

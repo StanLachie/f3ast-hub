@@ -1,39 +1,63 @@
-import { decode } from 'base64-arraybuffer';
-import type { RequestHandler } from './$types';
+import { getFileUrlFromS3, uploadFileToS3 } from "$lib/s3";
+import { json, redirect } from "@sveltejs/kit";
 
-export const GET: RequestHandler = async () => {
-	return new Response();
-};
+import type { RequestHandler } from "./$types";
+import { auth } from "$lib/auth";
+import prisma from "$lib/prisma";
 
-export const POST: RequestHandler = async ({ locals, request }) => {
-	const { restaurant } = await locals.getClientAccount();
-	const formData = Object.fromEntries(await request.formData());
+export const POST: RequestHandler = async ({ request }) => {
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
 
-	const menuImageFile = formData.menuImageFile as File;
+  if (!session?.user) {
+    redirect(302, "/dashboard/login");
+  }
 
-	if (!restaurant) {
-		return new Response(JSON.stringify({ error: 'Not found' }), {
-			status: 404,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
+  const restaurant = await prisma.restaurant.findFirst({
+    where: {
+      Users: {
+        some: {
+          id: session.user.id,
+        },
+      },
+    },
+  });
 
-	const fileName = `menuImg-${restaurant.id}-${Date.now()}`;
+  if (!restaurant) {
+    return json({ error: "Not found" }, { status: 404 });
+  }
 
-	await locals.supabase.storage
-		.from('client-assets')
-		.upload(fileName, decode(Buffer.from(await menuImageFile.arrayBuffer()).toString('base64')), {
-			upsert: true,
-			contentType: 'image/webp'
-		});
+  const formData = Object.fromEntries(await request.formData());
+  const image = formData.image as File;
+  const itemId = formData.itemId as string;
 
-	return new Response(
-		JSON.stringify({
-			success: true,
-			url: `https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/object/public/client-assets/${fileName}`
-		}),
-		{
-			headers: { 'content-type': 'application/json' }
-		}
-	);
+  if (!image || !itemId) {
+    return json({ error: "Missing required fields" }, { status: 400 });
+  }
+
+  const fileName = `restaurants/${restaurant.id}/menu-items/${itemId}`;
+
+  try {
+    const path = await uploadFileToS3(image, fileName);
+    const url = await getFileUrlFromS3(path);
+
+    await prisma.menuItem.update({
+      where: { id: Number(itemId) },
+      data: {
+        img: path,
+      },
+    });
+
+    return json({ success: true, url });
+  } catch (error) {
+    console.error(error);
+    return json(
+      {
+        error:
+          error instanceof Error ? error.message : "Failed to upload image",
+      },
+      { status: 400 }
+    );
+  }
 };

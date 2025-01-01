@@ -1,5 +1,5 @@
 {
-  "name": "f3ast-svelte",
+  "name": "f3ast-hub",
   "version": "0.0.1",
   "private": true,
   "engines": {
@@ -45,6 +45,8 @@
   },
   "type": "module",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.717.0",
+    "@aws-sdk/s3-request-presigner": "^3.717.0",
     "@neondatabase/serverless": "^0.10.4",
     "@prisma/adapter-neon": "^6.1.0",
     "@prisma/client": "^6.1.0",

@@ -1,66 +1,62 @@
-import { decode } from 'base64-arraybuffer';
-import type { RequestHandler } from './$types';
+import { getFileUrlFromS3, uploadFileToS3 } from "$lib/s3";
+import { json, redirect } from "@sveltejs/kit";
 
-export const POST: RequestHandler = async ({ locals, request }) => {
-	const { restaurant } = await locals.getClientAccount();
-	const formData = Object.fromEntries(await request.formData());
+import type { RequestHandler } from "./$types";
+import { auth } from "$lib/auth";
+import prisma from "$lib/prisma";
 
-	const image = formData.image as File;
+export const POST: RequestHandler = async ({ request }) => {
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
 
-	if (!image) {
-		return new Response(JSON.stringify({ error: 'No file selected' }), {
-			status: 400,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
+  if (!session?.user) {
+    redirect(302, "/dashboard/login");
+  }
 
-	if (!restaurant) {
-		return new Response(JSON.stringify({ error: 'Not found' }), {
-			status: 404,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
+  const restaurant = await prisma.restaurant.findFirst({
+    where: {
+      Users: {
+        some: {
+          id: session.user.id,
+        },
+      },
+    },
+  });
 
-	const fileName = `banner-${restaurant.id}`;
+  if (!restaurant) {
+    return json({ error: "Not found" }, { status: 404 });
+  }
 
-	const { data, error } = await locals.supabase.storage
-		.from('client-assets')
-		.upload(fileName, decode(Buffer.from(await image.arrayBuffer()).toString('base64')), {
-			upsert: true,
-			contentType: 'image/webp'
-		});
+  const formData = Object.fromEntries(await request.formData());
+  const image = formData.image as File;
 
-	if (error || !data) {
-		console.log(error);
-		return new Response(JSON.stringify({ error }), {
-			status: 400,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
+  if (!image) {
+    return json({ error: "No file selected" }, { status: 400 });
+  }
 
-	const { data: bannerData, error: bannerError } = await locals.supabase
-		.from('Restaurant')
-		.update({
-			banner: `https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/object/public/client-assets/${fileName}`
-		})
-		.eq('id', restaurant.id)
-		.select('*');
+  const fileName = `restaurants/${restaurant.id}/banner`;
 
-	if (bannerError || !bannerData) {
-		console.log(bannerError);
-		return new Response(JSON.stringify({ error: 'Failed to update banner' }), {
-			status: 400,
-			headers: { 'content-type': 'application/json' }
-		});
-	}
+  try {
+    const path = await uploadFileToS3(image, fileName);
 
-	return new Response(
-		JSON.stringify({
-			success: true,
-			url: `https://cpqmfpdmwfoaxcxituch.supabase.co/storage/v1/object/public/client-assets/${fileName}`
-		}),
-		{
-			headers: { 'content-type': 'application/json' }
-		}
-	);
+    await prisma.restaurant.update({
+      where: { id: restaurant.id },
+      data: {
+        banner: path,
+      },
+    });
+
+    const url = await getFileUrlFromS3(path);
+
+    return json({ success: true, url });
+  } catch (error) {
+    console.error(error);
+    return json(
+      {
+        error: error instanceof Error ? error.message : "Failed to upload logo",
+      },
+      { status: 400 }
+    );
+  }
 };

@@ -43,9 +43,7 @@
     initialLoading = false;
   });
 
-  async function handleCreateCategory(event: SubmitEvent) {
-    const form = event.target as HTMLFormElement;
-    const formData = new FormData(form);
+  async function handleCreateCategory(formData: FormData) {
     const name = formData.get("name") as string;
 
     if (!name) return;
@@ -55,6 +53,7 @@
     try {
       const res = await fetch("/api/menu/category", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name,
           description: formData.get("description"),
@@ -75,9 +74,7 @@
     }
   }
 
-  async function handleUpdateCategory(id: number, event: SubmitEvent) {
-    const form = event.target as HTMLFormElement;
-    const formData = new FormData(form);
+  async function handleUpdateCategory(id: number, formData: FormData) {
     const name = formData.get("name") as string;
 
     if (!name) return;
@@ -108,27 +105,26 @@
     }
   }
 
-  async function handleCreateItem(event: SubmitEvent) {
-    const form = event.target as HTMLFormElement;
-    const formData = new FormData(form);
-
+  async function handleCreateItem(formData: FormData) {
     const name = formData.get("name") as string;
     const price = formData.get("price") as string;
     const categoryId = formData.get("category") as string;
+    const image = formData.get("image") as File;
 
     if (!name || !price || !categoryId) return;
 
     isSaving = true;
 
     try {
+      // First create the item without the image
       const res = await fetch("/api/menu/item", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name,
           price: parseFloat(price),
           categoryId: parseInt(categoryId),
           description: formData.get("description"),
-          img: previewImage,
           sortingIndex: Date.now(),
         }),
       });
@@ -136,6 +132,40 @@
       if (!res.ok) throw new Error("Failed to create item");
 
       const { item } = await res.json();
+
+      // If we have an image, upload it
+      if (image) {
+        const imageFormData = new FormData();
+        imageFormData.append("image", image);
+        imageFormData.append("itemId", item.id.toString());
+
+        const imageRes = await fetch("/api/menu/item/cover", {
+          method: "POST",
+          body: imageFormData,
+        });
+
+        if (!imageRes.ok) throw new Error("Failed to upload image");
+
+        const { url } = await imageRes.json();
+        item.img = url;
+
+        // Update the item with the image URL
+        const updateRes = await fetch("/api/menu/item", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            categoryId: item.categoryId,
+            description: item.description,
+            img: url,
+          }),
+        });
+
+        if (!updateRes.ok) throw new Error("Failed to update item with image");
+      }
+
       menuItems = [...menuItems, item];
       closeModal();
     } catch (error) {
@@ -146,19 +176,18 @@
     }
   }
 
-  async function handleUpdateItem(id: number, event: SubmitEvent) {
-    const form = event.target as HTMLFormElement;
-    const formData = new FormData(form);
-
+  async function handleUpdateItem(id: number, formData: FormData) {
     const name = formData.get("name") as string;
     const price = formData.get("price") as string;
     const categoryId = formData.get("category") as string;
+    const image = formData.get("image") as File;
 
     if (!name || !price || !categoryId) return;
 
     isSaving = true;
 
     try {
+      // First update the item without the image
       const res = await fetch(`/api/menu/item`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -168,13 +197,45 @@
           price: parseFloat(price),
           categoryId: parseInt(categoryId),
           description: formData.get("description"),
-          img: previewImage,
         }),
       });
 
       if (!res.ok) throw new Error("Failed to update item");
 
       const { item } = await res.json();
+
+      // If we have a new image, upload it
+      if (image) {
+        const imageFormData = new FormData();
+        imageFormData.append("image", image);
+        imageFormData.append("itemId", id.toString());
+
+        const imageRes = await fetch("/api/menu/item/cover", {
+          method: "POST",
+          body: imageFormData,
+        });
+
+        if (!imageRes.ok) throw new Error("Failed to upload image");
+
+        const { url } = await imageRes.json();
+        item.img = url;
+
+        // Update the item with the new image URL
+        const updateRes = await fetch("/api/menu/item", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            categoryId: item.categoryId,
+            description: item.description,
+          }),
+        });
+
+        if (!updateRes.ok) throw new Error("Failed to update item with image");
+      }
+
       menuItems = menuItems.map((i) => (i.id === id ? item : i));
       closeModal();
     } catch (error) {
@@ -213,14 +274,13 @@
       openModal = "categoryCreate";
     },
     editFunc: async (id) => {
-      console.log(categories);
-      currentCategory = categories.find((c) => c.sortingIndex === id) ?? null;
+      currentCategory = categories.find((c) => c.id === id) ?? null;
       openModal = "categoryEdit";
     },
     deleteFunc: async (id) => {
       if (!confirm("Are you sure you want to delete this category?")) return;
 
-      let category = categories.find((c) => c.sortingIndex === id);
+      let category = categories.find((c) => c.id === id);
 
       if (!category) return;
 
@@ -255,12 +315,12 @@
         openModal = "itemCreate";
       },
       editFunc: async (id) => {
-        currentItem = menuItems.find((i) => i.sortingIndex === id) ?? null;
+        currentItem = menuItems.find((i) => i.id === id) ?? null;
         openModal = "itemEdit";
       },
       deleteFunc: async (id) => {
         if (!confirm("Are you sure you want to delete this item?")) return;
-        let item = menuItems.find((i) => i.sortingIndex === id);
+        let item = menuItems.find((i) => i.id === id);
 
         if (!item) return;
 
@@ -292,7 +352,8 @@
   <CategoryModalForm
     currentCategory={null}
     {isSaving}
-    handleCreateCategory={(e: SubmitEvent) => handleCreateCategory(e)}
+    handleCreateCategory={(formData: FormData) =>
+      handleCreateCategory(formData)}
   />
 </Modal>
 
@@ -304,8 +365,8 @@
   <CategoryModalForm
     {currentCategory}
     {isSaving}
-    handleUpdateCategory={(id: number, e: SubmitEvent) =>
-      handleUpdateCategory(id, e)}
+    handleUpdateCategory={(id: number, formData: FormData) =>
+      handleUpdateCategory(id, formData)}
   />
 </Modal>
 
@@ -318,7 +379,7 @@
     currentItem={null}
     {categories}
     {isSaving}
-    handleCreateItem={(e: SubmitEvent) => handleCreateItem(e)}
+    handleCreateItem={(formData: FormData) => handleCreateItem(formData)}
   />
 </Modal>
 
@@ -331,6 +392,7 @@
     {currentItem}
     {categories}
     {isSaving}
-    handleUpdateItem={(id: number, e: SubmitEvent) => handleUpdateItem(id, e)}
+    handleUpdateItem={(id: number, formData: FormData) =>
+      handleUpdateItem(id, formData)}
   />
 </Modal>

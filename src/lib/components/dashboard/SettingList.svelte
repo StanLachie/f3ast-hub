@@ -131,7 +131,7 @@
               class="btn-outline flex h-[42px] w-[42px] justify-center bg-white !p-2"
               on:click={() => {
                 if (!action.editFunc) return;
-                action.editFunc(item.id);
+                action.editFunc(item.dbId);
               }}
             >
               <Icon icon="mingcute:edit-2-fill" class="h-5 w-5" />
@@ -140,7 +140,7 @@
               class="btn-danger flex h-[42px] w-[42px] justify-center !p-2"
               on:click={() => {
                 if (!action.deleteFunc) return;
-                action.deleteFunc(item.id);
+                action.deleteFunc(item.dbId);
               }}
             >
               <Icon icon="mingcute:delete-2-fill" class="h-5 w-5" />

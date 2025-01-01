@@ -179,11 +179,17 @@
 
         if (!confirm) return;
 
-        await fetch("/api/restaurant/published", {
+        const res = await fetch("/api/restaurant/published", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ value: false }),
         });
+
+        if (!res.ok) {
+          const data = await res.json();
+          alert(data.error || "Failed to unpublish restaurant");
+          return;
+        }
 
         restaurantInfo.published = false;
       },
@@ -206,11 +212,17 @@
 
         if (!confirm) return;
 
-        await fetch("/api/restaurant/published", {
+        const res = await fetch("/api/restaurant/published", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ value: true }),
         });
+
+        if (!res.ok) {
+          const data = await res.json();
+          alert(data.error || "Failed to publish restaurant");
+          return;
+        }
 
         restaurantInfo.published = true;
       },
@@ -218,12 +230,12 @@
   />
 {/if}
 
-<!-- <SettingImage
+<SettingImage
   title="Logo"
   description="Upload a logo for your restaurant."
   shape="circle"
   loading={initialLoading}
-  currentImage={restaurantInfo.logo}
+  currentImage={data.logo || null}
   uploadUrl="/api/restaurant/logo"
 />
 
@@ -234,7 +246,7 @@
   loading={initialLoading}
   currentImage={restaurantInfo.banner}
   uploadUrl="/api/restaurant/banner"
-/> -->
+/>
 
 <SettingInput
   title="Name"

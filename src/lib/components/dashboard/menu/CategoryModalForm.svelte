@@ -4,8 +4,8 @@
   interface Props {
     currentCategory: any | null;
     isSaving: boolean;
-    handleUpdateCategory?: (id: number, e: SubmitEvent) => Promise<void>;
-    handleCreateCategory?: (e: SubmitEvent) => Promise<void>;
+    handleUpdateCategory?: (id: number, formData: FormData) => Promise<void>;
+    handleCreateCategory?: (formData: FormData) => Promise<void>;
   }
 
   let {
@@ -27,10 +27,13 @@
   class="flex flex-col gap-3"
   onsubmit={(event) => {
     event.preventDefault();
+    const form = event.target as HTMLFormElement;
+    const formData = new FormData(form);
+
     if (currentCategory && handleUpdateCategory) {
-      handleUpdateCategory(currentCategory.id, event);
+      handleUpdateCategory(currentCategory.id, formData);
     } else if (handleCreateCategory) {
-      handleCreateCategory(event);
+      handleCreateCategory(formData);
     }
   }}
 >

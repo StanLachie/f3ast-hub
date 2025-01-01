@@ -59,7 +59,6 @@ export const PUT: RequestHandler = async ({ request }) => {
       price,
       description,
       categoryId,
-      img,
     },
   });
 
