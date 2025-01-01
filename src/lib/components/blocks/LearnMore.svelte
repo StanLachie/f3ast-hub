@@ -13,14 +13,6 @@
       bgColorClass: "bg-purple-500/10",
     },
     {
-      title: "Hands-on Support",
-      description: "Get personalized assistance whenever you need it.",
-      imageSrc: "/handshake.png",
-      imageAlt: "Hands-on Support",
-      link: "/support",
-      bgColorClass: "bg-blue-500/10",
-    },
-    {
       title: "Beautiful Online Menu",
       description:
         "Showcase your dishes with a highly customizable digital menu.",
@@ -30,7 +22,25 @@
       bgColorClass: "bg-emerald-500/10",
     },
     {
-      title: "IRL QR Codes",
+      title: "Customer Inquiries",
+      description: "Connect with your customers directly via email.",
+      imageSrc: "/email.png",
+      imageAlt: "Customer Inquiries",
+      link: "/features",
+      bgColorClass: "bg-yellow-500/10",
+    },
+
+    {
+      title: "Hands-on Support",
+      description: "Get personalized assistance whenever you need it.",
+      imageSrc: "/handshake.png",
+      imageAlt: "Hands-on Support",
+      link: "/support",
+      bgColorClass: "bg-blue-500/10",
+    },
+
+    {
+      title: "QR Codes",
       description: "Connect physical and digital with custom QR codes.",
       imageSrc: "/camera.png",
       imageAlt: "QR Codes",
@@ -79,6 +89,7 @@
         1600: { perPage: 3 },
       },
       arrows: false,
+      lazyLoad: "nearby",
     });
 
     splide.mount();
