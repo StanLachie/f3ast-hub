@@ -1,10 +1,10 @@
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model MenuCategory {
@@ -91,6 +91,7 @@ model User {
   name               String
   firstName          String
   lastName           String
+  inquiry_emails     Boolean     @default(true)
   promotional_emails Boolean     @default(false)
   Restaurant         Restaurant? @relation(fields: [restaurantId], references: [id])
 
