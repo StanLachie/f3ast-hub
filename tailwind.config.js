@@ -11,6 +11,7 @@ export default {
   plugins: [
     function ({ addUtilities }) {
       const newUtilities = {
+        // Text outline utility
         ".text-outline": {
           "text-shadow":
             "-1px -1px 0 #000," +
