@@ -7,23 +7,14 @@ export const load = (async ({ parent }) => {
 
   const restaurant = layoutData.restaurant;
 
-  if (!restaurant.logo) {
-    return {
-      restaurant,
-    };
-  }
-
-  const logo = await getFileUrlFromS3(restaurant.logo);
-
-  if (!logo) {
-    return {
-      logo: null,
-      restaurant,
-    };
-  }
+  const logo = restaurant.logo ? await getFileUrlFromS3(restaurant.logo) : null;
+  const banner = restaurant.banner
+    ? await getFileUrlFromS3(restaurant.banner)
+    : null;
 
   return {
     logo,
+    banner,
     restaurant,
   };
 }) satisfies PageServerLoad;

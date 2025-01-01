@@ -244,7 +244,7 @@
   description="Upload a banner for your restaurant."
   shape="square"
   loading={initialLoading}
-  currentImage={restaurantInfo.banner}
+  currentImage={data.banner || null}
   uploadUrl="/api/restaurant/banner"
 />
 
