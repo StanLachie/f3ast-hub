@@ -38,7 +38,7 @@
       description: "Pro plan for medium businesses",
       features: [
         "Everything in Basic",
-        "Customer Mailing List",
+        "Priority Support",
         "Customer Inquiries",
       ],
     },
