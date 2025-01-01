@@ -4,6 +4,7 @@
   import Meta from "$lib/components/utils/Meta.svelte";
   import SettingHead from "$lib/components/dashboard/SettingHead.svelte";
   import SettingInput from "$lib/components/dashboard/SettingInput.svelte";
+  import SettingAction from "$lib/components/dashboard/SettingAction.svelte";
 
   export let data: PageData;
   const { layoutData } = data;
@@ -14,6 +15,7 @@
     name: "",
     firstName: "",
     lastName: "",
+    inquiry_emails: true,
   };
   let contactPreferences = {
     promotional_emails: false,
@@ -24,6 +26,7 @@
       name: (await layoutData).user?.name ?? "",
       firstName: (await layoutData).user?.firstName ?? "",
       lastName: (await layoutData).user?.lastName ?? "",
+      inquiry_emails: (await layoutData).user?.inquiry_emails ?? true,
     };
     contactPreferences = {
       promotional_emails: (await layoutData).user?.promotional_emails ?? false,
@@ -81,3 +84,71 @@
     submitUrl: "/api/profile/lastName",
   }}
 />
+
+{#if personalInfo.inquiry_emails}
+  <SettingAction
+    title="Inquiry Emails"
+    description="Receive customer inquiry emails via this accounts email."
+    loading={initialLoading}
+    action={{
+      name: "Disable",
+      type: "danger",
+      func: async () => {
+        if (!window) return;
+
+        const confirm = window.confirm(
+          "Are you sure you want to disable inquiry emails to this account?"
+        );
+
+        if (!confirm) return;
+
+        const res = await fetch("/api/profile/inquiryEmails", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ value: false }),
+        });
+
+        if (!res.ok) {
+          const data = await res.json();
+          alert(data.error || "Failed to disable inquiry emails");
+          return;
+        }
+
+        personalInfo.inquiry_emails = false;
+      },
+    }}
+  />
+{:else}
+  <SettingAction
+    title="Inquiry Emails"
+    description="Receive customer inquiry emails via this accounts email."
+    loading={initialLoading}
+    action={{
+      name: "Enable",
+      type: "primary",
+      func: async () => {
+        if (!window) return;
+
+        const confirm = window.confirm(
+          "Are you sure you want to enable inquiry emails to this account?"
+        );
+
+        if (!confirm) return;
+
+        const res = await fetch("/api/profile/inquiryEmails", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ value: true }),
+        });
+
+        if (!res.ok) {
+          const data = await res.json();
+          alert(data.error || "Failed to enable inquiry emails");
+          return;
+        }
+
+        personalInfo.inquiry_emails = true;
+      },
+    }}
+  />
+{/if}
