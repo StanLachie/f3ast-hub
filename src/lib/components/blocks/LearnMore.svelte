@@ -38,7 +38,14 @@
       link: "/support",
       bgColorClass: "bg-blue-500/10",
     },
-
+    {
+      title: "Show Up Online",
+      description: "Show up when your customers search for you online.",
+      imageSrc: "/globe.png",
+      imageAlt: "Show Up Online",
+      link: "/features",
+      bgColorClass: "bg-purple-500/10",
+    },
     {
       title: "QR Codes",
       description: "Connect physical and digital with custom QR codes.",
