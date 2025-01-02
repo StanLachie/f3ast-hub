@@ -92,6 +92,11 @@ export async function handleCustomerSubscriptionUpdated(
       data: {
         status: event.data.object.status as SubscriptionStatus,
         stripeSubscriptionId: event.data.object.id,
+        tier:
+          event.data.object.items.data[0].plan.id ===
+          "price_1QcpHPJkLTgCVE9zug7ksaG6"
+            ? "Elite"
+            : "Basic",
         currentPeriodStart: new Date(
           event.data.object.current_period_start * 1000
         ),
