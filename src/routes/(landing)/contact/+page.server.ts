@@ -33,7 +33,7 @@ export const actions: Actions = {
           email,
           name,
           "noreply@f3ast.com",
-          "Public Inquiries @ F3AST",
+          "Public Enquiries @ F3AST",
           null,
           `We've received your message.`,
           null,

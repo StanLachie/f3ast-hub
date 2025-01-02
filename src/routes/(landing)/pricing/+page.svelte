@@ -39,8 +39,8 @@
       features: [
         "Everything in Basic",
         "AI Menu Uploader",
-        "Customer Inquiries",
-      ],
+          "Customer Enquiries",
+        ],
     },
   ];
 

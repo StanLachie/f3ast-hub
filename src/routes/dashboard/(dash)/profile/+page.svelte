@@ -87,8 +87,8 @@
 
 {#if personalInfo.inquiry_emails}
   <SettingAction
-    title="Inquiry Emails"
-    description="Receive customer inquiry emails via this accounts email."
+    title="Enquiry Emails"
+    description="Receive customer enquiry emails via this accounts email."
     loading={initialLoading}
     action={{
       name: "Disable",
@@ -97,7 +97,7 @@
         if (!window) return;
 
         const confirm = window.confirm(
-          "Are you sure you want to disable inquiry emails to this account?"
+          "Are you sure you want to disable enquiry emails to this account?"
         );
 
         if (!confirm) return;
@@ -110,7 +110,7 @@
 
         if (!res.ok) {
           const data = await res.json();
-          alert(data.error || "Failed to disable inquiry emails");
+          alert(data.error || "Failed to disable enquiry emails");
           return;
         }
 
@@ -120,8 +120,8 @@
   />
 {:else}
   <SettingAction
-    title="Inquiry Emails"
-    description="Receive customer inquiry emails via this accounts email."
+    title="Enquiry Emails"
+    description="Receive customer enquiry emails via this accounts email."
     loading={initialLoading}
     action={{
       name: "Enable",
@@ -130,7 +130,7 @@
         if (!window) return;
 
         const confirm = window.confirm(
-          "Are you sure you want to enable inquiry emails to this account?"
+          "Are you sure you want to enable enquiry emails to this account?"
         );
 
         if (!confirm) return;
@@ -143,7 +143,7 @@
 
         if (!res.ok) {
           const data = await res.json();
-          alert(data.error || "Failed to enable inquiry emails");
+          alert(data.error || "Failed to enable enquiry emails");
           return;
         }
 

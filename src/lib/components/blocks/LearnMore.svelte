@@ -22,10 +22,10 @@
       bgColorClass: "bg-emerald-500/10",
     },
     {
-      title: "Customer Inquiries",
+      title: "Customer Enquiries",
       description: "Connect with your customers directly via email.",
       imageSrc: "/email.png",
-      imageAlt: "Customer Inquiries",
+      imageAlt: "Customer Enquiries",
       link: "/features",
       bgColorClass: "bg-yellow-500/10",
     },
