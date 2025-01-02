@@ -1,3 +1,4 @@
+import { F3AST_ELITE_PRICE_ID } from "$env/static/private";
 import type Stripe from "stripe";
 import type { SubscriptionStatus } from "@prisma/client";
 import prisma from "$lib/prisma";
@@ -94,8 +95,7 @@ export async function handleCustomerSubscriptionUpdated(
         stripeSubscriptionId: event.data.object.id,
         ...(event.data.object.items.data[0].plan.id && {
           tier:
-            event.data.object.items.data[0].plan.id ===
-            "price_1QcpHPJkLTgCVE9zug7ksaG6"
+            event.data.object.items.data[0].plan.id === F3AST_ELITE_PRICE_ID
               ? "Elite"
               : "Basic",
         }),

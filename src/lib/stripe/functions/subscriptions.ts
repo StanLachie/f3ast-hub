@@ -1,3 +1,8 @@
+import {
+  F3AST_BASIC_PRICE_ID,
+  F3AST_ELITE_PRICE_ID,
+} from "$env/static/private";
+
 import { PUBLIC_BASE_URL } from "$env/static/public";
 import { createStripeClient } from "../stripe-client";
 import { fail } from "@sveltejs/kit";
@@ -57,6 +62,6 @@ export function getStripeSubscriptionPrice(
   subscriptionTier: "Basic" | "Elite"
 ) {
   return subscriptionTier === "Basic"
-    ? "price_1QcpI9JkLTgCVE9z4kIKzqI4"
-    : "price_1QcpHPJkLTgCVE9zug7ksaG6";
+    ? F3AST_BASIC_PRICE_ID
+    : F3AST_ELITE_PRICE_ID;
 }
