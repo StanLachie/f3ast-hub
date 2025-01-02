@@ -57,6 +57,6 @@ export function getStripeSubscriptionPrice(
   subscriptionTier: "Basic" | "Elite"
 ) {
   return subscriptionTier === "Basic"
-    ? "price_1QbdN9JkLTgCVE9zShBhoWY9"
-    : "price_1OYiywJkLTgCVE9z34dDdKwq";
+    ? "price_1QcpI9JkLTgCVE9z4kIKzqI4"
+    : "price_1QcpHPJkLTgCVE9zug7ksaG6";
 }
