@@ -12,7 +12,7 @@
   >
     <dialog
       open
-      class="relative m-0 max-h-[90vh] w-full max-w-lg cursor-default overflow-y-auto rounded-2xl border-2 border-neutral-400 bg-white p-6 shadow-lg"
+      class="relative m-0 max-h-[90vh] w-full max-w-lg cursor-default overflow-y-auto rounded-2xl border-2 border-neutral-400 bg-white p-6 shadow-lg m-2"
       aria-labelledby="modal-title"
       aria-modal="true"
     >

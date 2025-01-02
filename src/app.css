@@ -3,50 +3,50 @@
 @tailwind utilities;
 
 body {
-	@apply bg-neutral-100;
+  @apply bg-neutral-100;
 }
 
 @layer base {
-	@font-face {
-		font-family: 'Norwester';
-		src:
-			local('Norwester'),
-			url('/norwester.woff') format('woff'),
-			url('/norwester.woff2') format('woff');
-	}
+  @font-face {
+    font-family: "Norwester";
+    src:
+      local("Norwester"),
+      url("/norwester.woff") format("woff"),
+      url("/norwester.woff2") format("woff");
+  }
 }
 
 @layer utilities {
-	.no-scrollbar::-webkit-scrollbar {
-		display: none;
-	}
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 
-	.no-scrollbar {
-		-ms-overflow-style: none;
-		scrollbar-width: none;
-	}
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 @layer components {
-	.btn-primary {
-		@apply flex items-center justify-center gap-2 rounded-lg border border-emerald-950 bg-emerald-300 px-3 py-2 text-sm font-semibold text-emerald-950 shadow-sm transition-colors duration-200 hover:scale-[97.5%] hover:bg-emerald-400;
-	}
-	.btn-outline {
-		@apply flex items-center justify-center gap-2 rounded-lg border border-neutral-400 px-3 py-2 text-sm font-semibold text-neutral-900 shadow-sm  transition-colors duration-200 hover:scale-[97.5%] hover:bg-neutral-200;
-	}
-	.btn-simple {
-		@apply flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm font-semibold text-neutral-900 shadow-sm hover:scale-[97.5%] hover:bg-neutral-100;
-	}
-	.btn-danger {
-		@apply flex items-center justify-center gap-2 rounded-lg border border-neutral-500 bg-red-300 px-3 py-2 text-sm font-semibold text-neutral-900 shadow-sm transition-colors duration-200 hover:scale-[97.5%] hover:bg-red-400;
-	}
-	.btn-dark {
-		@apply flex items-center gap-2 rounded-lg border border-neutral-800 bg-neutral-700 px-3 py-2 text-sm font-semibold text-neutral-100 shadow-sm hover:scale-[97.5%] hover:bg-neutral-800;
-	}
-	.form {
-		@apply mx-auto flex w-full max-w-lg flex-col items-center justify-center gap-4 rounded-lg border border-neutral-400 bg-white p-8;
-	}
-	.input {
-		@apply w-full rounded-lg border border-neutral-400 px-3 py-2;
-	}
+  .btn-primary {
+    @apply flex items-center justify-center gap-2 rounded-lg border border-emerald-950 bg-emerald-300 px-3 py-2 text-sm font-semibold text-emerald-950 shadow-sm transition-colors duration-200 hover:scale-[97.5%] hover:bg-emerald-400;
+  }
+  .btn-outline {
+    @apply flex items-center justify-center gap-2 rounded-lg border border-neutral-400 px-3 py-2 text-sm font-semibold text-neutral-900 shadow-sm  transition-colors duration-200 hover:scale-[97.5%] hover:bg-neutral-200;
+  }
+  .btn-simple {
+    @apply flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm font-semibold text-neutral-900 shadow-sm hover:scale-[97.5%] hover:bg-neutral-100;
+  }
+  .btn-danger {
+    @apply flex items-center justify-center gap-2 rounded-lg border border-neutral-500 bg-red-300 px-3 py-2 text-sm font-semibold text-neutral-900 shadow-sm transition-colors duration-200 hover:scale-[97.5%] hover:bg-red-400;
+  }
+  .btn-dark {
+    @apply flex items-center gap-2 rounded-lg border border-neutral-800 bg-neutral-700 px-3 py-2 text-sm font-semibold text-neutral-100 shadow-sm hover:scale-[97.5%] hover:bg-neutral-800;
+  }
+  .form {
+    @apply mx-auto flex w-full max-w-lg flex-col items-center justify-center gap-4 rounded-lg border border-neutral-400 bg-white p-8;
+  }
+  .input {
+    @apply w-full rounded-lg border border-neutral-400 px-3 py-2;
+  }
 }

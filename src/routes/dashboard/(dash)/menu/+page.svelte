@@ -11,6 +11,8 @@
   import ItemModalForm from "$lib/components/dashboard/menu/ItemModalForm.svelte";
   import Icon from "@iconify/svelte";
   import CategoryModalForm from "$lib/components/dashboard/menu/CategoryModalForm.svelte";
+  import SettingAction from "$lib/components/dashboard/SettingAction.svelte";
+  import MenuUploadModalInput from "$lib/components/dashboard/menu/MenuUploadModalInput.svelte";
 
   export let data: PageData;
 
@@ -42,6 +44,67 @@
 
     initialLoading = false;
   });
+
+  async function handleAiUpload(data: {
+    categories: {
+      name: string;
+      existingId: number | null;
+      items: { name: string; price: number }[];
+    }[];
+  }) {
+    console.log(data);
+
+    try {
+      await Promise.all(
+        data.categories.map(async (category: any) => {
+          let categoryId: number;
+
+          if (category.existingId) {
+            // Use existing category
+            categoryId = category.existingId;
+          } else {
+            // Create new category
+            const res = await fetch("/api/menu/category", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name: category.name,
+                description: "",
+                sortingIndex: Date.now(),
+              }),
+            });
+            const { category: uploadedCategory } = await res.json();
+            categories = [...categories, uploadedCategory];
+            categoryId = uploadedCategory.id;
+          }
+
+          // Upload items to category
+          await Promise.all(
+            category.items.map(async (item: any) => {
+              const res = await fetch("/api/menu/item", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  name: item.name,
+                  price: item.price,
+                  categoryId: categoryId,
+                  description: "",
+                  sortingIndex: Date.now(),
+                }),
+              });
+              const { item: uploadedItem } = await res.json();
+              menuItems = [...menuItems, uploadedItem];
+            })
+          );
+        })
+      );
+
+      closeModal();
+    } catch (error) {
+      console.error("Error uploading menu:", error);
+      alert("Failed to upload menu. Please try again.");
+    }
+  }
 
   async function handleCreateCategory(formData: FormData) {
     const name = formData.get("name") as string;
@@ -263,6 +326,18 @@
 
 <SettingHead title="Your Menu" description="Make changes to your menu here." />
 
+<SettingAction
+  title="AI Menu Uploader"
+  description="Upload an image of your menu and let the AI do the work!"
+  action={{
+    name: "Upload",
+    icon: "mingcute:ai-fill",
+    type: "primary",
+    func: () => {
+      openModal = "aiUpload";
+    },
+  }}
+/>
 <SettingList
   title="Categories"
   description="Create & edit categories for your restaurant's menu."
@@ -294,6 +369,7 @@
 
       if (res.ok) {
         categories = categories.filter((c) => c.id !== category.id);
+        menuItems = menuItems.filter((item) => item.categoryId !== category.id);
       } else {
         alert("Failed to delete category");
       }
@@ -343,6 +419,28 @@
     listItems={menuItems}
   />
 {/if}
+
+<Modal
+  title="AI Menu Uploader"
+  showModal={openModal === "aiUpload"}
+  onClose={closeModal}
+>
+  <MenuUploadModalInput
+    prompt={`You are a menu parsing assistant. Your task is to extract menu categories and items from the provided image.
+      Each category must have a name, and each item must include a name and price.
+    
+      Ensure the following:
+      - Extracted data must be accurate and strictly formatted according to the given schema.
+      - Group items logically under the most relevant category. Avoid overly broad or general grouping. For instance, items like sausage rolls should not automatically be grouped with pies unless they are explicitly part of the same category.
+      - Create new categories when existing categories do not logically encompass the items, but only when truly necessary.
+      - Prices must be numeric and accurately matched to their respective items. If a price is not visible, set it to 0.
+      - Use the provided pre-existing categories: ${categories.map((c) => `${c.name} (ID: ${c.id})`).join(", ")}. Indicate their ID using the existingId property. For new categories, set existingId to null.
+      - If an item does not fit into any of the pre-existing categories, group it under "Miscellaneous."
+      - Adhere strictly to the schema to ensure consistency and accuracy.
+      `}
+    handleUpload={handleAiUpload}
+  />
+</Modal>
 
 <Modal
   title="Create Category"

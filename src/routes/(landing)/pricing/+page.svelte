@@ -38,7 +38,7 @@
       description: "Pro plan for medium businesses",
       features: [
         "Everything in Basic",
-        "Priority Support",
+        "AI Menu Uploader",
         "Customer Inquiries",
       ],
     },
