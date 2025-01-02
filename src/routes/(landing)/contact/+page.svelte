@@ -24,6 +24,7 @@
       <p class="text-center text-neutral-600">
         We'll get back to you as soon as possible.
       </p>
+      <a href="/" class="btn-primary mt-4">Back to Home</a>
     </div>
   </div>
 {:else}
