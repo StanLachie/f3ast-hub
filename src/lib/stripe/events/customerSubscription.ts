@@ -90,13 +90,15 @@ export async function handleCustomerSubscriptionUpdated(
         restaurantId: restaurant.id,
       },
       data: {
-        status: event.data.object.status as SubscriptionStatus,
+        status: event.data.object.status as any,
         stripeSubscriptionId: event.data.object.id,
-        tier:
-          event.data.object.items.data[0].plan.id ===
-          "price_1QcpHPJkLTgCVE9zug7ksaG6"
-            ? "Elite"
-            : "Basic",
+        ...(event.data.object.items.data[0].plan.id && {
+          tier:
+            event.data.object.items.data[0].plan.id ===
+            "price_1QcpHPJkLTgCVE9zug7ksaG6"
+              ? "Elite"
+              : "Basic",
+        }),
         currentPeriodStart: new Date(
           event.data.object.current_period_start * 1000
         ),
