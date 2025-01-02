@@ -1,35 +1,14 @@
 {
   "extends": "./.svelte-kit/tsconfig.json",
   "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
     "strict": true,
-    "allowUnreachableCode": false,
-    "exactOptionalPropertyTypes": true,
-    "noImplicitAny": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true
-  },
-  "exclude": [
-    "**/node_modules/**",
-    "**/.svelte-kit/**",
-    "**/dist/**",
-    "**/build/**",
-    "**/.svelte/**",
-    "**/.vercel_build_output/**",
-    "**/.vercel/**",
-    "**/coverage/**",
-    "**/_/**",
-    "**/vite.config.js.timestamp-*",
-    "**/vite.config.ts.timestamp-*"
-  ],
-  "include": [
-    "src/**/*",
-    "src/node_modules",
-    ".svelte-kit/ambient.d.ts",
-    "**/*.svelte",
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+    "moduleResolution": "bundler"
+  }
 }
