@@ -178,7 +178,15 @@
         >
           Cancel
         </button>
-        <button class="btn-primary" on:click={handleSubmit}>
+        <button
+          class="btn-primary"
+          on:click={handleSubmit}
+          disabled={data.categories.length === 0 ||
+            data.categories.some((category) => category.items.length === 0) ||
+            data.categories.some((category) =>
+              category.items.some((item) => !item.price || item.price <= 0)
+            )}
+        >
           Save Menu Items
         </button>
       </div>
