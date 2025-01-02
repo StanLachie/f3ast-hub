@@ -9,7 +9,10 @@
         <div>
           <h3 class="font-semibold mb-2">Product</h3>
           <ul class="space-y-2 text-gray-400">
-            <li><a href="/#howItWorks" class="hover:text-white">Getting Started</a></li>
+            <li>
+              <a href="/#howItWorks" class="hover:text-white">Getting Started</a
+              >
+            </li>
             <li><a href="/#learnMore" class="hover:text-white">Features</a></li>
             <li>
               <a href="/support" class="hover:text-white"
@@ -30,7 +33,10 @@
       </div>
     </div>
     <div class="mt-16 text-center text-sm text-gray-400">
-      <p>&copy; {new Date().getFullYear()} F3AST. All rights reserved.</p>
+      <p>
+        &copy; {new Date().getFullYear()} F3AST. All rights reserved.
+      </p>
+      <p>Made with ❤️ by 🐢</p>
     </div>
   </div>
 </div>
