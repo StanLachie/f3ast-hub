@@ -1,4 +1,6 @@
 import type Stripe from "stripe";
+import type { SubscriptionStatus } from "@prisma/client";
+import { getStripeSubscriptionPrice } from "../functions/subscriptions";
 import prisma from "$lib/prisma";
 
 // import type { SubscriptionStatus } from "@prisma/client";
@@ -48,6 +50,11 @@ export async function handleCustomerSubscriptionCreated(
         restaurantId: restaurant.id,
         status: event.data.object.status as any,
         stripeSubscriptionId: event.data.object.id,
+        tier:
+          event.data.object.items.data[0].plan.id ===
+          "price_1OYiywJkLTgCVE9z34dDdKwq"
+            ? "Elite"
+            : "Basic",
         stripeCustomerId: String(event.data.object.customer),
         currentPeriodStart: new Date(
           event.data.object.current_period_start * 1000
