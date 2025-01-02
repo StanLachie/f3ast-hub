@@ -3,6 +3,7 @@
   import SettingAction from "$lib/components/dashboard/SettingAction.svelte";
   import type { PageData } from "./$types";
   import { onMount } from "svelte";
+  import BillingInfo from "$lib/components/dashboard/BillingInfo.svelte";
 
   export let data: PageData;
   const { layoutData } = data;
@@ -21,6 +22,8 @@
 </script>
 
 <SettingHead title="Billing" description="Update your billing details here." />
+
+<BillingInfo subscription={layoutData.subscription} loading={initialLoading} />
 
 {#if subscription.status !== "active"}
   <SettingAction
