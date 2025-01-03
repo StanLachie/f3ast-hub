@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { slide } from "svelte/transition";
   let questions = [
     {
       question: "What is F3AST?",
@@ -28,9 +29,19 @@
     {
       question: "Can I use F3AST for free?",
       answer:
-        "You can register for a free account and setup your menu. After that, if you wish to publish your menu online, you will need to upgrade to a paid plan.",
+        "You can register for a free account andsetup your menu. After that, if you wish to publish your menu online, you will need to upgrade to a paid plan.",
     },
   ];
+
+  let openIndexs: number[] = [];
+
+  function toggleQuestion(index: number) {
+    if (openIndexs.includes(index)) {
+      openIndexs = openIndexs.filter((i) => i !== index);
+    } else {
+      openIndexs = [...openIndexs, index];
+    }
+  }
 </script>
 
 <div class="w-full bg-gray-950 py-24 text-white" id="faq">
@@ -50,16 +61,21 @@
   </div>
   <div class="mx-auto max-w-4xl mt-16 px-6">
     <div class="divide-y divide-gray-800">
-      {#each questions as { question, answer }}
+      {#each questions as { question, answer }, index}
         <div class="py-6">
-          <details class="group">
-            <summary
+          <div class="group">
+            <button
               class="flex w-full cursor-pointer items-center justify-between text-left"
+              on:click={() => toggleQuestion(index)}
             >
               <h2 class="text-2xl font-medium text-white">{question}</h2>
               <span class="ml-6 flex h-7 items-center">
                 <svg
-                  class="h-6 w-6 rotate-0 transform text-gray-400 group-open:rotate-180 transition-transform duration-200"
+                  class="h-6 w-6 transform text-gray-400 transition-transform duration-200 {openIndexs.includes(
+                    index
+                  )
+                    ? 'rotate-180'
+                    : 'rotate-0'}"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -72,11 +88,17 @@
                   />
                 </svg>
               </span>
-            </summary>
-            <div class="mt-3 pr-12">
-              <p class="text-lg text-gray-300">{answer}</p>
-            </div>
-          </details>
+            </button>
+            {#if openIndexs.includes(index)}
+              <div class="mt-3 pr-12" transition:slide>
+                <p class="text-lg text-gray-300">{answer}</p>
+              </div>
+            {:else}
+              <div class="h-0 overflow-hidden">
+                <p class="text-lg text-gray-300">{answer}</p>
+              </div>
+            {/if}
+          </div>
         </div>
       {/each}
     </div>
