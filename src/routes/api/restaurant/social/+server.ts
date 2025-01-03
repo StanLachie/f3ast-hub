@@ -28,7 +28,13 @@ export const PUT: RequestHandler = async ({ request }) => {
     return json({ error: "Not found" }, { status: 404 });
   }
 
-  const validPlatforms = ["facebook", "instagram", "twitter", "tiktok"];
+  const validPlatforms = [
+    "facebook",
+    "instagram",
+    "twitter",
+    "tiktok",
+    "phone",
+  ];
   if (!validPlatforms.some((p) => platform.includes(p))) {
     return json({ error: "Invalid platform" }, { status: 400 });
   }

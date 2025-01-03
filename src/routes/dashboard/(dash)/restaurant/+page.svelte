@@ -24,6 +24,7 @@
     twitter: string;
     tiktok: string;
     slug: string;
+    phone: string;
     [key: string]: string | boolean | null;
   }
 
@@ -37,6 +38,7 @@
     instagram: /^https?:\/\/(www\.)?instagram\.com\/[a-zA-Z0-9_]+\/?$/,
     twitter: /^https?:\/\/(www\.)?twitter\.com\/[a-zA-Z0-9_]+\/?$/,
     tiktok: /^https?:\/\/(www\.)?tiktok\.com\/[a-zA-Z0-9_]+\/?$/,
+    phone: /^[0-9]{10}$/,
   };
 
   let restaurantInfo: RestaurantInfo = {
@@ -50,11 +52,12 @@
     instagram: "",
     twitter: "",
     tiktok: "",
+    phone: "",
     slug: "",
   };
 
   let selectedPlatform: {
-    platform: null | "facebook" | "instagram" | "twitter" | "tiktok";
+    platform: null | "facebook" | "instagram" | "twitter" | "tiktok" | "phone";
     url: string | null;
   } = {
     platform: null,
@@ -75,9 +78,15 @@
       selectedPlatform.url &&
       !socialRegex[selectedPlatform.platform].test(selectedPlatform.url)
     ) {
-      alert(
-        `Invalid URL. Please make sure it is a valid URL. (e.g. https://www.${selectedPlatform.platform}.com/username)`
-      );
+      if (selectedPlatform.platform === "phone") {
+        alert(
+          "Invalid phone number. Please make sure it is a valid phone number."
+        );
+      } else {
+        alert(
+          `Invalid URL. Please make sure it is a valid URL. (e.g. https://www.${selectedPlatform.platform}.com/username)`
+        );
+      }
       return;
     }
 
@@ -151,6 +160,7 @@
       twitter: (await layoutData).restaurant?.twitter ?? "",
       tiktok: (await layoutData).restaurant?.tiktok ?? "",
       slug: (await layoutData).restaurant?.slug ?? "",
+      phone: (await layoutData).restaurant?.phone ?? "",
     };
 
     initialLoading = false;
@@ -299,6 +309,17 @@
       <p class="text-neutral-600">Add your social media links here.</p>
     </div>
     <button
+      class={`${restaurantInfo.phone ? "btn-primary" : "btn-outline"} !p-2`}
+      on:click={() => {
+        selectedPlatform = {
+          platform: "phone",
+          url: restaurantInfo.phone,
+        };
+      }}
+    >
+      <Icon icon="mingcute:phone-line" class="h-5 w-5" />
+    </button>
+    <button
       class={`${restaurantInfo.facebook ? "btn-primary" : "btn-outline"} !p-2`}
       on:click={() => {
         selectedPlatform = {
@@ -363,8 +384,9 @@
       }}
     >
       <label for="social-url" class="text-sm font-medium text-neutral-700">
-        {selectedPlatform.platform.charAt(0)?.toUpperCase() +
-          selectedPlatform.platform.slice(1)} Profile URL
+        {selectedPlatform.platform === "phone"
+          ? "Public Phone Number"
+          : `${selectedPlatform.platform.charAt(0)?.toUpperCase() + selectedPlatform.platform.slice(1)} Profile URL`}
       </label>
       <input
         id="social-url"
@@ -372,7 +394,9 @@
         type="text"
         class="input"
         bind:value={selectedPlatform.url}
-        placeholder={`https://www.${selectedPlatform.platform}.com/${restaurantInfo.slug}`}
+        placeholder={selectedPlatform.platform === "phone"
+          ? "1234567890"
+          : `https://www.${selectedPlatform.platform}.com/${restaurantInfo.slug}`}
       />
 
       <div class="flex items-center gap-3">
