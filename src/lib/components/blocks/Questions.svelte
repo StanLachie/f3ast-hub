@@ -4,32 +4,32 @@
     {
       question: "What is F3AST?",
       answer:
-        "F3AST is a platform that allows you to create and manage your restaurant's online menu.",
+        "F3AST is a platform designed to help you create, manage, and showcase your restaurant's online menu with ease.",
     },
     {
       question: "What are the differences between the Basic and Elite plans?",
       answer:
-        "The Basic plan is our most affordable plan and includes access to our core features. The Elite plan includes additional features, including receiving customer inquiries & access to our AI tools.",
+        "The Basic plan provides access to essential features at an affordable price. The Elite plan unlocks premium benefits, including customer inquiries and advanced AI tools.",
     },
     {
       question: "How do I create my menu on F3AST?",
       answer:
-        'After signing up, you can log in to your account, navigate to the "Menu" section of your dashboard, from there you can add your menu items, descriptions, and prices one by one, or as an Elite member you can upload an image of your menu and we will do the rest with AI.',
+        'Sign up, log in, and navigate to the "Menu" section in your dashboard. Add menu items, descriptions, and prices manually, or, as an Elite member, upload an image of your menu and let our AI handle the rest.',
     },
     {
       question: "Can I customize the look of my menu?",
       answer:
-        "Yes, you can customize the look of your menu by adding your own logo and banner. You can also choose from a variety of pre-made themes.",
+        "Absolutely! Personalize your menu with your logo, banner, and a selection of pre-designed themes to match your restaurant’s brand.",
     },
     {
-      question: "Can my customers send enquires?",
+      question: "Can my customers send inquiries?",
       answer:
-        "Yes, with the Elite plan you can choose to allow your customers to send enquires to your email.",
+        "Yes! With the Elite plan, you can enable customer inquiries to be sent directly to your email for better communication.",
     },
     {
       question: "Can I use F3AST for free?",
       answer:
-        "You can register for a free account andsetup your menu. After that, if you wish to publish your menu online, you will need to upgrade to a paid plan.",
+        "Yes, you can create a free account to set up your menu. To publish it online and access additional features, you’ll need to upgrade to a paid plan.",
     },
   ];
 
