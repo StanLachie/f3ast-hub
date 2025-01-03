@@ -1,95 +1,112 @@
 <script lang="ts">
-  import Icon from "@iconify/svelte";
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
+  import FeatureCard from "./FeatureCard.svelte";
+  import Splide from "@splidejs/splide";
 
-  let currentIndex = 0;
-  let images = [
+  const slides = [
     {
-      title: "Your Online Menu, Your Way",
-      description: "Allow customers to explore your menu with ease.",
-      src: "https://www.f3ast.com/_next/image?url=%2Fimages%2Fscreenshots%2F1.webp&w=1920&q=75",
+      title: "Dashboard",
+      description: "Manage your menu and customers from one place.",
+      imageSrc: "/dashboard.png",
+      imageAlt: "Dashboard",
     },
     {
-      title: "Customer Enquires Made Easy",
-      description: "Connect with your customers directly via email.",
-      src: "https://www.f3ast.com/_next/image?url=%2Fimages%2Fscreenshots%2F3.webp&w=1920&q=75",
+      title: "Menu Editor",
+      description: "Create and manage your menu with ease.",
+      imageSrc: "/menuEditor.png",
+      imageAlt: "Menu Editor",
     },
     {
-      title: "Customize Your Website",
-      description:
-        "Your business is unique, and your online presence should be too.",
-      src: "https://www.f3ast.com/_next/image?url=%2Fimages%2Fscreenshots%2F4.webp&w=1920&q=75",
+      title: "Your Website",
+      description: "Your menu, your customers, your way.",
+      imageSrc: "/menu.png",
+      imageAlt: "Your Website",
+    },
+    {
+      title: "Customer Enquiries",
+      description: "Let your customers get in touch with you via email.",
+      imageSrc: "/enquiries.png",
+      imageAlt: "Customer Enquiries",
+    },
+    {
+      title: "Themes",
+      description: "Customize your website with our themes.",
+      imageSrc: "/themes.png",
+      imageAlt: "Themes",
     },
   ];
 
-  let interval: ReturnType<typeof setInterval>;
+  let perPage = 4;
+  let splideElement: HTMLElement;
+  let splide: Splide;
 
   onMount(() => {
-    interval = setInterval(() => {
-      currentIndex = (currentIndex + 1) % images.length;
-    }, 3500);
+    splide = new Splide(splideElement, {
+      perPage,
+      gap: "1rem",
+      omitEnd: true,
+      type: "loop",
+      pagination: false,
+      focus: "center",
+      autoplay: true,
+      interval: 2500,
+      // pauseOnFocus: true,
+      // pauseOnHover: true,
+      easing: "cubic-bezier(0.25, 0.1, 0.25, 1.0)",
+      breakpoints: {
+        720: { perPage: 1.1 },
+        1024: { perPage: 1.3 },
+        1600: { perPage: 2 },
+        2000: { perPage: 3 },
+      },
+      arrows: false,
+      drag: false,
+      lazyLoad: "nearby",
+    });
+
+    splide.mount();
   });
-
-  onDestroy(() => {
-    clearInterval(interval);
-  });
-
-  function nextImage() {
-    currentIndex = (currentIndex + 1) % images.length;
-    clearInterval(interval);
-    interval = setInterval(() => {
-      currentIndex = (currentIndex + 1) % images.length;
-    }, 3500);
-  }
-
-  function prevImage() {
-    currentIndex = (currentIndex - 1 + images.length) % images.length;
-    clearInterval(interval);
-    interval = setInterval(() => {
-      currentIndex = (currentIndex + 1) % images.length;
-    }, 3500);
-  }
 </script>
 
-<div class="relative">
-  <div class="mx-auto my-32 max-w-4xl px-8">
-    {#each images as image, i}
-      <img
-        src={image.src}
-        alt={`Image ${i + 1}`}
-        class={`aspect-video w-full rounded-t-2xl  border border-b-0 border-emerald-950 ${i === currentIndex ? "" : "hidden"}`}
-      />
-    {/each}
-    <div
-      class="flex justify-between divide-x divide-emerald-950 rounded-b-2xl border border-emerald-950 bg-emerald-300 font-semibold text-emerald-950"
-    >
-      <button
-        on:click={prevImage}
-        class="rounded-bl-2xl p-6 transition-all hover:bg-emerald-400"
-        ><Icon
-          icon="mingcute:arrow-left-circle-line"
-          class="text-4xl"
-        /></button
-      >
-      <div class="flex-1 bg-white px-6 py-4">
-        <div class="flex justify-between">
-          <span class="text-xl">
-            {images[currentIndex].title}
-          </span>
-          <span class="text-xl">
-            ({currentIndex + 1}/{images.length})
-          </span>
-        </div>
-        <p class="text-neutral-500">{images[currentIndex].description}</p>
-      </div>
-      <button
-        on:click={nextImage}
-        class="rounded-br-2xl p-6 transition-all hover:bg-emerald-400"
-        ><Icon
-          icon="mingcute:arrow-right-circle-line"
-          class="text-4xl"
-        /></button
-      >
-    </div>
+<svelte:head>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.0.9/dist/css/splide.min.css"
+  />
+</svelte:head>
+
+<div class="w-full py-24" id="showcase">
+  <div class="mx-auto max-w-7xl px-6 text-center">
+    <h1 class="text-4xl font-bold md:text-5xl lg:text-6xl">
+      Take A Look For Yourself
+    </h1>
+    <p class="mx-auto mt-8 max-w-2xl text-lg text-gray-500">
+      Here's a little look at what F3AST will look like for you.
+    </p>
   </div>
+
+  <section bind:this={splideElement} class="splide mt-16 text-[0px]">
+    <div class="splide__track">
+      <div class="splide__pagination hidden"></div>
+      <ul class="splide__list">
+        {#each slides as slide}
+          <li class="splide__slide">
+            <div
+              class="mx-auto flex-shrink-0 px-4 bg-white rounded-lg shadow-sm mb-4 p-4"
+            >
+              <img
+                src={slide.imageSrc}
+                alt={slide.imageAlt}
+                class="rounded-lg w-full aspect-video"
+              />
+              <p class="text-xl font-bold mt-4">{slide.title}</p>
+              <p class="text-lg text-gray-600 mt-2">{slide.description}</p>
+            </div>
+          </li>
+        {/each}
+      </ul>
+    </div>
+  </section>
+
+  <div class="relative mt-12"></div>
 </div>

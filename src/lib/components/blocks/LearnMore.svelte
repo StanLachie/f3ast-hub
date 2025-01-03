@@ -133,7 +133,10 @@
     </p>
   </div>
 
-  <section bind:this={splideElement} class="splide mt-16 max-h-[450px]">
+  <section
+    bind:this={splideElement}
+    class="splide mt-16 max-h-[450px] text-[0px]"
+  >
     <div class="splide__track">
       <ul class="splide__list">
         {#each features as feature}

@@ -15,7 +15,7 @@
             </li>
             <li><a href="/#learnMore" class="hover:text-white">Features</a></li>
             <li>
-              <a href="/support" class="hover:text-white"
+              <a href="/#faq" class="hover:text-white"
                 >Frequently Asked Questions</a
               >
             </li>

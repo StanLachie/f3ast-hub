@@ -18,5 +18,5 @@
     />
   </div>
   <h3 class="text-2xl font-bold text-white">{title}</h3>
-  <p class="mt-3 text-gray-300">{description}</p>
+  <p class="text-base mt-3 text-gray-300">{description}</p>
 </div>
