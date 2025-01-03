@@ -118,7 +118,7 @@ We may update these Terms from time to time. Continued use of the Platform after
 
 ### 12. Contact Information
 
-For questions about these Terms, please contact us at [lachiejeffress@gmail.com](mailto\:lachiejeffress@gmail.com).
+For questions about these Terms, please contact us at [lachlan@f3ast.com](mailto\:lachlan@f3ast.com).
 
 `
   );

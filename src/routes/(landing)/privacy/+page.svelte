@@ -75,7 +75,7 @@ You have the following rights regarding your personal information:
 
 4.4. Restriction of certain data processing activities.
 
-To exercise your rights, please contact us at [lachiejeffress@gmail.com](mailto\:lachiejeffress@gmail.com).
+To exercise your rights, please contact us at [lachlan@f3ast.com](mailto\:lachlan@f3ast.com).
 
 ---
 
@@ -107,9 +107,7 @@ We may update this Privacy Policy from time to time. We will notify you of signi
 
 If you have questions or concerns about this Privacy Policy, please contact us at:
 
-- **Email:** [lachiejeffress@gmail.com](mailto\:lachiejeffress@gmail.com)
-
-
+- **Email:** [lachlan@f3ast.com](mailto\:lachlan@f3ast.com)
 
 ---
 

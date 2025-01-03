@@ -20,7 +20,7 @@ export const actions: Actions = {
 
     try {
       await sendEmail(
-        "lachiejeffress@gmail.com",
+        "lachlan@f3ast.com",
         "Lachlan @ F3AST",
         "noreply@f3ast.com",
         name,
