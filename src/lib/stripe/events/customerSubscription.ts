@@ -139,6 +139,7 @@ export async function handleCustomerSubscriptionDeleted(
       data: {
         status: "canceled",
         stripeSubscriptionId: event.data.object.id,
+        currentPeriodEnd: null,
         canceledAt: event.data.object.cancel_at
           ? new Date(event.data.object.cancel_at * 1000)
           : new Date(),
