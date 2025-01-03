@@ -87,8 +87,9 @@
       pagination: false,
       focus: "center",
       autoplay: true,
-      interval: 3000,
-      pauseOnFocus: true,
+      interval: 2500,
+      // pauseOnFocus: true,
+      // pauseOnHover: true,
       easing: "cubic-bezier(0.25, 0.1, 0.25, 1.0)",
       breakpoints: {
         720: { perPage: 1.3 },
@@ -96,6 +97,7 @@
         1600: { perPage: 3 },
       },
       arrows: false,
+      drag: false,
       lazyLoad: "nearby",
     });
 
