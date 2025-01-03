@@ -9,6 +9,7 @@ export default {
     },
   },
   plugins: [
+    require("@tailwindcss/typography"),
     function ({ addUtilities }) {
       const newUtilities = {
         // Text outline utility

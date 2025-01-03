@@ -30,6 +30,17 @@
             <li><a href="/support" class="hover:text-white">Email Us</a></li>
           </ul>
         </div>
+        <div>
+          <h3 class="font-semibold mb-2">Legal</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li>
+              <a href="/terms" class="hover:text-white">Terms of Service</a>
+            </li>
+            <li>
+              <a href="/privacy" class="hover:text-white">Privacy Policy</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <div class="mt-16 text-center text-sm text-gray-400">
