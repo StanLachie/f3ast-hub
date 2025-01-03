@@ -9,7 +9,6 @@
       description: "Starting at just $19.99/month with no hidden fees.",
       imageSrc: "/cash.png",
       imageAlt: "Affordable Plans",
-      link: "/pricing",
       bgColorClass: "bg-purple-500/10",
     },
     {
@@ -18,7 +17,6 @@
         "Showcase your dishes with a highly customizable digital menu.",
       imageSrc: "/hamburger.png",
       imageAlt: "Online Menu",
-      link: "/features",
       bgColorClass: "bg-emerald-500/10",
     },
     {
@@ -26,7 +24,6 @@
       description: "Connect with your customers directly via email.",
       imageSrc: "/email.png",
       imageAlt: "Customer Enquiries",
-      link: "/features",
       bgColorClass: "bg-yellow-500/10",
     },
 
@@ -35,7 +32,6 @@
       description: "Get personalized assistance whenever you need it.",
       imageSrc: "/handshake.png",
       imageAlt: "Hands-on Support",
-      link: "/support",
       bgColorClass: "bg-blue-500/10",
     },
     {
@@ -43,7 +39,6 @@
       description: "Show up when your customers search for you online.",
       imageSrc: "/globe.png",
       imageAlt: "Show Up Online",
-      link: "/features",
       bgColorClass: "bg-purple-500/10",
     },
     {
@@ -51,7 +46,6 @@
       description: "Connect physical and digital with custom QR codes.",
       imageSrc: "/camera.png",
       imageAlt: "QR Codes",
-      link: "/features",
       bgColorClass: "bg-yellow-500/10",
     },
     {
@@ -59,7 +53,6 @@
       description: "Manage everything from one simple interface.",
       imageSrc: "/gear.png",
       imageAlt: "Dashboard",
-      link: "/features",
       bgColorClass: "bg-red-500/10",
     },
   ];

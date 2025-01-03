@@ -1,10 +1,7 @@
 <script lang="ts">
   import HeadlessNav from "$lib/components/HeadlessNav.svelte";
-  import type { PageData } from "./$types";
   import { enhance } from "$app/forms";
   import Meta from "$lib/components/utils/Meta.svelte";
-
-  export let data: PageData;
 
   let isSubmitting = false;
   let error: string | null = null;

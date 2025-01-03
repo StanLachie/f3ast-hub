@@ -3,7 +3,6 @@
   export let description: string;
   export let imageSrc: string;
   export let imageAlt: string;
-  export let link: string;
   export let bgColorClass: string = "bg-purple-500/10";
 </script>
 

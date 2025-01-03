@@ -1,8 +1,6 @@
 <script lang="ts">
   import "../app.css";
   import Meta from "$lib/components/utils/Meta.svelte";
-
-  export let data;
 </script>
 
 <Meta

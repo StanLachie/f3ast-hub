@@ -2,7 +2,6 @@
   import Icon from "@iconify/svelte";
 
   export let isUploadingImage = false;
-  export let previewImage: string | null = null;
   export let imageToDisplay: string | null = null;
   export let initials: string = "";
   export let handleFileChange: (event: Event) => void;

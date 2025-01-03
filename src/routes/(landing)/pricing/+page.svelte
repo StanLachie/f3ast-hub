@@ -1,12 +1,9 @@
 <script lang="ts">
-  import type { PageData } from "./$types";
   import PricingCard from "$lib/components/landing/PricingCard.svelte";
   import type { Product } from "$lib/types";
   import HeadlessNav from "$lib/components/HeadlessNav.svelte";
   import Meta from "$lib/components/utils/Meta.svelte";
-
-  export let data: PageData;
-
+  
   const products: Product[] = [
     {
       name: "Basic",
