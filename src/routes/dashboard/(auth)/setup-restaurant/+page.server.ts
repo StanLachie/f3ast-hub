@@ -91,7 +91,7 @@ export const actions: Actions = {
         });
       });
 
-      redirect(303, "/dashboard/restaurant");
+      return { success: true };
     } catch (error) {
       console.error("Restaurant setup error:", error);
       return fail(500, {
