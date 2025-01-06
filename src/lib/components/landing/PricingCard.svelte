@@ -1,8 +1,15 @@
 <script lang="ts">
-  import type { Product } from "$lib/types";
   import Icon from "@iconify/svelte";
-  export let product: Product;
-  export let subscriptionBasis: "monthly" | "yearly";
+  import { goto } from "$app/navigation";
+  const { isLoggedIn, product, subscriptionBasis } = $props();
+
+  async function handleSelectPlan() {
+    if (isLoggedIn) {
+      goto("/dashboard/billing");
+    } else {
+      goto("/dashboard/register");
+    }
+  }
 </script>
 
 <div
@@ -25,5 +32,7 @@
       </div>
     {/each}
   </div>
-  <button class="btn-primary w-full">Select Plan</button>
+  <button class="btn-primary w-full" onclick={handleSelectPlan}
+    >Select Plan</button
+  >
 </div>

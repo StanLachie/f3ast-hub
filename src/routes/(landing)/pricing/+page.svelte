@@ -3,7 +3,7 @@
   import type { Product } from "$lib/types";
   import HeadlessNav from "$lib/components/HeadlessNav.svelte";
   import Meta from "$lib/components/utils/Meta.svelte";
-  
+
   const products: Product[] = [
     {
       name: "Basic",
@@ -36,8 +36,8 @@
       features: [
         "Everything in Basic",
         "AI Menu Uploader",
-          "Customer Enquiries",
-        ],
+        "Customer Enquiries",
+      ],
     },
   ];
 
