@@ -6,6 +6,7 @@
   import BillingInfo from "$lib/components/dashboard/BillingInfo.svelte";
   import SettingActions from "$lib/components/dashboard/SettingActions.svelte";
   import Modal from "$lib/components/Modal.svelte";
+  import Icon from "@iconify/svelte";
 
   export let data: PageData;
   const { layoutData } = data;
@@ -23,10 +24,20 @@
     Basic: {
       monthly: 29.99,
       yearly: 299.99,
+      features: [
+        "Unlimited Menu Items",
+        "Unlimited Categories",
+        "Unlimited Customers",
+      ],
     },
     Elite: {
       monthly: 49.99,
       yearly: 499.99,
+      features: [
+        "Everything in Basic",
+        "AI Menu Uploader",
+        "Customer Enquiries",
+      ],
     },
   };
 
@@ -149,6 +160,140 @@
           ${selectedTier ? prices[selectedTier].yearly : 0}/yr
         </div>
       </button>
+    </div>
+
+    {#if selectedTier === "Elite"}
+      <div class="rounded-lg bg-emerald-50 p-3">
+        <p class="text-sm text-emerald-700">
+          <span class="font-medium">Great choice!</span> You'll get access to all
+          of our premium features.
+        </p>
+      </div>
+    {:else if selectedTier === "Basic"}
+      <div class="rounded-lg bg-emerald-50 p-3">
+        <p class="text-sm text-emerald-700">
+          <span class="font-medium">Upgrade to Elite</span> to unlock AI Menu Uploader
+          and Customer Enquiries, the perfect tool for growing business!
+        </p>
+      </div>
+    {/if}
+    <div class="flex flex-col gap-3">
+      <div class="rounded-lg border border-neutral-200">
+        <table class="w-full">
+          <tbody class="divide-y divide-neutral-200">
+            <tr>
+              <td class="px-4 py-2 text-sm text-neutral-600"
+                >Unlimited Menu Items</td
+              >
+              <td class="w-20 px-4 py-2 text-center">
+                <Icon
+                  icon="mingcute:check-fill"
+                  class="inline h-4 w-4 text-emerald-500"
+                />
+              </td>
+              <td class="w-20 px-4 py-2 text-center">
+                <Icon
+                  icon="mingcute:check-fill"
+                  class="inline h-4 w-4 text-emerald-500"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 text-sm text-neutral-600"
+                >Unlimited Categories</td
+              >
+              <td class="w-20 px-4 py-2 text-center">
+                <Icon
+                  icon="mingcute:check-fill"
+                  class="inline h-4 w-4 text-emerald-500"
+                />
+              </td>
+              <td class="w-20 px-4 py-2 text-center">
+                <Icon
+                  icon="mingcute:check-fill"
+                  class="inline h-4 w-4 text-emerald-500"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 text-sm text-neutral-600"
+                >Unlimited Customers</td
+              >
+              <td class="w-20 px-4 py-2 text-center">
+                <Icon
+                  icon="mingcute:check-fill"
+                  class="inline h-4 w-4 text-emerald-500"
+                />
+              </td>
+              <td class="w-20 px-4 py-2 text-center">
+                <Icon
+                  icon="mingcute:check-fill"
+                  class="inline h-4 w-4 text-emerald-500"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 text-sm text-neutral-600"
+                >AI Menu Uploader</td
+              >
+              <td class="w-20 px-4 py-2 text-center">
+                <Icon
+                  icon="mingcute:close-fill"
+                  class="inline h-4 w-4 text-neutral-300"
+                />
+              </td>
+              <td class="w-20 px-4 py-2 text-center">
+                <Icon
+                  icon="mingcute:check-fill"
+                  class="inline h-4 w-4 text-emerald-500"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 text-sm text-neutral-600"
+                >Customer Enquiries</td
+              >
+              <td class="w-20 px-4 py-2 text-center">
+                <Icon
+                  icon="mingcute:close-fill"
+                  class="inline h-4 w-4 text-neutral-300"
+                />
+              </td>
+              <td class="w-20 px-4 py-2 text-center">
+                <Icon
+                  icon="mingcute:check-fill"
+                  class="inline h-4 w-4 text-emerald-500"
+                />
+              </td>
+            </tr>
+          </tbody>
+          <thead>
+            <tr class="border-b border-neutral-200 bg-neutral-50">
+              <th
+                class="px-4 py-2 text-left text-sm font-medium text-neutral-600"
+                >Features</th
+              >
+              <th
+                class="w-20 px-4 py-2 text-center text-sm font-medium text-neutral-600"
+                >Basic</th
+              >
+              <th
+                class="w-20 px-4 py-2 text-center text-sm font-medium text-neutral-600"
+                >Elite</th
+              >
+            </tr>
+          </thead>
+        </table>
+      </div>
+
+      {#if selectedTier === "Basic"}
+        <button
+          class="text-sm font-medium text-emerald-600 hover:text-emerald-700"
+          on:click={() => (selectedTier = "Elite")}
+        >
+          Switch to Elite tier →
+        </button>
+      {/if}
     </div>
 
     <button class="btn-primary" on:click={handleSubscribe}>
