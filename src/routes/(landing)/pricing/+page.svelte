@@ -1,8 +1,11 @@
 <script lang="ts">
   import PricingCard from "$lib/components/landing/PricingCard.svelte";
-  import type { Product } from "$lib/types";
   import HeadlessNav from "$lib/components/HeadlessNav.svelte";
   import Meta from "$lib/components/utils/Meta.svelte";
+  import type { PageData } from "./$types";
+  import type { Product } from "$lib/types";
+
+  let { data }: { data: PageData } = $props();
 
   const products: Product[] = [
     {
@@ -41,7 +44,7 @@
     },
   ];
 
-  let subscriptionBasis: "monthly" | "yearly" = "monthly";
+  let subscriptionBasis = $state<"monthly" | "yearly">("monthly");
 </script>
 
 <Meta
@@ -68,7 +71,7 @@
       >
         <button
           class={`${subscriptionBasis === "monthly" ? "bg-emerald-300" : "bg-white"} w-24 place-self-end rounded-l-lg px-4 py-1 font-semibold shadow-sm transition-colors duration-200`}
-          on:click={() => {
+          onclick={() => {
             subscriptionBasis = "monthly";
           }}
         >
@@ -76,7 +79,7 @@
         </button>
         <button
           class={`${subscriptionBasis === "yearly" ? "bg-emerald-300" : "bg-white"} w-24 rounded-r-lg px-4 py-1 font-semibold shadow-sm transition-colors duration-200`}
-          on:click={() => {
+          onclick={() => {
             subscriptionBasis = "yearly";
           }}
         >
@@ -87,7 +90,11 @@
 
     <div class=" flex w-full flex-wrap justify-around gap-4">
       {#each products as product}
-        <PricingCard {product} {subscriptionBasis} />
+        <PricingCard
+          {product}
+          {subscriptionBasis}
+          isLoggedIn={data.isLoggedIn}
+        />
       {/each}
     </div>
 

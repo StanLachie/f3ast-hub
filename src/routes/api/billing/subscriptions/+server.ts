@@ -21,12 +21,17 @@ const arrayBufferToBuffer = (arrayBuffer: ArrayBuffer): Buffer => {
 
 export const GET: RequestHandler = async ({ request, url }) => {
   const subscriptionTier = url.searchParams.get("subscriptionTier");
+  const term = url.searchParams.get("term");
   const session = await auth.api.getSession({
     headers: request.headers,
   });
 
   if (!subscriptionTier || !["Basic", "Elite"].includes(subscriptionTier)) {
     return json({ error: "Invalid subscriptionTier" }, { status: 400 });
+  }
+
+  if (!term || !["monthly", "yearly"].includes(term)) {
+    return json({ error: "Invalid term" }, { status: 400 });
   }
 
   if (!session?.user) {
@@ -49,7 +54,8 @@ export const GET: RequestHandler = async ({ request, url }) => {
 
   const checkoutSession = await createStripeSubscriptionCheckoutSession(
     restaurant.id,
-    subscriptionTier as "Basic" | "Elite"
+    subscriptionTier as "Basic" | "Elite",
+    term as "monthly" | "yearly"
   );
 
   return json({ url: checkoutSession.url, status: 200 });
