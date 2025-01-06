@@ -334,6 +334,10 @@
     icon: "mingcute:ai-fill",
     type: "primary",
     func: () => {
+      if (data.layoutData.subscription?.tier !== "Elite") {
+        alert("You must be subscribed to Elite to use this feature");
+        return;
+      }
       openModal = "aiUpload";
     },
   }}
