@@ -230,12 +230,45 @@ const honeyTheme: Theme = {
   },
 };
 
+const lavenderTheme: Theme = {
+  colors: {
+    brand: {
+      primary: "#9D8EC7", // Lavender
+      secondary: "#B4A7D6", // Soft lavender
+    },
+    bg: {
+      default: "#FBFAFF", // Lavender white
+      subtle: "#F4F1FA", // Pale lavender
+      muted: "#E9E4F5", // Muted lavender
+      emphasis: "#4A4063", // Deep purple
+    },
+    text: {
+      default: "#2D2A38", // Deep purple
+      muted: "#6B6687", // Dusty purple
+      subtle: "#9895AA", // Grey lavender
+      inverse: "#FBFAFF", // Lavender white
+    },
+    border: {
+      default: "#E9E4F5", // Muted lavender
+      subtle: "#F4F1FA", // Pale lavender
+      emphasis: "#9D8EC7", // Lavender
+    },
+    state: {
+      error: "#E15F7E", // Soft red
+      warning: "#E6B971", // Warm gold
+      success: "#7BB5A5", // Sage
+      info: "#7C9BC7", // Periwinkle
+    },
+  },
+};
+
 const themes: Record<string, Theme> = {
   default: baseTheme,
   dark: darkTheme,
   espresso: espressoTheme,
   matcha: matchaTheme,
   honey: honeyTheme,
+  lavender: lavenderTheme,
 };
 
 export default themes;
