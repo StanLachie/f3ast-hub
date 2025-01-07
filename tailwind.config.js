@@ -1,6 +1,32 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./src/**/*.{html,js,svelte,ts}"],
+  safelist: [
+    // Background colors
+    {
+      pattern:
+        /bg-(transparent|black|white|neutral|gray|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(-[1-9]0{1,2})?$/,
+    },
+    {
+      pattern: /bg-\[#(?:[0-9a-fA-F]{3}){1,2}\]/,
+    },
+    // Text colors
+    {
+      pattern:
+        /text-(transparent|black|white|neutral|gray|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(-[1-9]0{1,2})?$/,
+    },
+    {
+      pattern: /text-\[#(?:[0-9a-fA-F]{3}){1,2}\]/,
+    },
+    // Border colors
+    {
+      pattern:
+        /border-(transparent|black|white|neutral|gray|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(-[1-9]0{1,2})?$/,
+    },
+    {
+      pattern: /border-\[#(?:[0-9a-fA-F]{3}){1,2}\]/,
+    },
+  ],
   theme: {
     extend: {
       fontFamily: {

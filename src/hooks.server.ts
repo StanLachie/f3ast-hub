@@ -19,8 +19,18 @@ export async function handle({ event, resolve }) {
     redirect(303, "/dashboard/login");
   }
 
+  if (
+    isAdminProtected(event.route.id as string) &&
+    session?.user?.id !== "lEeHstWK8eMJ9fLb98a9MupcJT4kmuoQ"
+  ) {
+    redirect(303, "/dashboard/login");
+  }
+
   return svelteKitHandler({ event, resolve, auth });
 }
 
 const isRouteProtected = (route: string) =>
   route !== null && route.includes("/(dash)/");
+
+const isAdminProtected = (route: string) =>
+  route !== null && route.includes("/admin/");

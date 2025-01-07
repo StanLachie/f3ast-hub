@@ -11,6 +11,7 @@
   import Icon from "@iconify/svelte";
   import Modal from "$lib/components/Modal.svelte";
   import SettingSkeleton from "$lib/components/dashboard/SettingSkeleton.svelte";
+  import SettingActions from "$lib/components/dashboard/SettingActions.svelte";
 
   interface RestaurantInfo {
     published: boolean;
@@ -173,37 +174,46 @@
 />
 
 {#if restaurantInfo.published}
-  <SettingAction
+  <SettingActions
     title="Publish"
     description="Whether your restaurant is published or not."
     loading={initialLoading}
-    action={{
-      name: "Unpublish",
-      type: "danger",
-      func: async () => {
-        if (!window) return;
+    actions={[
+      {
+        name: "Unpublish",
+        type: "danger",
+        func: async () => {
+          if (!window) return;
 
-        const confirm = window.confirm(
-          "Are you sure you want to unpublish your restaurant?"
-        );
+          const confirm = window.confirm(
+            "Are you sure you want to unpublish your restaurant?"
+          );
 
-        if (!confirm) return;
+          if (!confirm) return;
 
-        const res = await fetch("/api/restaurant/published", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ value: false }),
-        });
+          const res = await fetch("/api/restaurant/published", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ value: false }),
+          });
 
-        if (!res.ok) {
-          const data = await res.json();
-          alert(data.error || "Failed to unpublish restaurant");
-          return;
-        }
+          if (!res.ok) {
+            const data = await res.json();
+            alert(data.error || "Failed to unpublish restaurant");
+            return;
+          }
 
-        restaurantInfo.published = false;
+          restaurantInfo.published = false;
+        },
       },
-    }}
+      {
+        name: "Visit Restaurant",
+        type: "primary",
+        func: async () => {
+          window.open(`https://${restaurantInfo.slug}.f3ast.com`, "_blank");
+        },
+      },
+    ]}
   />
 {:else}
   <SettingAction
