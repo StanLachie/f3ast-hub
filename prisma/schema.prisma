@@ -47,6 +47,8 @@ model Restaurant {
   slug             String         @unique
   published        Boolean        @default(false)
   theme            String         @default("default")
+  primaryColor     String         @default("#000000")
+  secondaryColor   String         @default("#000000")
   tiktok           String?
   stripeCustomerId String         @unique @default("")
   Users            User[]
