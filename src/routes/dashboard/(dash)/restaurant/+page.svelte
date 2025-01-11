@@ -282,7 +282,7 @@
   }}
 />
 
-<SettingSelect
+<!-- <SettingSelect
   title="Theme"
   description="Your restaurant's theme."
   loading={initialLoading}
@@ -295,7 +295,7 @@
     options: Object.keys(themes),
     submitUrl: "/api/restaurant/theme",
   }}
-/>
+/> -->
 <SettingInput
   title="Address"
   description="Your restaurant's address."

@@ -198,38 +198,6 @@ const matchaTheme: Theme = {
   },
 };
 
-const honeyTheme: Theme = {
-  colors: {
-    brand: {
-      primary: "#FBB741",
-      secondary: "#FFE2A3",
-    },
-    bg: {
-      default: "#171717",
-      subtle: "#262626",
-      muted: "#404040",
-      emphasis: "#F5F5F5",
-    },
-    text: {
-      default: "#F5F5F5",
-      muted: "#949494",
-      subtle: "#737373",
-      inverse: "#171717",
-    },
-    border: {
-      default: "#404040",
-      subtle: "#262626",
-      emphasis: "#F5F5F5",
-    },
-    state: {
-      error: "#EF4444",
-      warning: "#F59E0B",
-      success: "#22C55E",
-      info: "#3B82F6",
-    },
-  },
-};
-
 const lavenderTheme: Theme = {
   colors: {
     brand: {
@@ -267,7 +235,6 @@ const themes: Record<string, Theme> = {
   dark: darkTheme,
   espresso: espressoTheme,
   matcha: matchaTheme,
-  honey: honeyTheme,
   lavender: lavenderTheme,
 };
 

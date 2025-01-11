@@ -15,6 +15,13 @@
       link: "/dashboard/restaurant",
     },
     {
+      name: "Theming",
+      description: "Customize your restaurant's theme here.",
+      type: "top",
+      icon: "mingcute:palette-fill",
+      link: "/dashboard/theme",
+    },
+    {
       name: "Menu",
       description: "Make changes to your menu here.",
       type: "top",
